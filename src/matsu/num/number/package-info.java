@@ -8,4 +8,4 @@
 /**
  * 
  */
-package matsu.num.Number;
+package matsu.num.number;

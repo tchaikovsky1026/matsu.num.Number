@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -43,6 +44,9 @@ final class ModulusIntTesting {
         @DataPoints
         public static Fixture[] FIXTURES;
 
+        @DataPoints
+        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+
         @BeforeClass
         public static void before_fixtureの用意() {
             List<Fixture> list = new ArrayList<>();
@@ -69,6 +73,32 @@ final class ModulusIntTesting {
                 executeTestProduct(getModulusInt(m), x, y);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
+            }
+        }
+
+        @Theory
+        public void test_2値積のモジュロをテスト_ランダム化(int divisor) {
+
+            int ite = 100;
+
+            try {
+                ModulusInt modulus = getModulusInt(divisor);
+
+                for (int c = 0; c < ite; c++) {
+
+                    int x = ThreadLocalRandom.current().nextInt(divisor * 5);
+                    int y = ThreadLocalRandom.current().nextInt(divisor * 5);
+                    if (ThreadLocalRandom.current().nextBoolean()) {
+                        x = -x;
+                    }
+                    if (ThreadLocalRandom.current().nextBoolean()) {
+                        y = -y;
+                    }
+
+                    executeTestProduct(modulus, x, y);
+                }
+            } catch (UnsupportedOperationException igonred) {
+                // divisorが対応していない場合は無視する
             }
         }
 
@@ -113,6 +143,9 @@ final class ModulusIntTesting {
         @DataPoints
         public static Fixture[] FIXTURES;
 
+        @DataPoints
+        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+
         @BeforeClass
         public static void before_fixtureの用意() {
             List<Fixture> list = new ArrayList<>();
@@ -138,6 +171,32 @@ final class ModulusIntTesting {
                 executeTestProduct(getModulusInt(m), x);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
+            }
+        }
+
+        @Theory
+        public void test_配列の要素積のモジュロをテスト_ランダム化(int divisor) {
+
+            int ite = 100;
+
+            try {
+                ModulusInt modulus = getModulusInt(divisor);
+
+                for (int c = 0; c < ite; c++) {
+
+                    int size = ThreadLocalRandom.current().nextInt(10);
+                    int[] x = new int[size];
+                    for (int i = 0; i < size; i++) {
+                        x[i] = ThreadLocalRandom.current().nextInt(divisor * 5);
+                        if (ThreadLocalRandom.current().nextBoolean()) {
+                            x[i] = -x[i];
+                        }
+                    }
+
+                    executeTestProduct(modulus, x);
+                }
+            } catch (UnsupportedOperationException igonred) {
+                // divisorが対応していない場合は無視する
             }
         }
 
@@ -187,6 +246,9 @@ final class ModulusIntTesting {
         @DataPoints
         public static Fixture[] FIXTURES;
 
+        @DataPoints
+        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+
         @BeforeClass
         public static void before_fixtureの用意() {
             List<Fixture> list = new ArrayList<>();
@@ -213,6 +275,29 @@ final class ModulusIntTesting {
                 executeTestPow(getModulusInt(m), x, k);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
+            }
+        }
+
+        @Theory
+        public void test_累乗のモジュロをテスト_ランダム化(int divisor) {
+
+            int ite = 100;
+
+            try {
+                ModulusInt modulus = getModulusInt(divisor);
+
+                for (int c = 0; c < ite; c++) {
+
+                    int x = ThreadLocalRandom.current().nextInt(divisor * 5);
+                    if (ThreadLocalRandom.current().nextBoolean()) {
+                        x = -x;
+                    }
+                    int k = ThreadLocalRandom.current().nextInt(200);
+
+                    executeTestPow(modulus, x, k);
+                }
+            } catch (UnsupportedOperationException igonred) {
+                // divisorが対応していない場合は無視する
             }
         }
 

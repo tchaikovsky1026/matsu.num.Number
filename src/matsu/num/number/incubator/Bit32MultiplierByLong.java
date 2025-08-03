@@ -25,8 +25,18 @@ final class Bit32MultiplierByLong implements Bit32Multiplier {
     }
 
     @Override
+    public long multiplyFull(int x, int y) {
+        return (long) x * y;
+    }
+
+    @Override
     public int multiplyHigh(int x, int y) {
         return (int) (((long) x * y) >> 32);
+    }
+
+    @Override
+    public long unsignedMultiplyFull(int x, int y) {
+        return Integer.toUnsignedLong(x) * Integer.toUnsignedLong(y);
     }
 
     @Override

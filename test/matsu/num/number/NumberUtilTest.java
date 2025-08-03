@@ -42,6 +42,31 @@ final class NumberUtilTest {
         }
 
         @Theory
+        public void test_符号付きlong積のFullBit_配列生成(long x, long y) {
+            long[] result = NumberUtil.multiplyFullLong(x, y);
+
+            BigInteger product = BigInteger.valueOf(x).multiply(BigInteger.valueOf(y));
+            long expected_high = product.shiftRight(64).longValue();
+            long expected_low = product.longValue();
+
+            assertThat("high bit", result[0], is(expected_high));
+            assertThat("low bit", result[1], is(expected_low));
+        }
+
+        @Theory
+        public void test_符号付きlong積のFullBit_配列に書き込み(long x, long y) {
+            long[] result = new long[2];
+            NumberUtil.multiplyFullLong(x, y, result);
+
+            BigInteger product = BigInteger.valueOf(x).multiply(BigInteger.valueOf(y));
+            long expected_high = product.shiftRight(64).longValue();
+            long expected_low = product.longValue();
+
+            assertThat("high bit", result[0], is(expected_high));
+            assertThat("low bit", result[1], is(expected_low));
+        }
+
+        @Theory
         public void test_符号付きlong積のHighBit(long x, long y) {
             long result = NumberUtil.multiplyHighLong(x, y);
 
@@ -51,6 +76,31 @@ final class NumberUtilTest {
                     .longValue();
 
             assertThat(result, is(expected));
+        }
+
+        @Theory
+        public void test_符号なしlong積のFullBit_配列生成(long x, long y) {
+            long[] result = NumberUtil.unsignedMultiplyFullLong(x, y);
+
+            BigInteger product = unsignedValueOf(x).multiply(unsignedValueOf(y));
+            long expected_high = product.shiftRight(64).longValue();
+            long expected_low = product.longValue();
+
+            assertThat("high bit", result[0], is(expected_high));
+            assertThat("low bit", result[1], is(expected_low));
+        }
+
+        @Theory
+        public void test_符号なしlong積のFullBit_配列に書き込み(long x, long y) {
+            long[] result = new long[2];
+            NumberUtil.unsignedMultiplyFullLong(x, y, result);
+
+            BigInteger product = unsignedValueOf(x).multiply(unsignedValueOf(y));
+            long expected_high = product.shiftRight(64).longValue();
+            long expected_low = product.longValue();
+
+            assertThat("high bit", result[0], is(expected_high));
+            assertThat("low bit", result[1], is(expected_low));
         }
 
         @Theory

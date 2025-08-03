@@ -55,14 +55,28 @@ final class Bit32MultiplierTest {
         }
 
         @Theory
-        public void test_符号付き積のテスト(int x, int y) {
+        public void test_符号付き積のテスト_Full(int x, int y) {
+            assertThat(
+                    BY_BIT_OPERATOR.multiplyFull(x, y),
+                    is(BY_LONG.multiplyFull(x, y)));
+        }
+
+        @Theory
+        public void test_符号付き積のテスト_High(int x, int y) {
             assertThat(
                     BY_BIT_OPERATOR.multiplyHigh(x, y),
                     is(BY_LONG.multiplyHigh(x, y)));
         }
 
         @Theory
-        public void test_符号無し積のテスト(int x, int y) {
+        public void test_符号無し積のテスト_Full(int x, int y) {
+            assertThat(
+                    BY_BIT_OPERATOR.unsignedMultiplyFull(x, y),
+                    is(BY_LONG.unsignedMultiplyFull(x, y)));
+        }
+
+        @Theory
+        public void test_符号無し積のテスト_High(int x, int y) {
             assertThat(
                     BY_BIT_OPERATOR.unsignedMultiplyHigh(x, y),
                     is(BY_LONG.unsignedMultiplyHigh(x, y)));

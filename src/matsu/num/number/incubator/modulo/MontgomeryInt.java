@@ -33,11 +33,17 @@ final class MontgomeryInt implements ModulusInt {
     private final ModulusToPositiveInt modulusToPositiveInt;
 
     /**
-     * 除数は正の奇数でなければならない.
+     * 与えた正整数を法としたモジュロ演算を構築する.
+     * 
+     * <p>
+     * 引数は1以上の奇数でなければならない. <br>
+     * 引数のバリデーションは行われていないので,
+     * 呼び出しもとでチェックすること.
+     * </p>
      * 
      * @param divisor 除数
      */
-    private MontgomeryInt(int divisor) {
+    MontgomeryInt(int divisor) {
         super();
         assert divisor >= 1 && (divisor & 1) == 1;
 
@@ -251,22 +257,5 @@ final class MontgomeryInt implements ModulusInt {
         // 1 <= a < 2^(32)より, 
         // モンゴメリリダクションでは, (TN' mod R)*N の上位32bitに1を加えればよい.
         return NumberUtil.unsignedMultiplyHigh(a * n_prime, divisor) + 1;
-    }
-
-    /**
-     * 与えた正整数を法としたモジュロ演算を構築する.
-     * 
-     * <p>
-     * 引数は1以上の奇数でなければならない. <br>
-     * 引数のバリデーションは行われていないので,
-     * 呼び出しもとでチェックすること.
-     * </p>
-     * 
-     * @param m 除数
-     */
-    static ModulusInt of(int divisor) {
-        assert divisor >= 1 && (divisor & 1) == 1;
-
-        return new MontgomeryInt(divisor);
     }
 }

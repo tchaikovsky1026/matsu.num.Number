@@ -17,19 +17,23 @@ import org.junit.runner.RunWith;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
 /**
- * {@link MontgomeryInt} クラスのテスト.
+ * {@link MontgomeryBasedModulusInt} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MontgomeryIntTest {
+final class MontgomeryBasedModulusIntTest {
 
-    public static final Class<?> TEST_CLASS = MontgomeryInt.class;
+    public static final Class<?> TEST_CLASS = MontgomeryBasedModulusInt.class;
 
     private static final IntFunction<ModulusInt> moduloGetter =
             m -> {
-                if ((m % 2) == 0) {
+                int exponent = Integer.numberOfTrailingZeros(m);
+                int innerDivisor = m >> exponent;
+
+                if (!(exponent >= 1 && innerDivisor != 1)) {
                     throw new UnsupportedOperationException();
                 }
-                return new MontgomeryInt(m);
+
+                return new MontgomeryBasedModulusInt(m);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -59,34 +63,34 @@ final class MontgomeryIntTest {
     @Ignore
     public static class 計算時間評価 {
 
-        private int m = 1001;
+        private int m = 31 * 64;
         private int k = 100;
 
         private int d = 100000;
 
         @Test
-        public void test_MontgomeryIntの実行() {
-            ModulusInt modulusInt = new MontgomeryInt(m);
+        public void test_MontgomeryBasedModulusIntの実行() {
+            ModulusInt modulusInt = new MontgomeryBasedModulusInt(m);
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:mod: ", 10_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,
                         () -> {
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
                         });
                 executor.execute();
             }
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:modpr2: ", 10_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:modpr2: ", 10_000_000,
                         () -> {
                             d += modulusInt.modpr(d, d);
                             d += modulusInt.modpr(d, d);
@@ -103,7 +107,7 @@ final class MontgomeryIntTest {
             }
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:modpow: ", 2_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:modpow: ", 2_000_000,
                         () -> {
                             d += modulusInt.modpow(d, k);
                             d += modulusInt.modpow(d, k);
@@ -127,16 +131,16 @@ final class MontgomeryIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "SimpleModulusInt:mod: ", 10_000_000,
                         () -> {
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
-                            d += modulusInt.mod(d * d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
+                            d += modulusInt.mod(d);
                         });
                 executor.execute();
             }

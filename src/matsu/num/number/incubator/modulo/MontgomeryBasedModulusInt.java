@@ -1,0 +1,113 @@
+/*
+ * Copyright © 2025 Matsuura Y.
+ * 
+ * This software is released under the MIT License.
+ * http://opensource.org/licenses/mit-license.php
+ */
+
+/*
+ * 2025.8.6
+ */
+package matsu.num.number.incubator.modulo;
+
+/**
+ * Montgomery modular multiplication をベースとした,
+ * {@code int} 型に関するモジュロ演算. <br>
+ * 2の累乗でない偶数を除数としたもので扱う.
+ * 
+ * @author Matsuura Y.
+ */
+final class MontgomeryBasedModulusInt implements ModulusInt {
+
+    private final int divisor;
+
+    private final ModulusInt modPow2Calculator;
+    private final ModulusInt modMCalculator;
+
+    /**
+     * 2^s - 1
+     */
+    private final int modPow2BitMask;
+
+    private final int minv;
+    private final int m;
+
+    /**
+     * 与えた正整数を法としたモジュロ演算を構築する.
+     * 
+     * <p>
+     * 引数(除数)は2の累乗でない正偶数でなければならない.. <br>
+     * 引数のバリデーションは行われていないので,
+     * 呼び出しもとでチェックすること.
+     * </p>
+     * 
+     * @param divisor 除数
+     */
+    MontgomeryBasedModulusInt(int divisor) {
+        super();
+        assert divisor >= 1 : "not: divisor >= 1";
+
+        int exponent = Integer.numberOfTrailingZeros(divisor);
+        int m = divisor >> exponent;
+        assert (m & 1) == 1 : "Bug: calcExponent";
+
+        assert exponent >= 1 && m != 1 : "not: divisor = 2^d * m";
+
+        this.divisor = divisor;
+        this.m = m;
+        this.modPow2Calculator = new ModulusIntPow2(exponent);
+        this.modMCalculator = new MontgomeryInt(m);
+
+        this.modPow2BitMask = (1 << exponent) - 1;
+        this.minv = InverseModR.invModR(m) & this.modPow2BitMask;
+    }
+
+    @Override
+    public int divisor() {
+        return this.divisor;
+    }
+
+    @Override
+    public int mod(int x) {
+        int modM = modMCalculator.mod(x);
+        int modPow2 = modPow2Calculator.mod(x);
+
+        return this.combinedMod(modM, modPow2);
+    }
+
+    @Override
+    public int modpr(int x, int y) {
+        int modM = modMCalculator.modpr(x, y);
+        int modPow2 = modPow2Calculator.modpr(x, y);
+
+        return this.combinedMod(modM, modPow2);
+    }
+
+    @Override
+    public int modpr(int... x) {
+        int modM = modMCalculator.modpr(x);
+        int modPow2 = modPow2Calculator.modpr(x);
+
+        return this.combinedMod(modM, modPow2);
+    }
+
+    @Override
+    public int modpow(int x, int k) {
+        int modM = modMCalculator.modpow(x, k);
+        int modPow2 = modPow2Calculator.modpow(x, k);
+
+        return this.combinedMod(modM, modPow2);
+    }
+
+    /**
+     * mod m と mod 2^s を与えて, mod ((2^s)*m) を計算する. <br>
+     * 引数は正規化されていなければならない.
+     * 
+     * @param modM mod m
+     * @param modPow2 mod 2^s
+     * @return mod ((2^s)*m)
+     */
+    private int combinedMod(int modM, int modPow2) {
+        return modM + m * (((modPow2 - modM) * minv) & modPow2BitMask);
+    }
+}

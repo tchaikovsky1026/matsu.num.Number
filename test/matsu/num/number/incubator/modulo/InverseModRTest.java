@@ -58,8 +58,9 @@ final class InverseModRTest {
 
         @BeforeClass
         public static void before_整数の準備() {
-            final int size = 20;
+            final int size = 100;
 
+            // 奇数になるようにmodify
             values = IntStream.range(0, size)
                     .mapToLong(
                             ignore -> (ThreadLocalRandom.current().nextLong() | 1L))

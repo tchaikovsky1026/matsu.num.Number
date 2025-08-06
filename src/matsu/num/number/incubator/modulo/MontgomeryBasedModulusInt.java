@@ -69,6 +69,11 @@ final class MontgomeryBasedModulusInt implements ModulusInt {
 
     @Override
     public int mod(int x) {
+
+        if (0 <= x && x < this.divisor) {
+            return x;
+        }
+
         int modM = modMCalculator.mod(x);
         int modPow2 = modPow2Calculator.mod(x);
 

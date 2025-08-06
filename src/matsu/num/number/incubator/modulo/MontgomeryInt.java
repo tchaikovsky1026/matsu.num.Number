@@ -72,12 +72,14 @@ final class MontgomeryInt implements ModulusInt {
      */
     @Override
     public int mod(int n) {
+
         // n -> mod m　を維持して正に変換
         // モンゴメリ変換とリダクションでmodに戻す.
-
         n = this.modulusToPositiveInt.toPositive(n);
 
-        return reduceMong(toMong(n));
+        return n < this.divisor
+                ? n
+                : reduceMong(toMong(n));
     }
 
     /**

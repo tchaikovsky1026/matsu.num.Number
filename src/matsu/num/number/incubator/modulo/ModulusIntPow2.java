@@ -21,9 +21,17 @@ final class ModulusIntPow2 implements ModulusInt {
     private final int bitMask;
 
     /**
-     * 2^1から2^30まで
+     * 指数 k を与えて, 2^k を法としたモジュロ演算を構築する.
+     * 
+     * <p>
+     * {@literal 1 <= k <= 30} でなければならない. <br>
+     * 引数のバリデーションは行われていないので,
+     * 呼び出しもとでチェックすること.
+     * </p>
+     * 
+     * @param exponent 指数
      */
-    private ModulusIntPow2(int exponent) {
+    ModulusIntPow2(int exponent) {
         super();
         assert 1 <= exponent && exponent <= 30;
 
@@ -116,22 +124,5 @@ final class ModulusIntPow2 implements ModulusInt {
         }
 
         return out & bitMask;
-    }
-
-    /**
-     * 指数 k を与えて, 2^k を法としたモジュロ演算を構築する. <br>
-     * 
-     * <p>
-     * {@literal 1 <= k <= 30} でなければならない. <br>
-     * 引数のバリデーションは行われていないので,
-     * 呼び出しもとでチェックすること.
-     * </p>
-     * 
-     * @param exponent 指数
-     */
-    static ModulusInt of(int exponent) {
-        assert 1 <= exponent && exponent <= 30;
-
-        return new ModulusIntPow2(exponent);
     }
 }

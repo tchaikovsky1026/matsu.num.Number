@@ -25,12 +25,12 @@ final class ModulusIntPow2Test {
                 if (!(1 <= m && m <= (1 << 30))) {
                     throw new UnsupportedOperationException();
                 }
-                int shift = 31 - Integer.numberOfLeadingZeros(m);
+                int shift = Integer.numberOfTrailingZeros(m);
                 if (m - (1 << shift) != 0) {
                     throw new UnsupportedOperationException();
                 }
 
-                return ModulusIntPow2.of(shift);
+                return new ModulusIntPow2(shift);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {

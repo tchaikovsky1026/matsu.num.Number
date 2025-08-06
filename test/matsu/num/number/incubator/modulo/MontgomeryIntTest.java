@@ -29,7 +29,7 @@ final class MontgomeryIntTest {
                 if ((m % 2) == 0) {
                     throw new UnsupportedOperationException();
                 }
-                return MontgomeryInt.of(m);
+                return new MontgomeryInt(m);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -66,7 +66,7 @@ final class MontgomeryIntTest {
 
         @Test
         public void test_MontgomeryIntの実行() {
-            ModulusInt modulusInt = MontgomeryInt.of(m);
+            ModulusInt modulusInt = new MontgomeryInt(m);
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryInt:mod: ", 10_000_000,

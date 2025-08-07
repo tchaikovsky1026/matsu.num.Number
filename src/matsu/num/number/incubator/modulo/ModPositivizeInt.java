@@ -60,7 +60,7 @@ final class ModPositivizeInt {
          * もっとも2^31に近い, (mod m = 0)の値
          * 2^31 の場合もあり得る.
          */
-        this.k = (1 << 31) - ModuloShifting.computeIntOptimized(1, 31, divisor);
+        this.k = (1 << 31) - ModuloShifting.computeInt(1, 31, divisor);
         this.doubleK = k << 1;
         this.negK = -k;
 

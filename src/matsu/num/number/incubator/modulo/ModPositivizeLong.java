@@ -60,7 +60,7 @@ final class ModPositivizeLong {
          * もっとも2^63に近い, (mod m = 0)の値
          * 2^63 の場合もあり得る.
          */
-        this.k = (1L << 63) - ModuloShifting.computeLongOptimized(1L, 63, divisor);
+        this.k = (1L << 63) - ModuloShifting.computeLong(1L, 63, divisor);
         this.doubleK = k << 1;
         this.negK = -k;
 

@@ -52,7 +52,7 @@ final class MontgomeryInt implements ModulusInt {
         // この2個は, 内部に重複する部分がある.
         // ただし, コストは大きくないので, 共通化しなくてもいいかも知れない.
         this.modPositivize = new ModPositivizeInt(divisor);
-        this.r2 = ModuloShifting.computeIntOptimized(1, 64, divisor);
+        this.r2 = ModuloShifting.computeInt(1, 64, divisor);
 
         this.n_prime = -InverseModPow2.invModR(divisor);
         this.mc_identity = toMong(1);

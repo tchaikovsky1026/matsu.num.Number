@@ -30,7 +30,7 @@ final class MontgomeryInt implements ModulusInt {
 
     private final int mc_identity;
 
-    private final ModulusToPositiveInt modulusToPositiveInt;
+    private final ModPositivizeInt modPositivize;
 
     /**
      * 与えた正整数を法としたモジュロ演算を構築する.
@@ -51,7 +51,7 @@ final class MontgomeryInt implements ModulusInt {
 
         // この2個は, 内部に重複する部分がある.
         // ただし, コストは大きくないので, 共通化しなくてもいいかも知れない.
-        this.modulusToPositiveInt = new ModulusToPositiveInt(divisor);
+        this.modPositivize = new ModPositivizeInt(divisor);
         this.r2 = ModuloShifting.computeIntOptimized(1, 64, divisor);
 
         this.n_prime = -InverseModPow2.invModR(divisor);
@@ -75,7 +75,7 @@ final class MontgomeryInt implements ModulusInt {
 
         // n -> mod m　を維持して正に変換
         // モンゴメリ変換とリダクションでmodに戻す.
-        n = this.modulusToPositiveInt.toPositive(n);
+        n = this.modPositivize.apply(n);
 
         return n < this.divisor
                 ? n
@@ -94,8 +94,8 @@ final class MontgomeryInt implements ModulusInt {
     public int modpr(int a, int b) {
 
         // a,bは2^31-1以下にマップされる
-        a = this.modulusToPositiveInt.toPositive(a);
-        b = this.modulusToPositiveInt.toPositive(b);
+        a = this.modPositivize.apply(a);
+        b = this.modPositivize.apply(b);
 
         /*
          * 以下の等式は mod m として見る.
@@ -137,7 +137,7 @@ final class MontgomeryInt implements ModulusInt {
 
         //xを正に変換してモンゴメリ変換
         for (int i = 0; i < len; i++) {
-            x[i] = toMong(this.modulusToPositiveInt.toPositive(x[i]));
+            x[i] = toMong(this.modPositivize.apply(x[i]));
         }
 
         // 結合法則を利用して, 4系列に分割
@@ -180,7 +180,7 @@ final class MontgomeryInt implements ModulusInt {
             throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
         }
 
-        x = this.modulusToPositiveInt.toPositive(x);
+        x = this.modPositivize.apply(x);
         switch (k) {
             case 0:
                 return 1;

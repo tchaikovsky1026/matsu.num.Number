@@ -54,7 +54,7 @@ final class MontgomeryInt implements ModulusInt {
         this.modulusToPositiveInt = new ModulusToPositiveInt(divisor);
         this.r2 = ModuloShifting.computeIntOptimized(1, 64, divisor);
 
-        this.n_prime = -InverseModR.invModR(divisor);
+        this.n_prime = -InverseModPow2.invModR(divisor);
         this.mc_identity = toMong(1);
     }
 

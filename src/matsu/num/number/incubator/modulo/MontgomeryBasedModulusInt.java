@@ -59,7 +59,7 @@ final class MontgomeryBasedModulusInt implements ModulusInt {
         this.modMCalculator = new MontgomeryInt(m);
 
         this.modPow2BitMask = (1 << exponent) - 1;
-        this.minv = InverseModR.invModR(m) & this.modPow2BitMask;
+        this.minv = InverseModPow2.invModR(m) & this.modPow2BitMask;
     }
 
     @Override

@@ -16,9 +16,9 @@ package matsu.num.number.incubator.modulo;
  * 
  * @author Matsuura Y.
  */
-final class InverseModR {
+final class InverseModPow2 {
 
-    private InverseModR() {
+    private InverseModPow2() {
         // インスタンス化不可
         throw new AssertionError();
     }

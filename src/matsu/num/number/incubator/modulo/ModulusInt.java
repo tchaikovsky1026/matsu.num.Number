@@ -53,7 +53,7 @@ interface ModulusInt {
      * (m は除数).
      * 
      * <p>
-     * lengthが0の場合は1が返る.
+     * lengthが0の場合はmod(1)が返る.
      * </p>
      * 
      * @param x x
@@ -68,7 +68,7 @@ interface ModulusInt {
      * 
      * <p>
      * 指数は 0 以上でなければならない. <br>
-     * x = 0, k = 0 の場合は1が返る.
+     * x = 0, k = 0 の場合はmod(1)が返る.
      * </p>
      * 
      * @param x x

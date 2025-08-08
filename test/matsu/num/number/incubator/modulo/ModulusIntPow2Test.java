@@ -22,7 +22,7 @@ final class ModulusIntPow2Test {
 
     private static final IntFunction<ModulusInt> moduloGetter =
             m -> {
-                if (!(1 <= m && m <= (1 << 30))) {
+                if (!(2 <= m && m <= (1 << 30))) {
                     throw new UnsupportedOperationException();
                 }
                 int shift = Integer.numberOfTrailingZeros(m);

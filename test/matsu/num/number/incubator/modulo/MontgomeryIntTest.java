@@ -26,6 +26,9 @@ final class MontgomeryIntTest {
 
     private static final IntFunction<ModulusInt> moduloGetter =
             m -> {
+                if (m == 1) {
+                    throw new UnsupportedOperationException();
+                }
                 if ((m % 2) == 0) {
                     throw new UnsupportedOperationException();
                 }

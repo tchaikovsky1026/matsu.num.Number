@@ -13,7 +13,8 @@ package matsu.num.number.incubator.modulo;
 import matsu.num.number.NumberUtil;
 
 /**
- * {@code int} 型に関する Montgomery modular multiplication を扱う.
+ * {@code int} 型に関する Montgomery modular multiplication を扱う. <br>
+ * 除数は 3 以上の奇数である.
  * 
  * @author Matsuura Y.
  */
@@ -36,7 +37,7 @@ final class MontgomeryInt implements ModulusInt {
      * 与えた正整数を法としたモジュロ演算を構築する.
      * 
      * <p>
-     * 引数は1以上の奇数でなければならない. <br>
+     * 引数は3以上の奇数でなければならない. <br>
      * 引数のバリデーションは行われていないので,
      * 呼び出しもとでチェックすること.
      * </p>
@@ -45,7 +46,7 @@ final class MontgomeryInt implements ModulusInt {
      */
     MontgomeryInt(int divisor) {
         super();
-        assert divisor >= 1 && (divisor & 1) == 1;
+        assert divisor >= 3 && (divisor & 1) == 1;
 
         this.divisor = divisor;
 

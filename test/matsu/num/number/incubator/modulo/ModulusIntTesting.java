@@ -45,7 +45,7 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -152,7 +152,7 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -237,7 +237,7 @@ final class ModulusIntTesting {
                             .mod(m);
                 }
 
-                expected = r.intValue();
+                expected = r.mod(m).intValue();
             }
 
             assertThat(result, is(expected));
@@ -263,7 +263,7 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
 
         @BeforeClass
         public static void before_fixtureの用意() {

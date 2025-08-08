@@ -17,12 +17,12 @@ import org.junit.runner.RunWith;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
 /**
- * {@link EvenNotPow2NumberModulusInt} クラスのテスト.
+ * {@link EvenNotPow2ModulusInt} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class EvenNotPow2NumberModulusIntTest {
+final class EvenNotPow2ModulusIntTest {
 
-    public static final Class<?> TEST_CLASS = EvenNotPow2NumberModulusInt.class;
+    public static final Class<?> TEST_CLASS = EvenNotPow2ModulusInt.class;
 
     private static final IntFunction<ModulusInt> moduloGetter =
             divisor -> {
@@ -33,7 +33,7 @@ final class EvenNotPow2NumberModulusIntTest {
                     throw new UnsupportedOperationException();
                 }
 
-                return new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
+                return new EvenNotPow2ModulusInt(pow2Exponent, innerDivisor);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -72,7 +72,7 @@ final class EvenNotPow2NumberModulusIntTest {
         public void test_MontgomeryBasedModulusIntの実行() {
             int pow2Exponent = Integer.numberOfTrailingZeros(m);
             int innerDivisor = m >> pow2Exponent;
-            ModulusInt modulusInt = new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
+            ModulusInt modulusInt = new EvenNotPow2ModulusInt(pow2Exponent, innerDivisor);
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,

@@ -41,6 +41,6 @@ final class MontgomeryBasedModulusFactory {
         int innerDivisor = divisor >> pow2Exponent;
         return innerDivisor == 1
                 ? new ModulusIntPow2(pow2Exponent)
-                : new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
+                : new EvenNotPow2ModulusInt(pow2Exponent, innerDivisor);
     }
 }

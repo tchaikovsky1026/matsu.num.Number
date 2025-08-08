@@ -17,7 +17,7 @@ package matsu.num.number.incubator.modulo;
  * 
  * @author Matsuura Y.
  */
-final class EvenNotPow2NumberModulusInt implements ModulusInt {
+final class EvenNotPow2ModulusInt implements ModulusInt {
 
     private final int divisor;
 
@@ -45,7 +45,7 @@ final class EvenNotPow2NumberModulusInt implements ModulusInt {
      * @param pow2Exponent d
      * @param innerDivisor m
      */
-    EvenNotPow2NumberModulusInt(int pow2Exponent, int innerDivisor) {
+    EvenNotPow2ModulusInt(int pow2Exponent, int innerDivisor) {
         super();
 
         assert pow2Exponent >= 1 && (innerDivisor & 1) == 1 && innerDivisor != 1 : "not: divisor = 2^d * m";

@@ -6,6 +6,6 @@
  */
 
 /**
- * 
+ * 基本的な整数演算の機能を扱うパッケージ.
  */
 package matsu.num.number;

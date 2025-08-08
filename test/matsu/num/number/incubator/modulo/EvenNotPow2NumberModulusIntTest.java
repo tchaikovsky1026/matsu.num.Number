@@ -25,15 +25,15 @@ final class EvenNotPow2NumberModulusIntTest {
     public static final Class<?> TEST_CLASS = EvenNotPow2NumberModulusInt.class;
 
     private static final IntFunction<ModulusInt> moduloGetter =
-            m -> {
-                int exponent = Integer.numberOfTrailingZeros(m);
-                int innerDivisor = m >> exponent;
+            divisor -> {
+                int pow2Exponent = Integer.numberOfTrailingZeros(divisor);
+                int innerDivisor = divisor >> pow2Exponent;
 
-                if (!(exponent >= 1 && innerDivisor != 1)) {
+                if (!(pow2Exponent >= 1 && innerDivisor != 1)) {
                     throw new UnsupportedOperationException();
                 }
 
-                return new EvenNotPow2NumberModulusInt(m);
+                return new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -70,7 +70,9 @@ final class EvenNotPow2NumberModulusIntTest {
 
         @Test
         public void test_MontgomeryBasedModulusIntの実行() {
-            ModulusInt modulusInt = new EvenNotPow2NumberModulusInt(m);
+            int pow2Exponent = Integer.numberOfTrailingZeros(m);
+            int innerDivisor = m >> pow2Exponent;
+            ModulusInt modulusInt = new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,

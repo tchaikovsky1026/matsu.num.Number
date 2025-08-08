@@ -10,8 +10,6 @@
  */
 package matsu.num.number.incubator.modulo;
 
-import matsu.num.number.incubator.Power2Util;
-
 /**
  * Montgomery modular multiplication をもとに構築されるモジュロ演算のファクトリ.
  * 
@@ -39,9 +37,10 @@ final class MontgomeryBasedModulusFactory {
                     : new MontgomeryInt(divisor);
         }
 
-        int pow2Exponent = Power2Util.exponentOf2(divisor);
-        return pow2Exponent > 0
+        int pow2Exponent = Integer.numberOfTrailingZeros(divisor);
+        int innerDivisor = divisor >> pow2Exponent;
+        return innerDivisor == 1
                 ? new ModulusIntPow2(pow2Exponent)
-                : new EvenNotPow2NumberModulusInt(divisor);
+                : new EvenNotPow2NumberModulusInt(pow2Exponent, innerDivisor);
     }
 }

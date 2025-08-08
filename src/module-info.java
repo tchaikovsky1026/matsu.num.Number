@@ -23,4 +23,5 @@
  */
 module matsu.num.Number {
     exports matsu.num.number;
+    exports matsu.num.number.modulo;
 }

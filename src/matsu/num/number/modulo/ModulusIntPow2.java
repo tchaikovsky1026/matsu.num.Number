@@ -15,7 +15,7 @@ package matsu.num.number.modulo;
  * 
  * @author Matsuura Y.
  */
-final class ModulusIntPow2 implements ModulusInt {
+final class ModulusIntPow2 extends SkeletalModulusInt {
 
     private final int divisor;
     private final int bitMask;

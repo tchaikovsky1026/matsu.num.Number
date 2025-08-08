@@ -18,7 +18,7 @@ import matsu.num.number.NumberUtil;
  * 
  * @author Matsuura Y.
  */
-final class MontgomeryInt implements ModulusInt {
+final class MontgomeryInt extends SkeletalModulusInt {
 
     private final int divisor;
     private final int r2;

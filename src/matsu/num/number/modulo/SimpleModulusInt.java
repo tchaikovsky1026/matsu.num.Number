@@ -17,7 +17,7 @@ package matsu.num.number.modulo;
  * @deprecated このクラスはプロダクトコードからは使用されていない
  */
 @Deprecated
-abstract class SimpleModulusInt implements ModulusInt {
+abstract class SimpleModulusInt extends SkeletalModulusInt {
 
     private final int m;
 

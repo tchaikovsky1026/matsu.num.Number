@@ -15,7 +15,7 @@ package matsu.num.number.modulo;
  * 
  * @author Matsuura Y.
  */
-final class ModulusLongPow2 implements ModulusLong {
+final class ModulusLongPow2 extends SkeletalModulusLong {
 
     private final long divisor;
     private final long bitMask;

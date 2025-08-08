@@ -17,7 +17,7 @@ import java.util.Objects;
  * 
  * @author Matsuura Y.
  */
-final class Mod1Int implements ModulusInt {
+final class Mod1Int extends SkeletalModulusInt {
 
     /**
      * シングルトン.

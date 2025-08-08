@@ -17,7 +17,7 @@ import java.util.Objects;
  * 
  * @author Matsuura Y.
  */
-final class Mod1Long implements ModulusLong {
+final class Mod1Long extends SkeletalModulusLong {
 
     /**
      * シングルトン.

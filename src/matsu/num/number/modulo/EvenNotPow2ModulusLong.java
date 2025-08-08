@@ -17,7 +17,7 @@ package matsu.num.number.modulo;
  * 
  * @author Matsuura Y.
  */
-final class EvenNotPow2ModulusLong implements ModulusLong {
+final class EvenNotPow2ModulusLong extends SkeletalModulusLong {
 
     private final long divisor;
 

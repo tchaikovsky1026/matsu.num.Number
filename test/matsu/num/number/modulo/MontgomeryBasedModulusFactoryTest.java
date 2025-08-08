@@ -9,6 +9,7 @@ package matsu.num.number.modulo;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
 
+import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
@@ -67,6 +68,23 @@ final class MontgomeryBasedModulusFactoryTest {
         @Override
         ModulusLong getModulusLong(long m) {
             return moduloLongGetter.apply(m);
+        }
+    }
+
+    public static class toString表示 {
+
+        @Test
+        public void test_toString() {
+            System.out.println(TEST_CLASS.getName());
+            System.out.println(moduloIntGetter.apply(1));
+            System.out.println(moduloIntGetter.apply(3));
+            System.out.println(moduloIntGetter.apply(4));
+            System.out.println(moduloIntGetter.apply(6));
+            System.out.println(moduloLongGetter.apply(1));
+            System.out.println(moduloLongGetter.apply(3));
+            System.out.println(moduloLongGetter.apply(4));
+            System.out.println(moduloLongGetter.apply(6));
+            System.out.println();
         }
     }
 }

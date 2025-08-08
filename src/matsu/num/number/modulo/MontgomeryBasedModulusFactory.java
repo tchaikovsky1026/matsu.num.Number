@@ -8,7 +8,7 @@
 /*
  * 2025.8.8
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * Montgomery modular multiplication をもとに構築されるモジュロ演算のファクトリ.

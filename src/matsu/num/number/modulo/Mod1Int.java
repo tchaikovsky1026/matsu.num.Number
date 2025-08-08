@@ -8,7 +8,7 @@
 /*
  * 2025.8.8
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * 除数1に対する {@link ModulusInt} の実装.
@@ -53,5 +53,4 @@ final class Mod1Int implements ModulusInt {
     public int modpow(int x, int k) {
         return 0;
     }
-
 }

@@ -50,7 +50,7 @@ abstract class SimpleModulusInt implements ModulusInt {
         for (int xi : x) {
             out = modpr(out, mod(xi));
         }
-        return out;
+        return mod(out);
     }
 
     @Override
@@ -67,7 +67,7 @@ abstract class SimpleModulusInt implements ModulusInt {
             k >>>= 1;
             xPow2 = modpr(xPow2, xPow2);
         }
-        return out;
+        return mod(out);
     }
 
     /**

@@ -8,7 +8,7 @@
 /*
  * 2025.8.6
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * 2の累乗を除数とする, {@link ModulusInt}.

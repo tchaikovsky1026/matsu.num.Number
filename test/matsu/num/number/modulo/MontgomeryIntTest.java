@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import java.util.function.IntFunction;
 

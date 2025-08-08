@@ -8,7 +8,7 @@
 /*
  * 2025.8.7
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * {@code long} 型の符号付き整数を, mod を不変のまま0以上に変換する.

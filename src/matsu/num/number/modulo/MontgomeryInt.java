@@ -8,7 +8,7 @@
 /*
  * 2025.8.6
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import matsu.num.number.NumberUtil;
 

@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.6
+ * 2025.8.8
  */
 package matsu.num.number.incubator.modulo;
 
@@ -17,7 +17,7 @@ package matsu.num.number.incubator.modulo;
  * 
  * @author Matsuura Y.
  */
-final class MontgomeryBasedModulusInt implements ModulusInt {
+final class EvenNotPow2NumberModulusInt implements ModulusInt {
 
     private final int divisor;
 
@@ -43,7 +43,7 @@ final class MontgomeryBasedModulusInt implements ModulusInt {
      * 
      * @param divisor 除数
      */
-    MontgomeryBasedModulusInt(int divisor) {
+    EvenNotPow2NumberModulusInt(int divisor) {
         super();
         assert divisor >= 1 : "not: divisor >= 1";
 

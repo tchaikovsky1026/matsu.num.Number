@@ -17,12 +17,12 @@ import org.junit.runner.RunWith;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
 /**
- * {@link MontgomeryBasedModulusInt} クラスのテスト.
+ * {@link EvenNotPow2NumberModulusInt} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MontgomeryBasedModulusIntTest {
+final class EvenNotPow2NumberModulusIntTest {
 
-    public static final Class<?> TEST_CLASS = MontgomeryBasedModulusInt.class;
+    public static final Class<?> TEST_CLASS = EvenNotPow2NumberModulusInt.class;
 
     private static final IntFunction<ModulusInt> moduloGetter =
             m -> {
@@ -33,7 +33,7 @@ final class MontgomeryBasedModulusIntTest {
                     throw new UnsupportedOperationException();
                 }
 
-                return new MontgomeryBasedModulusInt(m);
+                return new EvenNotPow2NumberModulusInt(m);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -70,7 +70,7 @@ final class MontgomeryBasedModulusIntTest {
 
         @Test
         public void test_MontgomeryBasedModulusIntの実行() {
-            ModulusInt modulusInt = new MontgomeryBasedModulusInt(m);
+            ModulusInt modulusInt = new EvenNotPow2NumberModulusInt(m);
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,

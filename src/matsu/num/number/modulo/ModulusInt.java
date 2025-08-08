@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.7.31
+ * 2025.8.8
  */
 package matsu.num.number.modulo;
 
@@ -24,7 +24,7 @@ package matsu.num.number.modulo;
  * 
  * @author Matsuura Y.
  */
-interface ModulusInt {
+public interface ModulusInt {
 
     /**
      * このインスタンスの除数 <i>m</i> の値を返す.
@@ -80,4 +80,20 @@ interface ModulusInt {
      * @throws IllegalArgumentException 指数が0未満の場合
      */
     public int modpow(int x, int k);
+
+    /**
+     * {@code int} 型整数について,
+     * 与えた正の整数を除数とするモジュロ演算を返す.
+     * 
+     * <p>
+     * 引数の値は正でなければならない.
+     * </p>
+     * 
+     * @param divisor 除数
+     * @return 除数に対応するモジュロ演算
+     * @throws IllegalArgumentException 引数が正の整数でない場合
+     */
+    public static ModulusInt get(int divisor) {
+        return MontgomeryBasedModulusFactory.get(divisor);
+    }
 }

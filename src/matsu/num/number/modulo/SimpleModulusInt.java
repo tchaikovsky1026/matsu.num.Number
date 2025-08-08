@@ -71,22 +71,25 @@ abstract class SimpleModulusInt implements ModulusInt {
     }
 
     /**
-     * 与えた正整数を法としたモジュロ演算を構築する.
+     * {@code int} 型整数について,
+     * 与えた正の整数を除数とするモジュロ演算を返す.
      * 
      * <p>
-     * 引数は1以上でなければならない. <br>
-     * 引数のバリデーションは行われていないので,
-     * 呼び出しもとでチェックすること.
+     * 引数の値は正でなければならない.
      * </p>
      * 
-     * @param m 除数
+     * @param divisor 除数
+     * @return 除数に対応するモジュロ演算
+     * @throws IllegalArgumentException 引数が正の整数でない場合
      */
-    static SimpleModulusInt of(int m) {
-        assert m >= 1;
+    static SimpleModulusInt of(int divisor) {
+        if (divisor <= 0) {
+            throw new IllegalArgumentException("illegal: divisor <= 0");
+        }
 
-        return m <= SmallDivisorImpl.MAX_M
-                ? new SmallDivisorImpl(m)
-                : new LargeDivisorImpl(m);
+        return divisor <= SmallDivisorImpl.MAX_M
+                ? new SmallDivisorImpl(divisor)
+                : new LargeDivisorImpl(divisor);
     }
 
     /**

@@ -13,10 +13,6 @@ package matsu.num.number.modulo;
 /**
  * Montgomery modular multiplication をもとに構築されるモジュロ演算のファクトリ.
  * 
- * <p>
- * インキュベータであるが, 公開できる可能性がある.
- * </p>
- * 
  * @author Matsuura Y.
  */
 final class MontgomeryBasedModulusFactory {
@@ -26,6 +22,18 @@ final class MontgomeryBasedModulusFactory {
         throw new AssertionError();
     }
 
+    /**
+     * {@code int} 型整数について,
+     * 与えた正の整数を除数とするモジュロ演算を返す.
+     * 
+     * <p>
+     * 引数の値は正でなければならない.
+     * </p>
+     * 
+     * @param divisor 除数
+     * @return 除数に対応するモジュロ演算
+     * @throws IllegalArgumentException 引数が正の整数でない場合
+     */
     static ModulusInt get(int divisor) {
         if (divisor <= 0) {
             throw new IllegalArgumentException("illegal: divisor <= 0");

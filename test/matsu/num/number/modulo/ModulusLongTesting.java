@@ -297,12 +297,12 @@ final class ModulusLongTesting {
             int k = fixture.k;
 
             try {
-                ModulusLong modulus = getModulus(m);
+                ModulusLong modulus = getModulusLong(m);
                 if (modulus.divisor() != m) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
 
-                executeTestPow(getModulus(m), x, k);
+                executeTestPow(getModulusLong(m), x, k);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
             }
@@ -314,7 +314,7 @@ final class ModulusLongTesting {
             int ite = 100;
 
             try {
-                ModulusLong modulus = getModulus(divisor);
+                ModulusLong modulus = getModulusLong(divisor);
                 if (modulus.divisor() != divisor) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
@@ -335,14 +335,14 @@ final class ModulusLongTesting {
         }
 
         /**
-         * 与えた値を除数とする ModulusInt を返す.
+         * 与えた値を除数とする ModulusLong を返す.
          * 
          * @param m 除数
          * @return
          * @throws UnsupportedOperationException
-         *             引数の値が対応しておらず, ModulusInt を返せない場合
+         *             引数の値が対応しておらず, ModulusLong を返せない場合
          */
-        abstract ModulusLong getModulus(long m);
+        abstract ModulusLong getModulusLong(long m);
 
         private static void executeTestPow(ModulusLong modulus, long x, int k) {
             assert k >= 0;

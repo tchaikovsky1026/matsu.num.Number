@@ -4,10 +4,6 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-
-/*
- * 2025.8.8
- */
 package matsu.num.number.modulo;
 
 import java.util.function.LongFunction;
@@ -53,7 +49,7 @@ final class MontgomeryLongTest {
     public static class ModPowのテスト extends ModulusLongTesting.Pow {
 
         @Override
-        ModulusLong getModulus(long m) {
+        ModulusLong getModulusLong(long m) {
             return moduloGetter.apply(m);
         }
     }

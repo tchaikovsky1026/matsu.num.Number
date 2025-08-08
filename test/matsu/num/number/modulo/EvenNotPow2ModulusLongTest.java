@@ -46,7 +46,7 @@ final class EvenNotPow2ModulusLongTest {
     public static class ModPowのテスト extends ModulusLongTesting.Pow {
 
         @Override
-        ModulusLong getModulus(long m) {
+        ModulusLong getModulusLong(long m) {
             return moduloGetter.apply(m);
         }
     }

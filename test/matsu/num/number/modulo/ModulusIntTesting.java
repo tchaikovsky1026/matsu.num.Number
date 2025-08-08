@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.6
+ * 2025.8.8
  */
 package matsu.num.number.modulo;
 

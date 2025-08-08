@@ -65,7 +65,7 @@ final class MontgomeryBasedModulusFactoryTest {
     public static class ModPowLongのテスト extends ModulusLongTesting.Pow {
 
         @Override
-        ModulusLong getModulus(long m) {
+        ModulusLong getModulusLong(long m) {
             return moduloLongGetter.apply(m);
         }
     }

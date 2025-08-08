@@ -1,2 +1,5 @@
+develop:
+Montgomery modular multiplication をベースとするモジュロ演算の機能追加.
+
 0:
 0.1.0: PJの作成

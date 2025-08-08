@@ -6,18 +6,18 @@
  */
 
 /*
- * 2025.8.2
+ * 2025.8.8
  */
 package matsu.num.number;
 
 /**
- * 整数型に関する, 簡単な処理を行うユーティリティ.
+ * 整数型に関する, 乗算に関連するユーティリティ.
  * 
  * @author Matsuura Y.
  */
-public final class NumberUtil {
+public final class MultiplicationUtil {
 
-    private NumberUtil() {
+    private MultiplicationUtil() {
         // インスタンス化不可
         throw new AssertionError();
     }

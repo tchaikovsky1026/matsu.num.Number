@@ -21,10 +21,10 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link NumberUtil} クラスのテスト.
+ * {@link MultiplicationUtil} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class NumberUtilTest {
+final class MultiplicationUtilTest {
 
     @RunWith(Theories.class)
     public static class Longの積に関するビット検証 {
@@ -43,7 +43,7 @@ final class NumberUtilTest {
 
         @Theory
         public void test_符号付きlong積のFullBit_配列生成(long x, long y) {
-            long[] result = NumberUtil.multiplyFullLong(x, y);
+            long[] result = MultiplicationUtil.multiplyFullLong(x, y);
 
             BigInteger product = BigInteger.valueOf(x).multiply(BigInteger.valueOf(y));
             long expected_high = product.shiftRight(64).longValue();
@@ -56,7 +56,7 @@ final class NumberUtilTest {
         @Theory
         public void test_符号付きlong積のFullBit_配列に書き込み(long x, long y) {
             long[] result = new long[2];
-            NumberUtil.multiplyFullLong(x, y, result);
+            MultiplicationUtil.multiplyFullLong(x, y, result);
 
             BigInteger product = BigInteger.valueOf(x).multiply(BigInteger.valueOf(y));
             long expected_high = product.shiftRight(64).longValue();
@@ -68,7 +68,7 @@ final class NumberUtilTest {
 
         @Theory
         public void test_符号付きlong積のHighBit(long x, long y) {
-            long result = NumberUtil.multiplyHighLong(x, y);
+            long result = MultiplicationUtil.multiplyHighLong(x, y);
 
             long expected = BigInteger.valueOf(x)
                     .multiply(BigInteger.valueOf(y))
@@ -80,7 +80,7 @@ final class NumberUtilTest {
 
         @Theory
         public void test_符号なしlong積のFullBit_配列生成(long x, long y) {
-            long[] result = NumberUtil.unsignedMultiplyFullLong(x, y);
+            long[] result = MultiplicationUtil.unsignedMultiplyFullLong(x, y);
 
             BigInteger product = unsignedValueOf(x).multiply(unsignedValueOf(y));
             long expected_high = product.shiftRight(64).longValue();
@@ -93,7 +93,7 @@ final class NumberUtilTest {
         @Theory
         public void test_符号なしlong積のFullBit_配列に書き込み(long x, long y) {
             long[] result = new long[2];
-            NumberUtil.unsignedMultiplyFullLong(x, y, result);
+            MultiplicationUtil.unsignedMultiplyFullLong(x, y, result);
 
             BigInteger product = unsignedValueOf(x).multiply(unsignedValueOf(y));
             long expected_high = product.shiftRight(64).longValue();
@@ -105,7 +105,7 @@ final class NumberUtilTest {
 
         @Theory
         public void test_符号無しlong積のHighBit(long x, long y) {
-            long result = NumberUtil.unsignedMultiplyHighLong(x, y);
+            long result = MultiplicationUtil.unsignedMultiplyHighLong(x, y);
 
             long expected = unsignedValueOf(x)
                     .multiply(unsignedValueOf(y))

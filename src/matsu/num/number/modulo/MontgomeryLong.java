@@ -10,7 +10,7 @@
  */
 package matsu.num.number.modulo;
 
-import matsu.num.number.NumberUtil;
+import matsu.num.number.MultiplicationUtil;
 
 /**
  * {@code long} 型に関する Montgomery modular multiplication を扱う. <br>
@@ -178,10 +178,10 @@ final class MontgomeryLong extends SkeletalModulusLong {
      * @return mr(ab)
      */
     private long reduceMong(long a, long b) {
-        long[] ab = NumberUtil.unsignedMultiplyFullLong(a, b);
+        long[] ab = MultiplicationUtil.unsignedMultiplyFullLong(a, b);
         long high_ab = ab[0];
         long low_ab = ab[1];
-        long Tnn_high = NumberUtil.unsignedMultiplyHighLong(low_ab * n_prime, divisor);
+        long Tnn_high = MultiplicationUtil.unsignedMultiplyHighLong(low_ab * n_prime, divisor);
         if (low_ab != 0) {
             Tnn_high++;
         }
@@ -219,6 +219,6 @@ final class MontgomeryLong extends SkeletalModulusLong {
 
         // 1 <= a < 2^(32)より, 
         // モンゴメリリダクションでは, (TN' mod R)*N の上位32bitに1を加えればよい.
-        return NumberUtil.unsignedMultiplyHighLong(a * n_prime, divisor) + 1L;
+        return MultiplicationUtil.unsignedMultiplyHighLong(a * n_prime, divisor) + 1L;
     }
 }

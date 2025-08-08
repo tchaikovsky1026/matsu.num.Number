@@ -59,6 +59,10 @@ public interface ModulusInt {
      * <i>m</i> を法とする総積の剰余を計算する. <br>
      * 剰余は 0 以上 <i>m</i> 未満の値である.
      * 
+     * <p>
+     * 引数が空の場合は 1 mod <i>m</i> を返す.
+     * </p>
+     * 
      * @param x <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
      *            ..., <i>x</i><sub><i>n</i></sub>
      * @return (<i>x</i><sub>1</sub><i>x</i><sub>2</sub>&middot;&middot;&middot;<i>x</i><sub><i>n</i></sub>)
@@ -67,11 +71,14 @@ public interface ModulusInt {
     public int modpr(int... x);
 
     /**
-     * <i>m</i> を法とする, 累乗の剰余を計算する. <br>
+     * <i>m</i> を法とする, 累乗 (<i>x</i><sup><i>k</i></sup>) の剰余を計算する. <br>
      * 剰余は 0 以上 <i>m</i> 未満の値である.
      * 
      * <p>
-     * 指数は 0 以上でなければならない.
+     * 指数 <i>k</i> は 0 以上でなければならない. <br>
+     * <i>k</i> = 0 の場合は
+     * (<i>x</i> = 0 であっても)
+     * 1 mod <i>m</i> を返す.
      * </p>
      * 
      * @param x 底
@@ -82,15 +89,15 @@ public interface ModulusInt {
     public int modpow(int x, int k);
 
     /**
-     * {@code int} 型整数について,
-     * 与えた正の整数を除数とするモジュロ演算を返す.
+     * {@code int} 型整数 <i>m</i> について,
+     * <i>m</i> を法とするモジュロ演算を返す.
      * 
      * <p>
-     * 引数の値は正でなければならない.
+     * 除数 <i>m</i> は正でなければならない.
      * </p>
      * 
-     * @param divisor 除数
-     * @return 除数に対応するモジュロ演算
+     * @param divisor 除数 <i>m</i>
+     * @return <i>m</i> を法とするモジュロ演算
      * @throws IllegalArgumentException 引数が正の整数でない場合
      */
     public static ModulusInt get(int divisor) {

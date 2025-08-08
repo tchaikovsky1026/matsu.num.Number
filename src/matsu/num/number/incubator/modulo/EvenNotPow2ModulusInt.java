@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.6
+ * 2025.8.8
  */
 package matsu.num.number.incubator.modulo;
 
@@ -17,7 +17,7 @@ package matsu.num.number.incubator.modulo;
  * 
  * @author Matsuura Y.
  */
-final class MontgomeryBasedModulusInt implements ModulusInt {
+final class EvenNotPow2ModulusInt implements ModulusInt {
 
     private final int divisor;
 
@@ -33,33 +33,30 @@ final class MontgomeryBasedModulusInt implements ModulusInt {
     private final int m;
 
     /**
-     * 与えた正整数を法としたモジュロ演算を構築する.
+     * d と m を与えて, 2^d * m を法としたモジュロ演算を構築する.
      * 
      * <p>
-     * 引数(除数)は2の累乗でない正偶数でなければならない.. <br>
+     * d は 1 以上, m は 3 以上の奇数でなければならない. <br>
+     * 当然, 2^d * m の値は扱える値の範囲内でなければならない.
      * 引数のバリデーションは行われていないので,
      * 呼び出しもとでチェックすること.
      * </p>
      * 
-     * @param divisor 除数
+     * @param pow2Exponent d
+     * @param innerDivisor m
      */
-    MontgomeryBasedModulusInt(int divisor) {
+    EvenNotPow2ModulusInt(int pow2Exponent, int innerDivisor) {
         super();
-        assert divisor >= 1 : "not: divisor >= 1";
 
-        int exponent = Integer.numberOfTrailingZeros(divisor);
-        int m = divisor >> exponent;
-        assert (m & 1) == 1 : "Bug: calcExponent";
+        assert pow2Exponent >= 1 && (innerDivisor & 1) == 1 && innerDivisor != 1 : "not: divisor = 2^d * m";
 
-        assert exponent >= 1 && m != 1 : "not: divisor = 2^d * m";
+        this.divisor = innerDivisor << pow2Exponent;
+        this.m = innerDivisor;
+        this.modPow2Calculator = new ModulusIntPow2(pow2Exponent);
+        this.modMCalculator = new MontgomeryInt(innerDivisor);
 
-        this.divisor = divisor;
-        this.m = m;
-        this.modPow2Calculator = new ModulusIntPow2(exponent);
-        this.modMCalculator = new MontgomeryInt(m);
-
-        this.modPow2BitMask = (1 << exponent) - 1;
-        this.minv = InverseModR.invModR(m) & this.modPow2BitMask;
+        this.modPow2BitMask = (1 << pow2Exponent) - 1;
+        this.minv = InverseModPow2.invModR(innerDivisor) & this.modPow2BitMask;
     }
 
     @Override
@@ -69,6 +66,11 @@ final class MontgomeryBasedModulusInt implements ModulusInt {
 
     @Override
     public int mod(int x) {
+
+        if (0 <= x && x < this.divisor) {
+            return x;
+        }
+
         int modM = modMCalculator.mod(x);
         int modPow2 = modPow2Calculator.mod(x);
 

@@ -11,8 +11,10 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.BeforeClass;
 import org.junit.experimental.runners.Enclosed;
@@ -22,12 +24,12 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link ModulusToPositiveLong} のテスト.
+ * {@link ModPositivizeLong} のテスト.
  */
 @RunWith(Enclosed.class)
-final class ModulusToPositiveLongTest {
+final class ModPositivizeLongTest {
 
-    public static final Class<?> TEST_CLASS = ModulusToPositiveLong.class;
+    public static final Class<?> TEST_CLASS = ModPositivizeLong.class;
 
     @RunWith(Theories.class)
     public static class long型modShiftの値テスト {
@@ -40,9 +42,15 @@ final class ModulusToPositiveLongTest {
             final int size = 20;
 
             //1以上MAX_VALUE以下の整数列
-            values = IntStream.range(0, size)
+            long[] randoms = IntStream.range(0, size)
                     .mapToLong(
                             ignore -> (ThreadLocalRandom.current().nextLong(Long.MAX_VALUE) + 1))
+                    .toArray();
+
+            long[] params = { 1L, 4L, 7L, 10L, 31L, 32L };
+
+            values = Stream.of(randoms, params)
+                    .flatMapToLong(arr -> Arrays.stream(arr))
                     .toArray();
         }
 
@@ -52,11 +60,11 @@ final class ModulusToPositiveLongTest {
             //負の数にして検証する
             x = -x;
 
-            ModulusToPositiveLong modulusToPositiveLong = new ModulusToPositiveLong(m);
+            ModPositivizeLong modPositivize = new ModPositivizeLong(m);
 
-            long xMod = modulusToPositiveLong.toPositive(x);
+            long xMod = modPositivize.apply(x);
             assertThat(xMod, is(greaterThanOrEqualTo(0L)));
-            
+
             long modDiff = BigInteger.valueOf(xMod)
                     .subtract(BigInteger.valueOf(x))
                     .mod(BigInteger.valueOf(m))

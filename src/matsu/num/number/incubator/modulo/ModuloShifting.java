@@ -6,11 +6,9 @@
  */
 
 /*
- * 2025.8.4
+ * 2025.8.7
  */
 package matsu.num.number.incubator.modulo;
-
-import java.math.BigInteger;
 
 /**
  * {@literal (N << shift) % m} を計算することに関する. <br>
@@ -25,34 +23,15 @@ final class ModuloShifting {
     }
 
     /**
-     * int型のN(0以上),m(1以上)について, {@literal (N << shift) % m} を素朴に計算する. <br>
-     * ただし, シフトは適宜拡張して行われる.
-     *
-     * @param n N
-     * @param shift shift
-     * @param m m
-     * @return {@literal (N << shift) % m}
-     */
-    static int computeIntNaive(int n, int shift, int m) {
-        assert n >= 0;
-        assert m >= 1;
-        assert shift >= 0;
-
-        return BigInteger.valueOf(n)
-                .shiftLeft(shift)
-                .mod(BigInteger.valueOf(m)).intValue();
-    }
-
-    /**
      * int型のN(0以上),m(1以上)について, {@literal (N << shift) % m}
-     * をビットシフトによる方法で計算する.
+     * を計算する.
      *
      * @param n N
      * @param shift shift
      * @param m m
      * @return {@literal (N << shift) % m}
      */
-    static int computeIntOptimized(int n, int shift, int m) {
+    static int computeInt(int n, int shift, int m) {
         assert n >= 0;
         assert m >= 1;
         assert shift >= 0;
@@ -97,34 +76,15 @@ final class ModuloShifting {
     }
 
     /**
-     * long型のN(0以上),m(1以上)について, {@literal (N << shift) % m} を素朴に計算する. <br>
-     * ただし, シフトは適宜拡張して行われる.
-     *
-     * @param n N
-     * @param shift shift
-     * @param m m
-     * @return {@literal (N << shift) % m}
-     */
-    static long computeLongNaive(long n, int shift, long m) {
-        assert n >= 0;
-        assert m >= 1;
-        assert shift >= 0;
-
-        return BigInteger.valueOf(n)
-                .shiftLeft(shift)
-                .mod(BigInteger.valueOf(m)).longValue();
-    }
-
-    /**
      * long型のN(0以上),m(1以上)について, {@literal (N << shift) % m}
-     * をビットシフトによる方法で計算する.
+     * を計算する.
      *
      * @param n N
      * @param shift shift
      * @param m m
      * @return {@literal (N << shift) % m}
      */
-    static long computeLongOptimized(long n, int shift, long m) {
+    static long computeLong(long n, int shift, long m) {
         assert n >= 0;
         assert m >= 1;
         assert shift >= 0;

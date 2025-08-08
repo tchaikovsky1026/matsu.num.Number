@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.5
+ * 2025.8.6
  */
 package matsu.num.number.incubator.modulo;
 
@@ -16,9 +16,9 @@ package matsu.num.number.incubator.modulo;
  * 
  * @author Matsuura Y.
  */
-final class InverseModR {
+final class InverseModPow2 {
 
-    private InverseModR() {
+    private InverseModPow2() {
         // インスタンス化不可
         throw new AssertionError();
     }
@@ -37,45 +37,57 @@ final class InverseModR {
         assert (n & 1) == 1;
 
         int r = 1;
-        int currentBitMask = 1;
+        int currentRMask = -1;
+        int currentBitSetMask = 1;
         int out = 0;
-        for (int i = 0; i < 32; i++) {
+        while (r != 0) {
             if ((r & 1) == 1) {
-                out |= currentBitMask;
+                // outの注目ビットを立てる
+                out |= currentBitSetMask;
+
                 r -= n;
             }
 
+            r &= currentRMask;
             r >>>= 1;
-            currentBitMask <<= 1;
+            currentRMask >>>= 1;
+
+            currentBitSetMask <<= 1;
         }
 
         return out;
     }
 
     /**
-     * 符号なし long について, 2^(long) を法とした逆元を計算する.
+     * 符号なし long について, 2^(64) を法とした逆元を計算する.
      * 
      * <p>
      * n は奇数でなければならない.
      * </p>
      * 
      * @param n 符号なし整数
-     * @return n^(-1) (mod 2^(long))
+     * @return n^(-1) (mod 2^(64))
      */
     static long invModR(long n) {
         assert (n & 1L) == 1L;
 
         long r = 1L;
-        long currentBitMask = 1L;
+        long currentRMask = -1L;
+        long currentBitSetMask = 1L;
         long out = 0;
-        for (int i = 0; i < 64; i++) {
+        while (r != 0) {
             if ((r & 1L) == 1L) {
-                out |= currentBitMask;
+                // outの注目ビットを立てる
+                out |= currentBitSetMask;
+
                 r -= n;
             }
 
+            r &= currentRMask;
             r >>>= 1;
-            currentBitMask <<= 1;
+            currentRMask >>>= 1;
+
+            currentBitSetMask <<= 1;
         }
 
         return out;

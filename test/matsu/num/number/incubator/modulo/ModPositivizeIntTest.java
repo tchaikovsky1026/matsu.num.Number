@@ -10,8 +10,10 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.BeforeClass;
 import org.junit.experimental.runners.Enclosed;
@@ -21,12 +23,12 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link ModulusToPositiveInt} のテスト.
+ * {@link ModPositivizeInt} のテスト.
  */
 @RunWith(Enclosed.class)
-final class ModulusToPositiveIntTest {
+final class ModPositivizeIntTest {
 
-    public static final Class<?> TEST_CLASS = ModulusToPositiveInt.class;
+    public static final Class<?> TEST_CLASS = ModPositivizeInt.class;
 
     @RunWith(Theories.class)
     public static class int型modShiftの値テスト {
@@ -39,8 +41,13 @@ final class ModulusToPositiveIntTest {
             final int size = 20;
 
             //1以上MAX_VALUE以下の整数列
-            values = IntStream.range(0, size)
+            int[] randoms = IntStream.range(0, size)
                     .map(ignore -> (ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE) + 1))
+                    .toArray();
+            int[] params = { 1, 4, 7, 10, 31, 32 };
+
+            values = Stream.of(randoms, params)
+                    .flatMapToInt(arr -> Arrays.stream(arr))
                     .toArray();
         }
 
@@ -50,9 +57,9 @@ final class ModulusToPositiveIntTest {
             //負の数にして検証する
             x = -x;
 
-            ModulusToPositiveInt modulusToPositiveInt = new ModulusToPositiveInt(m);
+            ModPositivizeInt modPositivize = new ModPositivizeInt(m);
 
-            int xMod = modulusToPositiveInt.toPositive(x);
+            int xMod = modPositivize.apply(x);
             assertThat(xMod, is(greaterThanOrEqualTo(0)));
 
             int modDiff = BigInteger.valueOf(xMod)

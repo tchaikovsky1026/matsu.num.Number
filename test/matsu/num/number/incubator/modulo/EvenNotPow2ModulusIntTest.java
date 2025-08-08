@@ -17,23 +17,23 @@ import org.junit.runner.RunWith;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
 /**
- * {@link MontgomeryBasedModulusInt} クラスのテスト.
+ * {@link EvenNotPow2ModulusInt} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MontgomeryBasedModulusIntTest {
+final class EvenNotPow2ModulusIntTest {
 
-    public static final Class<?> TEST_CLASS = MontgomeryBasedModulusInt.class;
+    public static final Class<?> TEST_CLASS = EvenNotPow2ModulusInt.class;
 
     private static final IntFunction<ModulusInt> moduloGetter =
-            m -> {
-                int exponent = Integer.numberOfTrailingZeros(m);
-                int innerDivisor = m >> exponent;
+            divisor -> {
+                int pow2Exponent = Integer.numberOfTrailingZeros(divisor);
+                int innerDivisor = divisor >> pow2Exponent;
 
-                if (!(exponent >= 1 && innerDivisor != 1)) {
+                if (!(pow2Exponent >= 1 && innerDivisor != 1)) {
                     throw new UnsupportedOperationException();
                 }
 
-                return new MontgomeryBasedModulusInt(m);
+                return new EvenNotPow2ModulusInt(pow2Exponent, innerDivisor);
             };
 
     public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
@@ -70,21 +70,36 @@ final class MontgomeryBasedModulusIntTest {
 
         @Test
         public void test_MontgomeryBasedModulusIntの実行() {
-            ModulusInt modulusInt = new MontgomeryBasedModulusInt(m);
+            int pow2Exponent = Integer.numberOfTrailingZeros(m);
+            int innerDivisor = m >> pow2Exponent;
+            ModulusInt modulusInt = new EvenNotPow2ModulusInt(pow2Exponent, innerDivisor);
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,
                         () -> {
+                            int d = this.d;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }
@@ -92,16 +107,29 @@ final class MontgomeryBasedModulusIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:modpr2: ", 10_000_000,
                         () -> {
+                            int d = this.d;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }
@@ -109,16 +137,30 @@ final class MontgomeryBasedModulusIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "MontgomeryBasedModulusInt:modpow: ", 2_000_000,
                         () -> {
+                            int d = this.d;
+                            int k = this.k;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }
@@ -131,16 +173,29 @@ final class MontgomeryBasedModulusIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "SimpleModulusInt:mod: ", 10_000_000,
                         () -> {
+                            int d = this.d;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
                             d += modulusInt.mod(d);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }
@@ -148,16 +203,29 @@ final class MontgomeryBasedModulusIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "SimpleModulusInt:modpr2: ", 10_000_000,
                         () -> {
+                            int d = this.d;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
                             d += modulusInt.modpr(d, d);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }
@@ -165,16 +233,30 @@ final class MontgomeryBasedModulusIntTest {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "SimpleModulusInt:modpow: ", 2_000_000,
                         () -> {
+                            int d = this.d;
+                            int k = this.k;
+                            int mask = 0x7FFF_FFFF;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
                             d += modulusInt.modpow(d, k);
+                            d &= mask;
+                            this.d = d;
                         });
                 executor.execute();
             }

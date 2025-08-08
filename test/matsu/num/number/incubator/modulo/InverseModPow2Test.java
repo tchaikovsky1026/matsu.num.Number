@@ -21,12 +21,12 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link InverseModR} のテスト.
+ * {@link InverseModPow2} のテスト.
  */
 @RunWith(Enclosed.class)
-final class InverseModRTest {
+final class InverseModPow2Test {
 
-    public static final Class<?> TEST_CLASS = InverseModR.class;
+    public static final Class<?> TEST_CLASS = InverseModPow2.class;
 
     @RunWith(Theories.class)
     public static class int型の値テスト {
@@ -46,7 +46,7 @@ final class InverseModRTest {
 
         @Theory
         public void test_invModRのテスト(int n) {
-            assertThat(InverseModR.invModR(n) * n, is(1));
+            assertThat(InverseModPow2.invModR(n) * n, is(1));
         }
     }
 
@@ -58,8 +58,9 @@ final class InverseModRTest {
 
         @BeforeClass
         public static void before_整数の準備() {
-            final int size = 20;
+            final int size = 100;
 
+            // 奇数になるようにmodify
             values = IntStream.range(0, size)
                     .mapToLong(
                             ignore -> (ThreadLocalRandom.current().nextLong() | 1L))
@@ -68,7 +69,7 @@ final class InverseModRTest {
 
         @Theory
         public void test_invModRのテスト(long n) {
-            assertThat(InverseModR.invModR(n) * n, is(1L));
+            assertThat(InverseModPow2.invModR(n) * n, is(1L));
         }
     }
 }

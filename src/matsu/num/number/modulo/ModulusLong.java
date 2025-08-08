@@ -101,6 +101,20 @@ public interface ModulusLong {
      * @throws IllegalArgumentException 引数が正の整数でない場合
      */
     public static ModulusLong get(long divisor) {
-        throw new AssertionError("TODO");
+        if (divisor <= 0L) {
+            throw new IllegalArgumentException("illegal: divisor <= 0");
+        }
+
+        if ((divisor & 1L) == 1L) {
+            return divisor == 1L
+                    ? Mod1Long.INSTANCE
+                    : new MontgomeryLong(divisor);
+        }
+
+        int pow2Exponent = Long.numberOfTrailingZeros(divisor);
+        long innerDivisor = divisor >> pow2Exponent;
+        return innerDivisor == 1L
+                ? new ModulusLongPow2(pow2Exponent)
+                : new EvenNotPow2ModulusLong(pow2Exponent, innerDivisor);
     }
 }

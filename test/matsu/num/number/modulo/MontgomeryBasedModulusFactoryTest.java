@@ -7,6 +7,7 @@
 package matsu.num.number.modulo;
 
 import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -18,29 +19,54 @@ import org.junit.runner.RunWith;
 final class MontgomeryBasedModulusFactoryTest {
 
     public static Class<?> TEST_CLASS = MontgomeryBasedModulusFactory.class;
-    private static final IntFunction<ModulusInt> moduloGetter = MontgomeryBasedModulusFactory::get;
+    private static final IntFunction<ModulusInt> moduloIntGetter = MontgomeryBasedModulusFactory::get;
+    private static final LongFunction<ModulusLong> moduloLongGetter = MontgomeryBasedModulusFactory::get;
 
-    public static class ModProd2のテスト extends ModulusIntTesting.Prod2 {
+    public static class ModProd2Intのテスト extends ModulusIntTesting.Prod2 {
 
         @Override
         ModulusInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+            return moduloIntGetter.apply(m);
         }
     }
 
-    public static class ModProdArrayのテスト extends ModulusIntTesting.ProdArray {
+    public static class ModProdArrayIntのテスト extends ModulusIntTesting.ProdArray {
 
         @Override
         ModulusInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+            return moduloIntGetter.apply(m);
         }
     }
 
-    public static class ModPowのテスト extends ModulusIntTesting.Pow {
+    public static class ModPowIntのテスト extends ModulusIntTesting.Pow {
 
         @Override
         ModulusInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+            return moduloIntGetter.apply(m);
+        }
+    }
+
+    public static class ModProd2Longのテスト extends ModulusLongTesting.Prod2 {
+
+        @Override
+        ModulusLong getModulusLong(long m) {
+            return moduloLongGetter.apply(m);
+        }
+    }
+
+    public static class ModProdArrayLongのテスト extends ModulusLongTesting.ProdArray {
+
+        @Override
+        ModulusLong getModulusLong(long m) {
+            return moduloLongGetter.apply(m);
+        }
+    }
+
+    public static class ModPowLongのテスト extends ModulusLongTesting.Pow {
+
+        @Override
+        ModulusLong getModulus(long m) {
+            return moduloLongGetter.apply(m);
         }
     }
 }

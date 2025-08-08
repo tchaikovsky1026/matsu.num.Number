@@ -14,7 +14,9 @@ package matsu.num.number.modulo;
  * 単純なモジュロ演算の実装.
  * 
  * @author Matsuura Y.
+ * @deprecated このクラスはプロダクトコードからは使用されていない
  */
+@Deprecated
 abstract class SimpleModulusInt implements ModulusInt {
 
     private final int m;

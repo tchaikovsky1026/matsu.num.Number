@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 /**
  * {@link SimpleModulusInt} クラスのテスト.
  */
+@Deprecated
 @RunWith(Enclosed.class)
 final class SimpleModulusIntTest {
 

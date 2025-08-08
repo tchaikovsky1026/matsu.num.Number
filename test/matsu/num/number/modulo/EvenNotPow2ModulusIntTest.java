@@ -167,6 +167,7 @@ final class EvenNotPow2ModulusIntTest {
 
         @Test
         public void test_SimpleModulusIntの実行() {
+            @SuppressWarnings("deprecation")
             ModulusInt modulusInt = SimpleModulusInt.of(m);
             {
                 var executor = new SpeedTestExecutor(

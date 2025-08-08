@@ -164,6 +164,7 @@ final class MontgomeryIntTest {
 
         @Test
         public void test_SimpleModulusIntの実行() {
+            @SuppressWarnings("deprecation")
             ModulusInt modulusInt = SimpleModulusInt.of(m);
             {
                 var executor = new SpeedTestExecutor(

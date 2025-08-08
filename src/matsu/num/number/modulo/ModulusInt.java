@@ -67,6 +67,7 @@ public interface ModulusInt {
      *            ..., <i>x</i><sub><i>n</i></sub>
      * @return (<i>x</i><sub>1</sub><i>x</i><sub>2</sub>&middot;&middot;&middot;<i>x</i><sub><i>n</i></sub>)
      *             mod <i>m</i>
+     * @throws NullPointerException 引数がnullの場合
      */
     public int modpr(int... x);
 

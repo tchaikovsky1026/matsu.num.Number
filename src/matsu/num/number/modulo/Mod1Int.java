@@ -8,14 +8,16 @@
 /*
  * 2025.8.8
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
+
+import java.util.Objects;
 
 /**
  * 除数1に対する {@link ModulusInt} の実装.
  * 
  * @author Matsuura Y.
  */
-final class Mod1Int implements ModulusInt {
+final class Mod1Int extends SkeletalModulusInt {
 
     /**
      * シングルトン.
@@ -46,12 +48,15 @@ final class Mod1Int implements ModulusInt {
 
     @Override
     public int modpr(int... x) {
+        Objects.requireNonNull(x);
         return 0;
     }
 
     @Override
     public int modpow(int x, int k) {
+        if (k < 0) {
+            throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
+        }
         return 0;
     }
-
 }

@@ -8,14 +8,14 @@
 /*
  * 2025.8.6
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * 2の累乗を除数とする, {@link ModulusInt}.
  * 
  * @author Matsuura Y.
  */
-final class ModulusIntPow2 implements ModulusInt {
+final class ModulusIntPow2 extends SkeletalModulusInt {
 
     private final int divisor;
     private final int bitMask;

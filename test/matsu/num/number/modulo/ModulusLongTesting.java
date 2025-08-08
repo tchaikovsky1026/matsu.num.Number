@@ -6,9 +6,9 @@
  */
 
 /*
- * 2025.8.6
+ * 2025.8.8
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -31,9 +31,9 @@ import org.junit.runner.RunWith;
  * @author Matsuura Y.
  */
 @Ignore
-final class ModulusIntTesting {
+final class ModulusLongTesting {
 
-    private ModulusIntTesting() {
+    private ModulusLongTesting() {
         throw new AssertionError();
     }
 
@@ -45,7 +45,10 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static long[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                100000000001L, 1L << 42, 11 * (1L << 42)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -65,12 +68,12 @@ final class ModulusIntTesting {
 
         @Theory
         public void test_2値積のモジュロをテスト(Fixture fixture) {
-            int m = fixture.m;
-            int x = fixture.x;
-            int y = fixture.y;
+            long m = fixture.m;
+            long x = fixture.x;
+            long y = fixture.y;
 
             try {
-                ModulusInt modulus = getModulusInt(m);
+                ModulusLong modulus = getModulusLong(m);
                 if (modulus.divisor() != m) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
@@ -82,20 +85,20 @@ final class ModulusIntTesting {
         }
 
         @Theory
-        public void test_2値積のモジュロをテスト_ランダム化(int divisor) {
+        public void test_2値積のモジュロをテスト_ランダム化(long divisor) {
 
             int ite = 100;
 
             try {
-                ModulusInt modulus = getModulusInt(divisor);
+                ModulusLong modulus = getModulusLong(divisor);
                 if (modulus.divisor() != divisor) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
 
                 for (int c = 0; c < ite; c++) {
 
-                    int x = ThreadLocalRandom.current().nextInt(divisor * 5);
-                    int y = ThreadLocalRandom.current().nextInt(divisor * 5);
+                    long x = ThreadLocalRandom.current().nextLong(divisor * 5);
+                    long y = ThreadLocalRandom.current().nextLong(divisor * 5);
                     if (ThreadLocalRandom.current().nextBoolean()) {
                         x = -x;
                     }
@@ -111,31 +114,31 @@ final class ModulusIntTesting {
         }
 
         /**
-         * 与えた値を除数とする ModulusInt を返す.
+         * 与えた値を除数とする ModulusLong を返す.
          * 
          * @param m 除数
          * @return
          * @throws UnsupportedOperationException
-         *             引数の値が対応しておらず, ModulusInt を返せない場合
+         *             引数の値が対応しておらず, ModulusLong を返せない場合
          */
-        abstract ModulusInt getModulusInt(int m);
+        abstract ModulusLong getModulusLong(long m);
 
-        private static void executeTestProduct(ModulusInt modulus, int x, int y) {
-            int result = modulus.modpr(x, y);
-            int expected = BigInteger.valueOf(x)
+        private static void executeTestProduct(ModulusLong modulus, long x, long y) {
+            long result = modulus.modpr(x, y);
+            long expected = BigInteger.valueOf(x)
                     .multiply(BigInteger.valueOf(y))
                     .mod(BigInteger.valueOf(modulus.divisor()))
-                    .intValue();
+                    .longValueExact();
 
             assertThat(result, is(expected));
         }
 
         static final class Fixture {
-            final int m;
-            final int x;
-            final int y;
+            final long m;
+            final long x;
+            final long y;
 
-            Fixture(int m, int x, int y) {
+            Fixture(long m, long x, long y) {
                 super();
                 this.m = m;
                 this.x = x;
@@ -152,48 +155,51 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static long[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                100000000001L, 1L << 42, 11 * (1L << 42)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
             List<Fixture> list = new ArrayList<>();
 
-            list.add(new Fixture(3, new int[] { 4, 2, 7 }));
-            list.add(new Fixture(5, new int[] { -6, 2, 4 }));
-            list.add(new Fixture(36, new int[] { 881, -64, -31 }));
-            list.add(new Fixture(21, new int[] { 3, 382, -216 }));
-            list.add(new Fixture(17, new int[] { 64, 25, 541 }));
-            list.add(new Fixture(10, new int[] { -52, 83, -52 }));
-            list.add(new Fixture(38, new int[] { -543, 1281, 2195 }));
-            list.add(new Fixture(100213, new int[] { -543, 1281, 1000351, 318162 }));
+            list.add(new Fixture(3, new long[] { 4, 2, 7 }));
+            list.add(new Fixture(5, new long[] { -6, 2, 4 }));
+            list.add(new Fixture(36, new long[] { 881, -64, -31 }));
+            list.add(new Fixture(21, new long[] { 3, 382, -216 }));
+            list.add(new Fixture(17, new long[] { 64, 25, 541 }));
+            list.add(new Fixture(10, new long[] { -52, 83, -52 }));
+            list.add(new Fixture(38, new long[] { -543, 1281, 2195 }));
+            list.add(new Fixture(100213, new long[] { -543, 1281, 1000351, 318162 }));
 
             FIXTURES = list.toArray(Fixture[]::new);
         }
 
         @Theory
         public void test_配列の要素積のモジュロをテスト(Fixture fixture) {
-            int m = fixture.m;
-            int[] x = fixture.x;
+            long m = fixture.m;
+            long[] x = fixture.x;
 
             try {
-                ModulusInt modulus = getModulusInt(m);
+                ModulusLong modulus = getModulusLong(m);
                 if (modulus.divisor() != m) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
 
-                executeTestProduct(getModulusInt(m), x);
+                executeTestProduct(getModulusLong(m), x);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
             }
         }
 
         @Theory
-        public void test_配列の要素積のモジュロをテスト_ランダム化(int divisor) {
+        public void test_配列の要素積のモジュロをテスト_ランダム化(long divisor) {
 
             int ite = 100;
 
             try {
-                ModulusInt modulus = getModulusInt(divisor);
+                ModulusLong modulus = getModulusLong(divisor);
                 if (modulus.divisor() != divisor) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
@@ -201,9 +207,9 @@ final class ModulusIntTesting {
                 for (int c = 0; c < ite; c++) {
 
                     int size = ThreadLocalRandom.current().nextInt(10);
-                    int[] x = new int[size];
+                    long[] x = new long[size];
                     for (int i = 0; i < size; i++) {
-                        x[i] = ThreadLocalRandom.current().nextInt(divisor * 5);
+                        x[i] = ThreadLocalRandom.current().nextLong(divisor * 5);
                         if (ThreadLocalRandom.current().nextBoolean()) {
                             x[i] = -x[i];
                         }
@@ -217,37 +223,37 @@ final class ModulusIntTesting {
         }
 
         /**
-         * 与えた値を除数とする ModulusInt を返す.
+         * 与えた値を除数とする ModulusLong を返す.
          * 
          * @param m 除数
          * @return
          * @throws UnsupportedOperationException
-         *             引数の値が対応しておらず, ModulusInt を返せない場合
+         *             引数の値が対応しておらず, ModulusLong を返せない場合
          */
-        abstract ModulusInt getModulusInt(int m);
+        abstract ModulusLong getModulusLong(long m);
 
-        private static void executeTestProduct(ModulusInt modulus, int[] x) {
-            int result = modulus.modpr(x);
-            int expected;
+        private static void executeTestProduct(ModulusLong modulus, long[] x) {
+            long result = modulus.modpr(x);
+            long expected;
             {
                 BigInteger m = BigInteger.valueOf(modulus.divisor());
                 BigInteger r = BigInteger.ONE;
-                for (int xi : x) {
+                for (long xi : x) {
                     r = r.multiply(BigInteger.valueOf(xi))
                             .mod(m);
                 }
 
-                expected = r.mod(m).intValue();
+                expected = r.mod(m).longValueExact();
             }
 
             assertThat(result, is(expected));
         }
 
         static final class Fixture {
-            final int m;
-            final int[] x;
+            final long m;
+            final long[] x;
 
-            Fixture(int m, int[] x) {
+            Fixture(long m, long[] x) {
                 super();
                 this.m = m;
                 this.x = x;
@@ -263,7 +269,10 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 1, 2, 4, 8, 16, 31, 126, 30513, 2874127 };
+        public static long[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                100000000001L, 1L << 42, 11 * (1L << 42)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -283,36 +292,36 @@ final class ModulusIntTesting {
 
         @Theory
         public void test_累乗のモジュロをテスト(Fixture fixture) {
-            int m = fixture.m;
-            int x = fixture.x;
+            long m = fixture.m;
+            long x = fixture.x;
             int k = fixture.k;
 
             try {
-                ModulusInt modulus = getModulusInt(m);
+                ModulusLong modulus = getModulusLong(m);
                 if (modulus.divisor() != m) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
 
-                executeTestPow(getModulusInt(m), x, k);
+                executeTestPow(getModulusLong(m), x, k);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
             }
         }
 
         @Theory
-        public void test_累乗のモジュロをテスト_ランダム化(int divisor) {
+        public void test_累乗のモジュロをテスト_ランダム化(long divisor) {
 
             int ite = 100;
 
             try {
-                ModulusInt modulus = getModulusInt(divisor);
+                ModulusLong modulus = getModulusLong(divisor);
                 if (modulus.divisor() != divisor) {
                     throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
                 }
 
                 for (int c = 0; c < ite; c++) {
 
-                    int x = ThreadLocalRandom.current().nextInt(divisor * 5);
+                    long x = ThreadLocalRandom.current().nextLong(divisor * 5);
                     if (ThreadLocalRandom.current().nextBoolean()) {
                         x = -x;
                     }
@@ -326,33 +335,33 @@ final class ModulusIntTesting {
         }
 
         /**
-         * 与えた値を除数とする ModulusInt を返す.
+         * 与えた値を除数とする ModulusLong を返す.
          * 
          * @param m 除数
          * @return
          * @throws UnsupportedOperationException
-         *             引数の値が対応しておらず, ModulusInt を返せない場合
+         *             引数の値が対応しておらず, ModulusLong を返せない場合
          */
-        abstract ModulusInt getModulusInt(int m);
+        abstract ModulusLong getModulusLong(long m);
 
-        private static void executeTestPow(ModulusInt modulus, int x, int k) {
+        private static void executeTestPow(ModulusLong modulus, long x, int k) {
             assert k >= 0;
 
-            int result = modulus.modpow(x, k);
-            int expected = BigInteger.valueOf(x).modPow(
+            long result = modulus.modpow(x, k);
+            long expected = BigInteger.valueOf(x).modPow(
                     BigInteger.valueOf(k),
                     BigInteger.valueOf(modulus.divisor()))
-                    .intValue();
+                    .longValueExact();
 
             assertThat(result, is(expected));
         }
 
         static final class Fixture {
-            final int m;
-            final int x;
+            final long m;
+            final long x;
             final int k;
 
-            Fixture(int m, int x, int k) {
+            Fixture(long m, long x, int k) {
                 super();
                 this.m = m;
                 this.x = x;

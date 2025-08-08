@@ -8,7 +8,7 @@
 /*
  * 2025.8.6
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import matsu.num.number.NumberUtil;
 
@@ -18,7 +18,7 @@ import matsu.num.number.NumberUtil;
  * 
  * @author Matsuura Y.
  */
-final class MontgomeryInt implements ModulusInt {
+final class MontgomeryInt extends SkeletalModulusInt {
 
     private final int divisor;
     private final int r2;
@@ -64,13 +64,6 @@ final class MontgomeryInt implements ModulusInt {
         return this.divisor;
     }
 
-    /**
-     * n mod m を返す
-     * (m は除数).
-     * 
-     * @param n
-     * @return n mod m
-     */
     @Override
     public int mod(int n) {
 
@@ -83,14 +76,6 @@ final class MontgomeryInt implements ModulusInt {
                 : reduceMong(toMong(n));
     }
 
-    /**
-     * a*b mod m を返す
-     * (m は除数).
-     * 
-     * @param a a
-     * @param b b
-     * @return a*b mod m
-     */
     @Override
     public int modpr(int a, int b) {
 
@@ -107,18 +92,6 @@ final class MontgomeryInt implements ModulusInt {
         return reduceMong(toMong(a), b);
     }
 
-    /**
-     * x1*x2*... mod m を返す
-     * (m は除数).
-     * 
-     * <p>
-     * lengthが0の場合は1が返る.
-     * </p>
-     * 
-     * @param x x
-     * @return x1*x2*... mod m
-     * @throws NullPointerException 引数がnullの場合
-     */
     @Override
     public int modpr(int... x) {
         switch (x.length) {
@@ -161,20 +134,6 @@ final class MontgomeryInt implements ModulusInt {
         return reduceMong(reduceMong(reduceMong(v0, v1), reduceMong(v2, v3)));
     }
 
-    /**
-     * x^k mod m を返す
-     * (m は除数).
-     * 
-     * <p>
-     * 指数は 0 以上でなければならない. <br>
-     * x = 0, k = 0 の場合は1が返る.
-     * </p>
-     * 
-     * @param x x
-     * @param k k
-     * @return x^k mod m
-     * @throws IllegalArgumentException 指数が0未満の場合
-     */
     @Override
     public int modpow(int x, int k) {
         if (k < 0) {

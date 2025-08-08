@@ -8,29 +8,29 @@
 /*
  * 2025.8.8
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * Montgomery modular multiplication をベースとした,
- * {@code int} 型に関するモジュロ演算. <br>
+ * {@code long} 型に関するモジュロ演算. <br>
  * 2の累乗でない偶数を除数としたもので扱う.
  * 
  * @author Matsuura Y.
  */
-final class EvenNotPow2ModulusInt implements ModulusInt {
+final class EvenNotPow2ModulusLong extends SkeletalModulusLong {
 
-    private final int divisor;
+    private final long divisor;
 
-    private final ModulusInt modPow2Calculator;
-    private final ModulusInt modMCalculator;
+    private final ModulusLong modPow2Calculator;
+    private final ModulusLong modMCalculator;
 
     /**
      * 2^s - 1
      */
-    private final int modPow2BitMask;
+    private final long modPow2BitMask;
 
-    private final int minv;
-    private final int m;
+    private final long minv;
+    private final long m;
 
     /**
      * d と m を与えて, 2^d * m を法としたモジュロ演算を構築する.
@@ -45,58 +45,58 @@ final class EvenNotPow2ModulusInt implements ModulusInt {
      * @param pow2Exponent d
      * @param innerDivisor m
      */
-    EvenNotPow2ModulusInt(int pow2Exponent, int innerDivisor) {
+    EvenNotPow2ModulusLong(int pow2Exponent, long innerDivisor) {
         super();
 
-        assert pow2Exponent >= 1 && (innerDivisor & 1) == 1 && innerDivisor != 1 : "not: divisor = 2^d * m";
+        assert pow2Exponent >= 1 && (innerDivisor & 1L) == 1L && innerDivisor != 1L : "not: divisor = 2^d * m";
 
         this.divisor = innerDivisor << pow2Exponent;
         this.m = innerDivisor;
-        this.modPow2Calculator = new ModulusIntPow2(pow2Exponent);
-        this.modMCalculator = new MontgomeryInt(innerDivisor);
+        this.modPow2Calculator = new ModulusLongPow2(pow2Exponent);
+        this.modMCalculator = new MontgomeryLong(innerDivisor);
 
-        this.modPow2BitMask = (1 << pow2Exponent) - 1;
+        this.modPow2BitMask = (1L << pow2Exponent) - 1;
         this.minv = InverseModPow2.invModR(innerDivisor) & this.modPow2BitMask;
     }
 
     @Override
-    public int divisor() {
+    public long divisor() {
         return this.divisor;
     }
 
     @Override
-    public int mod(int x) {
+    public long mod(long x) {
 
         if (0 <= x && x < this.divisor) {
             return x;
         }
 
-        int modM = modMCalculator.mod(x);
-        int modPow2 = modPow2Calculator.mod(x);
+        long modM = modMCalculator.mod(x);
+        long modPow2 = modPow2Calculator.mod(x);
 
         return this.combinedMod(modM, modPow2);
     }
 
     @Override
-    public int modpr(int x, int y) {
-        int modM = modMCalculator.modpr(x, y);
-        int modPow2 = modPow2Calculator.modpr(x, y);
+    public long modpr(long x, long y) {
+        long modM = modMCalculator.modpr(x, y);
+        long modPow2 = modPow2Calculator.modpr(x, y);
 
         return this.combinedMod(modM, modPow2);
     }
 
     @Override
-    public int modpr(int... x) {
-        int modM = modMCalculator.modpr(x);
-        int modPow2 = modPow2Calculator.modpr(x);
+    public long modpr(long... x) {
+        long modM = modMCalculator.modpr(x);
+        long modPow2 = modPow2Calculator.modpr(x);
 
         return this.combinedMod(modM, modPow2);
     }
 
     @Override
-    public int modpow(int x, int k) {
-        int modM = modMCalculator.modpow(x, k);
-        int modPow2 = modPow2Calculator.modpow(x, k);
+    public long modpow(long x, int k) {
+        long modM = modMCalculator.modpow(x, k);
+        long modPow2 = modPow2Calculator.modpow(x, k);
 
         return this.combinedMod(modM, modPow2);
     }
@@ -109,7 +109,7 @@ final class EvenNotPow2ModulusInt implements ModulusInt {
      * @param modPow2 mod 2^s
      * @return mod ((2^s)*m)
      */
-    private int combinedMod(int modM, int modPow2) {
+    private long combinedMod(long modM, long modPow2) {
         return modM + m * (((modPow2 - modM) * minv) & modPow2BitMask);
     }
 }

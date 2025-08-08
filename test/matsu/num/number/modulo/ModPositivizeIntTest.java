@@ -4,8 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -24,53 +23,51 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link ModPositivizeLong} のテスト.
+ * {@link ModPositivizeInt} のテスト.
  */
 @RunWith(Enclosed.class)
-final class ModPositivizeLongTest {
+final class ModPositivizeIntTest {
 
-    public static final Class<?> TEST_CLASS = ModPositivizeLong.class;
+    public static final Class<?> TEST_CLASS = ModPositivizeInt.class;
 
     @RunWith(Theories.class)
-    public static class long型modShiftの値テスト {
+    public static class int型modShiftの値テスト {
 
         @DataPoints
-        public static long[] values;
+        public static int[] values;
 
         @BeforeClass
         public static void before_1以上の整数の準備() {
             final int size = 20;
 
             //1以上MAX_VALUE以下の整数列
-            long[] randoms = IntStream.range(0, size)
-                    .mapToLong(
-                            ignore -> (ThreadLocalRandom.current().nextLong(Long.MAX_VALUE) + 1))
+            int[] randoms = IntStream.range(0, size)
+                    .map(ignore -> (ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE) + 1))
                     .toArray();
-
-            long[] params = { 1L, 4L, 7L, 10L, 31L, 32L };
+            int[] params = { 1, 4, 7, 10, 31, 32 };
 
             values = Stream.of(randoms, params)
-                    .flatMapToLong(arr -> Arrays.stream(arr))
+                    .flatMapToInt(arr -> Arrays.stream(arr))
                     .toArray();
         }
 
         @Theory
-        public void test_modShiftのテスト(long m, long x) {
+        public void test_modShiftのテスト(int m, int x) {
 
             //負の数にして検証する
             x = -x;
 
-            ModPositivizeLong modPositivize = new ModPositivizeLong(m);
+            ModPositivizeInt modPositivize = new ModPositivizeInt(m);
 
-            long xMod = modPositivize.apply(x);
-            assertThat(xMod, is(greaterThanOrEqualTo(0L)));
+            int xMod = modPositivize.apply(x);
+            assertThat(xMod, is(greaterThanOrEqualTo(0)));
 
-            long modDiff = BigInteger.valueOf(xMod)
+            int modDiff = BigInteger.valueOf(xMod)
                     .subtract(BigInteger.valueOf(x))
                     .mod(BigInteger.valueOf(m))
-                    .longValue();
+                    .intValue();
 
-            assertThat(modDiff, is(0L));
+            assertThat(modDiff, is(0));
         }
     }
 }

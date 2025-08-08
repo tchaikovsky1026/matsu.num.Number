@@ -4,7 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;

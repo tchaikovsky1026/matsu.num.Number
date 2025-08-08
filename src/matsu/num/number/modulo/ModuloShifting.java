@@ -8,7 +8,7 @@
 /*
  * 2025.8.7
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * {@literal (N << shift) % m} を計算することに関する. <br>

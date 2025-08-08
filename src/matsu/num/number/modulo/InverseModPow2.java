@@ -8,7 +8,7 @@
 /*
  * 2025.8.6
  */
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 /**
  * 整数の, 2^(bit) に対するモジュロ逆元を計算することに関するプロトタイプ. <br>

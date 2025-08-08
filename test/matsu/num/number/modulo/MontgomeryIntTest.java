@@ -4,8 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-
-package matsu.num.number.incubator.modulo;
+package matsu.num.number.modulo;
 
 import java.util.function.IntFunction;
 
@@ -165,6 +164,7 @@ final class MontgomeryIntTest {
 
         @Test
         public void test_SimpleModulusIntの実行() {
+            @SuppressWarnings("deprecation")
             ModulusInt modulusInt = SimpleModulusInt.of(m);
             {
                 var executor = new SpeedTestExecutor(

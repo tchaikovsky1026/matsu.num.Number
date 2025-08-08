@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.7.31
+ * 2025.8.8
  */
 package matsu.num.number.modulo;
 
@@ -45,7 +45,10 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+        public static int[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                1000000001, 1 << 20, 11 * (1 << 20)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -70,7 +73,12 @@ final class ModulusIntTesting {
             int y = fixture.y;
 
             try {
-                executeTestProduct(getModulusInt(m), x, y);
+                ModulusInt modulus = getModulusInt(m);
+                if (modulus.divisor() != m) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
+
+                executeTestProduct(modulus, x, y);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
             }
@@ -83,6 +91,9 @@ final class ModulusIntTesting {
 
             try {
                 ModulusInt modulus = getModulusInt(divisor);
+                if (modulus.divisor() != divisor) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
 
                 for (int c = 0; c < ite; c++) {
 
@@ -117,7 +128,7 @@ final class ModulusIntTesting {
             int expected = BigInteger.valueOf(x)
                     .multiply(BigInteger.valueOf(y))
                     .mod(BigInteger.valueOf(modulus.divisor()))
-                    .intValue();
+                    .intValueExact();
 
             assertThat(result, is(expected));
         }
@@ -144,7 +155,10 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+        public static int[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                1000000001, 1 << 20, 11 * (1 << 20)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -168,6 +182,11 @@ final class ModulusIntTesting {
             int[] x = fixture.x;
 
             try {
+                ModulusInt modulus = getModulusInt(m);
+                if (modulus.divisor() != m) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
+
                 executeTestProduct(getModulusInt(m), x);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
@@ -181,6 +200,9 @@ final class ModulusIntTesting {
 
             try {
                 ModulusInt modulus = getModulusInt(divisor);
+                if (modulus.divisor() != divisor) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
 
                 for (int c = 0; c < ite; c++) {
 
@@ -221,7 +243,7 @@ final class ModulusIntTesting {
                             .mod(m);
                 }
 
-                expected = r.intValue();
+                expected = r.mod(m).intValueExact();
             }
 
             assertThat(result, is(expected));
@@ -247,7 +269,10 @@ final class ModulusIntTesting {
         public static Fixture[] FIXTURES;
 
         @DataPoints
-        public static int[] divisors = { 4, 31, 126, 30513, 2874127 };
+        public static int[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                1000000001, 1 << 20, 11 * (1 << 20)
+        };
 
         @BeforeClass
         public static void before_fixtureの用意() {
@@ -272,6 +297,11 @@ final class ModulusIntTesting {
             int k = fixture.k;
 
             try {
+                ModulusInt modulus = getModulusInt(m);
+                if (modulus.divisor() != m) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
+
                 executeTestPow(getModulusInt(m), x, k);
             } catch (UnsupportedOperationException igonred) {
                 // mが対応していない場合は無視する
@@ -285,6 +315,9 @@ final class ModulusIntTesting {
 
             try {
                 ModulusInt modulus = getModulusInt(divisor);
+                if (modulus.divisor() != divisor) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
 
                 for (int c = 0; c < ite; c++) {
 
@@ -318,7 +351,7 @@ final class ModulusIntTesting {
             int expected = BigInteger.valueOf(x).modPow(
                     BigInteger.valueOf(k),
                     BigInteger.valueOf(modulus.divisor()))
-                    .intValue();
+                    .intValueExact();
 
             assertThat(result, is(expected));
         }

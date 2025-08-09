@@ -8,11 +8,14 @@ package matsu.num.number.speedutil;
 
 import java.util.Objects;
 
+import org.junit.Ignore;
+
 /**
  * 計算時間評価を行う仕組みを扱う.
  * 
  * @author Matsuura Y.
  */
+@Ignore
 public final class SpeedTestExecutor {
 
     private final Class<?> testClass;

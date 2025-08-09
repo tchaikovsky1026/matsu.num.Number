@@ -8,9 +8,13 @@ package matsu.num.number.modulo;
 
 import java.util.function.LongFunction;
 
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+
 /**
  * {@link EvenNotPow2ModulusLong} のテスト.
  */
+@RunWith(Enclosed.class)
 final class EvenNotPow2ModulusLongTest {
 
     public static Class<?> TEST_CLASS = EvenNotPow2ModulusLong.class;

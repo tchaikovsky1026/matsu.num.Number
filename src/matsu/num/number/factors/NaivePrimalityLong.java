@@ -8,7 +8,7 @@
 /*
  * 2025.8.9
  */
-package matsu.num.number.incubator.factors;
+package matsu.num.number.factors;
 
 /**
  * 素朴な試し割り法による素数判定クラス.

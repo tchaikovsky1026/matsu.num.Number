@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.10
  */
 package matsu.num.number.modulo;
 
@@ -26,7 +26,7 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link ModulusInt} をテストするためのテスト骨格.
+ * {@link ModulusLong} をテストするためのテスト骨格.
  * 
  * @author Matsuura Y.
  */
@@ -294,7 +294,7 @@ final class ModulusLongTesting {
         public void test_累乗のモジュロをテスト(Fixture fixture) {
             long m = fixture.m;
             long x = fixture.x;
-            int k = fixture.k;
+            long k = fixture.k;
 
             try {
                 ModulusLong modulus = getModulusLong(m);
@@ -344,7 +344,7 @@ final class ModulusLongTesting {
          */
         abstract ModulusLong getModulusLong(long m);
 
-        private static void executeTestPow(ModulusLong modulus, long x, int k) {
+        private static void executeTestPow(ModulusLong modulus, long x, long k) {
             assert k >= 0;
 
             long result = modulus.modpow(x, k);
@@ -359,9 +359,9 @@ final class ModulusLongTesting {
         static final class Fixture {
             final long m;
             final long x;
-            final int k;
+            final long k;
 
-            Fixture(long m, long x, int k) {
+            Fixture(long m, long x, long k) {
                 super();
                 this.m = m;
                 this.x = x;

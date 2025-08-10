@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.10
  */
 package matsu.num.number.modulo;
 
@@ -90,7 +90,7 @@ public interface ModulusLong {
      * @return <i>x</i><sup><i>k</i></sup> mod <i>m</i>
      * @throws IllegalArgumentException 指数が0未満の場合
      */
-    public long modpow(long x, int k);
+    public long modpow(long x, long k);
 
     /**
      * {@code long} 型整数 <i>m</i> について,

@@ -8,7 +8,7 @@
 /*
  * 2025.8.10
  */
-package matsu.num.number.incubator.factors;
+package matsu.num.number.factors;
 
 /**
  * 整数が素数であるかを判定する機能を提供する,

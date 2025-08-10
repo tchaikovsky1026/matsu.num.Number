@@ -1,2 +1,3 @@
 matsu.num.number,
+matsu.num.number.factors,
 matsu.num.number.modulo,

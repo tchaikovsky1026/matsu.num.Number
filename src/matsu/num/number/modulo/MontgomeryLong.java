@@ -135,28 +135,31 @@ final class MontgomeryLong extends SkeletalModulusLong {
     }
 
     @Override
-    public long modpow(long x, int k) {
+    public long modpow(long x, long k) {
         if (k < 0) {
             throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
         }
 
         x = this.modPositivize.apply(x);
-        switch (k) {
-            case 0:
-                return 1;
-            case 1:
-                return mod(x);
-            case 2:
-                return modpr(x, x);
-            default:
-                // ブロック外で処理
+
+        if (k <= Integer.MAX_VALUE) {
+            switch ((int) k) {
+                case 0:
+                    return 1;
+                case 1:
+                    return mod(x);
+                case 2:
+                    return modpr(x, x);
+                default:
+                    // ブロック外で処理
+            }
         }
 
         // 指数3以上
         long mong_out = mc_identity;
         long mong_xPow = toMong(x);
         while (k > 0) {
-            if ((k & 1) == 1) {
+            if ((k & 1L) == 1L) {
                 mong_out = reduceMong(mong_out, mong_xPow);
             }
 

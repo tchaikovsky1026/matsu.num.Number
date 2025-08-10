@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.10
  */
 package matsu.num.number.modulo;
 
@@ -95,27 +95,29 @@ final class ModulusLongPow2 extends SkeletalModulusLong {
     }
 
     @Override
-    public long modpow(long x, int k) {
+    public long modpow(long x, long k) {
         if (k < 0) {
             throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
         }
 
-        switch (k) {
-            case 0:
-                return 1L;
-            case 1:
-                return mod(x);
-            case 2:
-                return modpr(x, x);
-            default:
-                // ブロック外で処理
+        if (k <= Integer.MAX_VALUE) {
+            switch ((int) k) {
+                case 0:
+                    return 1L;
+                case 1:
+                    return mod(x);
+                case 2:
+                    return modpr(x, x);
+                default:
+                    // ブロック外で処理
+            }
         }
 
         // 指数3以上
         long out = 1L;
         long xPow = x;
-        while (k > 0) {
-            if ((k & 1) == 1) {
+        while (k > 0L) {
+            if ((k & 1L) == 1L) {
                 out *= xPow;
             }
 

@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.10
  */
 package matsu.num.number.modulo;
 
@@ -94,7 +94,7 @@ final class EvenNotPow2ModulusLong extends SkeletalModulusLong {
     }
 
     @Override
-    public long modpow(long x, int k) {
+    public long modpow(long x, long k) {
         long modM = modMCalculator.modpow(x, k);
         long modPow2 = modPow2Calculator.modpow(x, k);
 

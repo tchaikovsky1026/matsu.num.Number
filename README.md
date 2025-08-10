@@ -14,4 +14,3 @@ matsu.num.Number は Java 言語向けの数値計算における, 整数論に�
 ## License
 
 This project is licensed under the MIT License, see the LICENSE.txt file for details.
-

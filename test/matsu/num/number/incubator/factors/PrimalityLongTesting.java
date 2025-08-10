@@ -125,8 +125,7 @@ final class PrimalityLongTesting {
 
             for (int c = 0; c < ite; c++) {
 
-                // int範囲で代用
-                long n = ThreadLocalRandom.current().nextLong(1_000_000L);
+                long n = ThreadLocalRandom.current().nextLong(10_000_000_000_000L);
 
                 boolean result = testingPrimalityInt.isPrime(n);
                 boolean expected = REFERENCE.isPrime(n);

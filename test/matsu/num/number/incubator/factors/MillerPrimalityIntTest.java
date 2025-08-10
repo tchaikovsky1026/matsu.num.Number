@@ -10,24 +10,16 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 /**
- * {@link NaivePrimalityInt} のテスト.
+ * {@link MillerPrimalityInt} のテスト.
  */
 @RunWith(Enclosed.class)
-final class NaivePrimalityIntTest {
+final class MillerPrimalityIntTest {
 
-    public static final Class<?> TEST_CLASS = NaivePrimalityInt.class;
+    public static final Class<?> TEST_CLASS = MillerPrimalityInt.class;
 
-    private static final PrimalityInt Test_Primality = new NaivePrimalityInt();
+    private static final PrimalityInt Test_Primality = new MillerPrimalityInt();
 
     public static class Enumeration extends PrimalityIntTesting.Enumeration {
-
-        @Override
-        PrimalityInt getPrimalityInt() {
-            return Test_Primality;
-        }
-    }
-
-    public static class Randoms extends PrimalityIntTesting.Randoms {
 
         @Override
         PrimalityInt getPrimalityInt() {

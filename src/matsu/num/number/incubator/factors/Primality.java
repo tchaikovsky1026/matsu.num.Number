@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.9
+ * 2025.8.10
  */
 package matsu.num.number.incubator.factors;
 
@@ -18,8 +18,8 @@ package matsu.num.number.incubator.factors;
  */
 public final class Primality {
 
-    private static final PrimalityInt PRIMALITY_INT = new NaivePrimalityInt();
-    private static final PrimalityLong PRIMALITY_LONG = new NaivePrimalityLong();
+    private static final PrimalityInt PRIMALITY_INT = new MillerPrimalityInt();
+    private static final PrimalityLong PRIMALITY_LONG = new MillerPrimalityLong();
 
     private Primality() {
         // インスタンス化不可

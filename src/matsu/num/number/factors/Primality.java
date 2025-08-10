@@ -43,6 +43,9 @@ public final class Primality {
      * @return <i>n</i> が整数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
      */
     public static boolean isPrime(long n) {
+        if (0 <= n && n <= Integer.MAX_VALUE) {
+            return isPrime((int) n);
+        }
         return PRIMALITY_LONG.isPrime(n);
     }
 }

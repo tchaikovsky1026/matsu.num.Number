@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.10
  */
 package matsu.num.number.modulo;
 
@@ -53,7 +53,7 @@ final class Mod1Long extends SkeletalModulusLong {
     }
 
     @Override
-    public long modpow(long x, int k) {
+    public long modpow(long x, long k) {
         if (k < 0L) {
             throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
         }

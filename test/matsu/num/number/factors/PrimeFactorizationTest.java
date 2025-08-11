@@ -36,5 +36,10 @@ final class PrimeFactorizationTest {
         LongFunction<long[]> getPrimeFactorize() {
             return (long n) -> apply(n);
         }
+
+        @Override
+        long max() {
+            return 3_000_000_000L;
+        }
     }
 }

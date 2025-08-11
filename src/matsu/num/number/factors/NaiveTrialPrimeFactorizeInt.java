@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.10
+ * 2025.8.11
  */
 package matsu.num.number.factors;
 
@@ -47,28 +47,10 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
         }
 
         // 素因数3を調べる
-        while (true) {
-            int q = n / 3;
-            int r = n - 3 * q;
-            if (r == 0) {
-                factor.add(Integer.valueOf(3));
-                n = q;
-            } else {
-                break;
-            }
-        }
+        n = trial(n, 3, factor);
 
         // 素因数5を調べる
-        while (true) {
-            int q = n / 5;
-            int r = n - 5 * q;
-            if (r == 0) {
-                factor.add(Integer.valueOf(5));
-                n = q;
-            } else {
-                break;
-            }
-        }
+        n = trial(n, 5, factor);
 
         /*
          * 試し割り法で検証すべき因数は, 6k + 1 と 6k + 5 である.
@@ -77,30 +59,10 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
         for (int l = 6; l * l <= n; l += 6) {
 
             // 6k + 1 の検証
-            int m1 = l + 1;
-            while (true) {
-                int q = n / m1;
-                int r = n - m1 * q;
-                if (r == 0) {
-                    factor.add(Integer.valueOf(m1));
-                    n = q;
-                } else {
-                    break;
-                }
-            }
+            n = trial(n, l + 1, factor);
 
             // 6k + 5 の検証
-            int m2 = l + 5;
-            while (true) {
-                int q = n / m2;
-                int r = n - m2 * q;
-                if (r == 0) {
-                    factor.add(Integer.valueOf(m2));
-                    n = q;
-                } else {
-                    break;
-                }
-            }
+            n = trial(n, l + 5, factor);
         }
 
         if (n > 1) {
@@ -110,5 +72,34 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
         return factor.stream()
                 .mapToInt(m -> m.intValue())
                 .toArray();
+    }
+
+    /**
+     * 被除数 n に対して,
+     * 素因数 m を調べる. <br>
+     * 素因数を持つ場合, リストに追加される. <br>
+     * p で割り切った商を戻り値として返す.
+     * 
+     * <p>
+     * m が合成数の場合は, その素因数で n はすでに割り切れていることを前提とする.
+     * </p>
+     * 
+     * @param n n
+     * @param m m
+     * @param factor 素因数のリスト
+     * @return n を m で割り切った結果
+     */
+    private static int trial(int n, int m, List<Integer> factor) {
+        while (true) {
+            int q = n / m;
+            int r = n - m * q;
+            if (r == 0) {
+                factor.add(Integer.valueOf(m));
+                n = q;
+            } else {
+                break;
+            }
+        }
+        return n;
     }
 }

@@ -41,14 +41,14 @@ final class PrimeFactorizeTesting {
     static abstract class IntFactorize {
 
         @Test
-        public void test_素因数分解検証_ランダム化() {
+        public final void test_素因数分解検証_ランダム化() {
             int ite = 1000;
 
             IntFunction<int[]> primeFactorize = getPrimeFactorize();
 
             for (int c = 0; c < ite; c++) {
 
-                int n = 2 + ThreadLocalRandom.current().nextInt(1_000_000);
+                int n = 2 + ThreadLocalRandom.current().nextInt(Math.max(1, max()));
                 int[] factors = primeFactorize.apply(n);
                 int prodFactors = 1;
 
@@ -72,6 +72,15 @@ final class PrimeFactorizeTesting {
          * @return 素因数分解器
          */
         abstract IntFunction<int[]> getPrimeFactorize();
+
+        /**
+         * 検証する被除数の最大値(概算)を返す.
+         * 
+         * @return 被除数の最大値
+         */
+        int max() {
+            return 1_000_000;
+        }
     }
 
     /**
@@ -88,7 +97,7 @@ final class PrimeFactorizeTesting {
 
             for (int c = 0; c < ite; c++) {
 
-                long n = 2 + ThreadLocalRandom.current().nextLong(100_000_000_000L);
+                long n = 2 + ThreadLocalRandom.current().nextLong(Math.max(1L, max()));
                 long[] factors = primeFactorize.apply(n);
                 long prodFactors = 1;
 
@@ -112,5 +121,14 @@ final class PrimeFactorizeTesting {
          * @return 素因数分解器
          */
         abstract LongFunction<long[]> getPrimeFactorize();
+
+        /**
+         * 検証する被除数の最大値(概算)を返す.
+         * 
+         * @return 被除数の最大値
+         */
+        long max() {
+            return 100_000_000_000L;
+        }
     }
 }

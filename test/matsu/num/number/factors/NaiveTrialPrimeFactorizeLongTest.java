@@ -31,5 +31,10 @@ final class NaiveTrialPrimeFactorizeLongTest {
         LongFunction<long[]> getPrimeFactorize() {
             return FACTORIZE_LONG::apply;
         }
+
+        @Override
+        long max() {
+            return 3_000_000_000L;
+        }
     }
 }

@@ -91,11 +91,10 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
      */
     private static int trial(int n, int m, List<Integer> factor) {
         while (true) {
-            int q = n / m;
-            int r = n - m * q;
+            int r = n % m;
             if (r == 0) {
                 factor.add(Integer.valueOf(m));
-                n = q;
+                n /= m;
             } else {
                 break;
             }

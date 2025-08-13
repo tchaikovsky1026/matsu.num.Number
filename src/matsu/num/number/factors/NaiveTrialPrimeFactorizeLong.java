@@ -91,11 +91,10 @@ final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
      */
     private static long trial(long n, long m, List<Long> factor) {
         while (true) {
-            long q = n / m;
-            long r = n - m * q;
+            long r = n % m;
             if (r == 0) {
                 factor.add(Long.valueOf(m));
-                n = q;
+                n /= m;
             } else {
                 break;
             }

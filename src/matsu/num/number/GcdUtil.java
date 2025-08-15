@@ -35,8 +35,9 @@ public final class GcdUtil {
      * <ul>
      * <li><i>a</i> = <i>b</i> = 0 のとき,
      * gcd(<i>a</i>, <i>b</i>) = 0</li>
-     * <li><i>a</i> = <i>b</i> = -2<sup>31</sup> のとき,
-     * gcd(<i>a</i>, <i>b</i>) = -2<sup>31</sup></li>
+     * <li><i>a</i> = <i>b</i> =
+     * {@link Integer#MIN_VALUE} のとき,
+     * gcd(<i>a</i>, <i>b</i>) = {@link Integer#MIN_VALUE}</li>
      * </ul>
      * 
      * @param a <i>a</i>
@@ -45,10 +46,9 @@ public final class GcdUtil {
      */
     public static int gcd(int a, int b) {
         /*
-         * Stein のアルゴリズムを改変.
+         * Stein のアルゴリズムに基づく.
          * a,bが奇数,
          * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
-         * a >> b のとき, bを大きく引くようにする.
          */
 
         a = Math.abs(a);
@@ -78,23 +78,15 @@ public final class GcdUtil {
         while (true) {
             // ここの時点で, a >= b かつ a, bとも奇数である.
 
-            //bが小さすぎる場合, aから大きく引く
-            int shift = Integer.numberOfLeadingZeros(a) - Integer.numberOfLeadingZeros(b);
-            if (shift >= 2) {
-                a -= b << (shift - 1);
+            while (a >= b) {
+                a -= b;
+                a >>= Integer.numberOfTrailingZeros(a);
             }
-            a -= b;
-            a = Math.abs(a);
 
-            //a = 0でもよい
-            a >>= Integer.numberOfTrailingZeros(a);
-
-            // a >= b にする
-            if (a < b) {
-                int t = a;
-                a = b;
-                b = t;
-            }
+            // この時点で a < b なので, a >= b にする
+            int t = a;
+            a = b;
+            b = t;
 
             // b = 0なら gcdはa
             if (b == 0) {
@@ -118,8 +110,9 @@ public final class GcdUtil {
      * <ul>
      * <li><i>a</i> = <i>b</i> = 0 のとき,
      * gcd(<i>a</i>, <i>b</i>) = 0</li>
-     * <li><i>a</i> = <i>b</i> = -2<sup>63</sup> のとき,
-     * gcd(<i>a</i>, <i>b</i>) = -2<sup>63</sup></li>
+     * <li><i>a</i> = <i>b</i> =
+     * {@link Long#MIN_VALUE} のとき,
+     * gcd(<i>a</i>, <i>b</i>) = {@link Long#MIN_VALUE}</li>
      * </ul>
      * 
      * @param a <i>a</i>
@@ -128,10 +121,9 @@ public final class GcdUtil {
      */
     public static long gcd(long a, long b) {
         /*
-         * Stein のアルゴリズムを改変.
+         * Stein のアルゴリズムに基づく.
          * a,bが奇数,
          * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
-         * a >> b のとき, bを大きく引くようにする.
          */
 
         a = Math.abs(a);
@@ -161,23 +153,15 @@ public final class GcdUtil {
         while (true) {
             // ここの時点で, a >= b かつ a, bとも奇数である.
 
-            //bが小さすぎる場合, aから大きく引く
-            long shift = Long.numberOfLeadingZeros(a) - Long.numberOfLeadingZeros(b);
-            if (shift >= 2) {
-                a -= b << (shift - 1);
+            while (a >= b) {
+                a -= b;
+                a >>= Long.numberOfTrailingZeros(a);
             }
-            a -= b;
-            a = Math.abs(a);
 
-            //a = 0でもよい
-            a >>= Long.numberOfTrailingZeros(a);
-
-            // a >= b にする
-            if (a < b) {
-                long t = a;
-                a = b;
-                b = t;
-            }
+            // この時点で a < b なので, a >= b にする
+            long t = a;
+            a = b;
+            b = t;
 
             // b = 0なら gcdはa
             if (b == 0) {

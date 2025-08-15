@@ -157,7 +157,7 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
             /* rho法の実行 */
             final long n = this.n;
 
-            final long m = 100L; // 剰余計算のマージサイズ
+            final long m = 64L; // 剰余計算のマージサイズ, 2の累乗を要求する
             final long x0 = n >> 1; // 初期値
 
             /*
@@ -176,32 +176,39 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
                 long x;
                 long y = x0;
                 long r = 1L;
-                long g;
-                long ys;
-                do {
+                long g = 1L; // 必ず上書きされるが, ダミーを代入
+                long ys = y; // 必ず上書きされるが, ダミーを代入
+                CycleFinding: while (true) {
                     x = y;
                     for (long j = 0L; j < r; j++) {
                         y = f(y, c);
                     }
-                    long k = 0L;
-                    do {
+                    long internalSize = Math.min(m, r);
+                    long externalSize = r / internalSize;
+
+                    for (long e = 0; e < externalSize; e++) {
                         ys = y;
                         long q = 1L;
-                        for (long i = 0L, len = Math.min(m, r - k); i < len; i++) {
+                        for (long i = 0L; i < internalSize; i++) {
                             y = f(y, c);
-                            q = moduloN.modpr(q, x - y);
+                            q = moduloN.modpr(q, Math.abs(x - y));
                         }
                         g = GcdUtil.gcd(q, n);
-                        k += m;
-                    } while (k < r && g == 1L);
-                    r *= 2L;
-                } while (g == 1L);
+                        if (g != 1L) {
+                            break CycleFinding;
+                        }
+                    }
+                    r <<= 1;
+                }
 
                 if (g == n) {
-                    do {
+                    for (long i = 0; i < r; i++) {
                         ys = f(ys, c);
                         g = GcdUtil.gcd(x - ys, n);
-                    } while (g == 1L);
+                        if (g != 1) {
+                            break;
+                        }
+                    }
                 }
 
                 if (g < n) {

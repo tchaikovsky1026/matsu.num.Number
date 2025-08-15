@@ -13,16 +13,16 @@ package matsu.num.number.modulo;
 import java.util.Objects;
 
 /**
- * 除数1に対する {@link ModulusInt} の実装.
+ * 除数1に対する {@link ModuloInt} の実装.
  * 
  * @author Matsuura Y.
  */
-final class Mod1Int extends SkeletalModulusInt {
+final class Mod1Int extends SkeletalModuloInt {
 
     /**
      * シングルトン.
      */
-    static final ModulusInt INSTANCE = new Mod1Int();
+    static final ModuloInt INSTANCE = new Mod1Int();
 
     /**
      * 内部から呼ばれる.

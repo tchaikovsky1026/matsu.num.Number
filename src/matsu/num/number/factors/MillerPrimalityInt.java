@@ -10,7 +10,7 @@
  */
 package matsu.num.number.factors;
 
-import matsu.num.number.modulo.ModulusInt;
+import matsu.num.number.modulo.ModuloInt;
 
 /**
  * int 型の Miller テストによる素数判定.
@@ -42,7 +42,7 @@ final class MillerPrimalityInt implements PrimalityInt {
         int n_m1 = n - 1;
         int pow2Exponent = Integer.numberOfTrailingZeros(n_m1);
         int m = n_m1 >> pow2Exponent;
-        ModulusInt modN = ModulusInt.get(n);
+        ModuloInt modN = ModuloInt.get(n);
 
         labelA: for (int a : testA) {
             // a < n だけをテストに用いる

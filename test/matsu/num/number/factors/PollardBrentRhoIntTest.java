@@ -24,7 +24,7 @@ final class PollardBrentRhoIntTest {
 
     public static final Class<?> TEST_CLASS = PollardBrentRhoInt.class;
 
-    private static final PrimeFactorizeInt FACTORIZE_INT = new PollardBrentRhoInt();
+    private static final PrimeFactorInt FACTORIZE_INT = new PollardBrentRhoInt();
 
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 
@@ -59,7 +59,7 @@ final class PollardBrentRhoIntTest {
 
         @Test
         public void test_PollardBrentRhoIntの実行() {
-            PrimeFactorizeInt primeFactorizeInt = new PollardBrentRhoInt();
+            PrimeFactorInt primeFactorizeInt = new PollardBrentRhoInt();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "PollardBrentRhoInt: ", 1,
@@ -79,7 +79,8 @@ final class PollardBrentRhoIntTest {
 
         @Test
         public void test_NaiveTrialPrimeFactorizeIntの実行() {
-            PrimeFactorizeInt primeFactorizeInt = new NaiveTrialPrimeFactorizeInt();
+            @SuppressWarnings("deprecation")
+            PrimeFactorInt primeFactorizeInt = new NaiveTrialPrimeFactorInt();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeInt: ", 1,

@@ -14,15 +14,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import matsu.num.number.GcdUtil;
-import matsu.num.number.modulo.ModulusInt;
+import matsu.num.number.modulo.ModuloInt;
 
 /**
  * {@code int} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.
  * 
  * @author Matsuura Y.
  */
-final class PollardBrentRhoInt implements PrimeFactorizeInt {
+final class PollardBrentRhoInt implements PrimeFactorInt {
 
     /**
      * rho 法に移行した場合の, 素因数の最小. <br>
@@ -140,11 +139,11 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
     private static final class RhoAlgorithm {
 
         private final int n;
-        private final ModulusInt moduloN;
+        private final ModuloInt moduloN;
 
         RhoAlgorithm(int n) {
             this.n = n;
-            this.moduloN = ModulusInt.get(n);
+            this.moduloN = ModuloInt.get(n);
         }
 
         /**
@@ -196,7 +195,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
                             y = f(y, c);
                             q = moduloN.modpr(q, Math.abs(x - y));
                         }
-                        g = GcdUtil.gcd(q, n);
+                        g = Gcd.gcd(q, n);
                         if (g != 1) {
                             break CycleFinding;
                         }
@@ -207,7 +206,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
                 if (g == n) {
                     for (int i = 0; i < r; i++) {
                         ys = f(ys, c);
-                        g = GcdUtil.gcd(x - ys, n);
+                        g = Gcd.gcd(x - ys, n);
                         if (g != 1) {
                             break;
                         }
@@ -228,6 +227,8 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
         /**
          * 乱数を生成する
+         * 
+         * @param c 0以下
          */
         private int f(int y, int c) {
             int y2_p_c = moduloN.modpr(y, y) + c;

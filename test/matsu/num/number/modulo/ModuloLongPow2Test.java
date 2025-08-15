@@ -12,22 +12,24 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 /**
- * {@link MontgomeryLong} のテスト.
+ * {@link ModuloLongPow2} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MontgomeryLongTest {
+final class ModuloLongPow2Test {
 
-    public static final Class<?> TEST_CLASS = MontgomeryLong.class;
+    public static final Class<?> TEST_CLASS = ModuloLongPow2.class;
 
     private static final LongFunction<ModuloLong> moduloGetter =
             m -> {
-                if (m == 1) {
+                if (!(2L <= m && m <= (1L << 62))) {
                     throw new UnsupportedOperationException();
                 }
-                if ((m % 2) == 0) {
+                int shift = Long.numberOfTrailingZeros(m);
+                if (m - (1L << shift) != 0L) {
                     throw new UnsupportedOperationException();
                 }
-                return new MontgomeryLong(m);
+
+                return new ModuloLongPow2(shift);
             };
 
     public static class ModProd2のテスト extends ModuloLongTesting.Prod2 {

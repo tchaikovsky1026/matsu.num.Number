@@ -11,8 +11,7 @@
 package matsu.num.number.factors;
 
 /**
- * 整数が素数であるかを判定する機能を提供する,
- * ユーティリティクラス.
+ * 整数型の素数判定に関連する機能を扱う.
  * 
  * @author Matsuura Y.
  */

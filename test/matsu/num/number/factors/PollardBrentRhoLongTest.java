@@ -23,7 +23,7 @@ final class PollardBrentRhoLongTest {
 
     public static final Class<?> TEST_CLASS = PollardBrentRhoLong.class;
 
-    private static final PrimeFactorizeLong FACTORIZE_LONG = new PollardBrentRhoLong();
+    private static final PrimeFactorLong FACTORIZE_LONG = new PollardBrentRhoLong();
 
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 
@@ -58,7 +58,7 @@ final class PollardBrentRhoLongTest {
 
         @Test
         public void test_PollardBrentRhoLongの実行() {
-            PrimeFactorizeLong primeFactorizeLong = new PollardBrentRhoLong();
+            PrimeFactorLong primeFactorizeLong = new PollardBrentRhoLong();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "PollardBrentRhoLong: ", 10,
@@ -78,7 +78,8 @@ final class PollardBrentRhoLongTest {
 
         @Test
         public void test_NaiveTrialPrimeFactorizeLongの実行() {
-            PrimeFactorizeLong primeFactorizeLong = new NaiveTrialPrimeFactorizeLong();
+            @SuppressWarnings("deprecation")
+            PrimeFactorLong primeFactorizeLong = new NaiveTrialPrimeFactorLong();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeLong: ", 1,

@@ -21,7 +21,7 @@ interface PrimalityInt {
      * {@code int} 型の整数 <i>n</i> が素数かどうかを判定する.
      * 
      * @param n 整数
-     * @return <i>n</i> が整数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
+     * @return <i>n</i> が素数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
      */
     public abstract boolean isPrime(int n);
 }

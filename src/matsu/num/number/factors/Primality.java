@@ -30,7 +30,7 @@ public final class Primality {
      * {@code int} 型の整数 <i>n</i> が素数かどうかを判定する.
      * 
      * @param n 整数
-     * @return <i>n</i> が整数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
+     * @return <i>n</i> が素数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
      */
     public static boolean isPrime(int n) {
         return PRIMALITY_INT.isPrime(n);
@@ -40,7 +40,7 @@ public final class Primality {
      * {@code long} 型の整数 <i>n</i> が素数かどうかを判定する.
      * 
      * @param n 整数
-     * @return <i>n</i> が整数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
+     * @return <i>n</i> が素数なら true (<i>n</i> {@literal < 2} の場合は必ず false)
      */
     public static boolean isPrime(long n) {
         if (0 <= n && n <= Integer.MAX_VALUE) {

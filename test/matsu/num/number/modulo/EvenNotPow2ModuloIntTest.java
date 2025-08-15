@@ -16,22 +16,23 @@ import org.junit.runner.RunWith;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
 /**
- * {@link MontgomeryInt} クラスのテスト.
+ * {@link EvenNotPow2ModuloInt} クラスのテスト.
  */
 @RunWith(Enclosed.class)
-final class MontgomeryIntTest {
+final class EvenNotPow2ModuloIntTest {
 
-    public static final Class<?> TEST_CLASS = MontgomeryInt.class;
+    public static final Class<?> TEST_CLASS = EvenNotPow2ModuloInt.class;
 
     private static final IntFunction<ModuloInt> moduloGetter =
-            m -> {
-                if (m == 1) {
+            divisor -> {
+                int pow2Exponent = Integer.numberOfTrailingZeros(divisor);
+                int innerDivisor = divisor >> pow2Exponent;
+
+                if (!(pow2Exponent >= 1 && innerDivisor != 1)) {
                     throw new UnsupportedOperationException();
                 }
-                if ((m % 2) == 0) {
-                    throw new UnsupportedOperationException();
-                }
-                return new MontgomeryInt(m);
+
+                return new EvenNotPow2ModuloInt(pow2Exponent, innerDivisor);
             };
 
     public static class ModProd2のテスト extends ModuloIntTesting.Prod2 {
@@ -61,17 +62,19 @@ final class MontgomeryIntTest {
     @Ignore
     public static class 計算時間評価 {
 
-        private int m = 1001;
+        private int m = 31 * 64;
         private int k = 100;
 
         private int d = 100000;
 
         @Test
-        public void test_MontgomeryIntの実行() {
-            ModuloInt modulusInt = new MontgomeryInt(m);
+        public void test_MontgomeryBasedModulusIntの実行() {
+            int pow2Exponent = Integer.numberOfTrailingZeros(m);
+            int innerDivisor = m >> pow2Exponent;
+            ModuloInt modulusInt = new EvenNotPow2ModuloInt(pow2Exponent, innerDivisor);
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:mod: ", 10_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:mod: ", 10_000_000,
                         () -> {
                             int d = this.d;
                             int mask = 0x7FFF_FFFF;
@@ -101,7 +104,7 @@ final class MontgomeryIntTest {
             }
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:modpr2: ", 10_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:modpr2: ", 10_000_000,
                         () -> {
                             int d = this.d;
                             int mask = 0x7FFF_FFFF;
@@ -131,7 +134,7 @@ final class MontgomeryIntTest {
             }
             {
                 var executor = new SpeedTestExecutor(
-                        TEST_CLASS, "MontgomeryInt:modpow: ", 2_000_000,
+                        TEST_CLASS, "MontgomeryBasedModulusInt:modpow: ", 2_000_000,
                         () -> {
                             int d = this.d;
                             int k = this.k;

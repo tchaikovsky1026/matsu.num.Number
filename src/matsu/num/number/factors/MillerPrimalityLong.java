@@ -10,7 +10,7 @@
  */
 package matsu.num.number.factors;
 
-import matsu.num.number.modulo.ModulusLong;
+import matsu.num.number.modulo.ModuloLong;
 
 /**
  * long 型の Miller テストによる素数判定.
@@ -42,7 +42,7 @@ final class MillerPrimalityLong implements PrimalityLong {
         long n_m1 = n - 1L;
         long pow2Exponent = Long.numberOfTrailingZeros(n_m1);
         long m = n_m1 >> pow2Exponent;
-        ModulusLong modN = ModulusLong.get(n);
+        ModuloLong modN = ModuloLong.get(n);
 
         labelA: for (long a : testA) {
             // a < n だけをテストに用いる

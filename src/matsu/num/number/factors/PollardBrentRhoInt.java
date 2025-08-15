@@ -160,7 +160,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
             /* rho法の実行 */
             final int n = this.n;
 
-            final int m = 100; // 剰余計算のマージサイズ
+            final int m = 64; // 剰余計算のマージサイズ, 2の累乗を要求する
             final int x0 = n >> 1; // 初期値
 
             /*
@@ -179,32 +179,39 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
                 int x;
                 int y = x0;
                 int r = 1;
-                int g;
-                int ys;
-                do {
+                int g = 1; // 必ず上書きされるが, ダミーを代入
+                int ys = y; // 必ず上書きされるが, ダミーを代入
+                CycleFinding: while (true) {
                     x = y;
                     for (int j = 0; j < r; j++) {
                         y = f(y, c);
                     }
-                    int k = 0;
-                    do {
+                    int internalSize = Math.min(m, r);
+                    int externalSize = r / internalSize;
+
+                    for (int e = 0; e < externalSize; e++) {
                         ys = y;
                         int q = 1;
-                        for (int i = 0, len = Math.min(m, r - k); i < len; i++) {
+                        for (int i = 0; i < internalSize; i++) {
                             y = f(y, c);
-                            q = moduloN.modpr(q, x - y);
+                            q = moduloN.modpr(q, Math.abs(x - y));
                         }
                         g = GcdUtil.gcd(q, n);
-                        k += m;
-                    } while (k < r && g == 1);
-                    r *= 2;
-                } while (g == 1);
+                        if (g != 1) {
+                            break CycleFinding;
+                        }
+                    }
+                    r <<= 1;
+                }
 
                 if (g == n) {
-                    do {
+                    for (int i = 0; i < r; i++) {
                         ys = f(ys, c);
                         g = GcdUtil.gcd(x - ys, n);
-                    } while (g == 1);
+                        if (g != 1) {
+                            break;
+                        }
+                    }
                 }
 
                 if (g < n) {

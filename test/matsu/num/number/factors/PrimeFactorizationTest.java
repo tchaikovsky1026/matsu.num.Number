@@ -28,6 +28,11 @@ final class PrimeFactorizationTest {
         IntFunction<int[]> getPrimeFactorize() {
             return (int n) -> apply(n);
         }
+
+        @Override
+        int max() {
+            return 2_000_000_000;
+        }
     }
 
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
@@ -39,7 +44,7 @@ final class PrimeFactorizationTest {
 
         @Override
         long max() {
-            return 3_000_000_000L;
+            return 3_000_000_000_000_000L;
         }
     }
 }

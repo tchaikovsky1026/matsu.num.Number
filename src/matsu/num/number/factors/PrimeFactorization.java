@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.11
+ * 2025.8.15
  */
 package matsu.num.number.factors;
 
@@ -18,8 +18,8 @@ package matsu.num.number.factors;
  */
 public final class PrimeFactorization {
 
-    private static final PrimeFactorizeInt FACTORIZE_INT = new NaiveTrialPrimeFactorizeInt();
-    private static final PrimeFactorizeLong FACTORIZE_LONG = new NaiveTrialPrimeFactorizeLong();
+    private static final PrimeFactorizeInt FACTORIZE_INT = new PollardBrentRhoInt();
+    private static final PrimeFactorizeLong FACTORIZE_LONG = new PollardBrentRhoLong();
 
     private PrimeFactorization() {
         // インスタンス化不可

@@ -8,7 +8,7 @@
 /*
  * 2025.8.11
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;

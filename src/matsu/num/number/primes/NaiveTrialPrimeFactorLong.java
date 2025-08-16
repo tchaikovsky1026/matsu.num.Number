@@ -8,71 +8,71 @@
 /*
  * 2025.8.11
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 素朴な試し割り法による {@link PrimeFactorInt} の実装.
+ * 素朴な試し割り法による {@link PrimeFactorLong} の実装.
  * 
  * @author Matsuura Y.
  * @deprecated このクラスはプロダクトコードから使用されていない
  */
 @Deprecated
-final class NaiveTrialPrimeFactorInt implements PrimeFactorInt {
+final class NaiveTrialPrimeFactorLong implements PrimeFactorLong {
 
     /**
      * 唯一のコンストラクタ.
      */
-    NaiveTrialPrimeFactorInt() {
+    NaiveTrialPrimeFactorLong() {
         super();
     }
 
     @Override
-    public int[] apply(int n) {
-        if (n < 2) {
+    public long[] apply(long n) {
+        if (n < 2L) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new int[] { n };
+            return new long[] { n };
         }
 
-        List<Integer> factor = new ArrayList<>(32);
+        List<Long> factor = new ArrayList<>(64);
 
         // 素因数2を調べる
-        while ((n & 1) == 0) {
-            factor.add(Integer.valueOf(2));
+        while ((n & 1L) == 0L) {
+            factor.add(Long.valueOf(2L));
             n >>= 1;
         }
 
         // 素因数3を調べる
-        n = trial(n, 3, factor);
+        n = trial(n, 3L, factor);
 
         // 素因数5を調べる
-        n = trial(n, 5, factor);
+        n = trial(n, 5L, factor);
 
         /*
          * 試し割り法で検証すべき因数は, 6k + 1 と 6k + 5 である.
          * l = 6k とする.
          */
-        for (int l = 6; l * l <= n; l += 6) {
+        for (long l = 6L; l * l <= n; l += 6L) {
 
             // 6k + 1 の検証
-            n = trial(n, l + 1, factor);
+            n = trial(n, l + 1L, factor);
 
             // 6k + 5 の検証
-            n = trial(n, l + 5, factor);
+            n = trial(n, l + 5L, factor);
         }
 
-        if (n > 1) {
-            factor.add(Integer.valueOf(n));
+        if (n > 1L) {
+            factor.add(Long.valueOf(n));
         }
 
         return factor.stream()
-                .mapToInt(m -> m.intValue())
+                .mapToLong(m -> m.longValue())
                 .toArray();
     }
 
@@ -91,11 +91,11 @@ final class NaiveTrialPrimeFactorInt implements PrimeFactorInt {
      * @param factor 素因数のリスト
      * @return n を m で割り切った結果
      */
-    private static int trial(int n, int m, List<Integer> factor) {
+    private static long trial(long n, long m, List<Long> factor) {
         while (true) {
-            int r = n % m;
+            long r = n % m;
             if (r == 0) {
-                factor.add(Integer.valueOf(m));
+                factor.add(Long.valueOf(m));
                 n /= m;
             } else {
                 break;

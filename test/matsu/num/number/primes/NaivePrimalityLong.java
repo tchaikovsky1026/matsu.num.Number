@@ -8,7 +8,7 @@
 /*
  * 2025.8.9
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 /**
  * テスト用, 素朴な試し割り法による素数判定クラス.

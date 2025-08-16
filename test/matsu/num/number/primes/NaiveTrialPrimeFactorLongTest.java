@@ -8,7 +8,7 @@
 /*
  * 2025.8.11
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import java.util.function.LongFunction;
 

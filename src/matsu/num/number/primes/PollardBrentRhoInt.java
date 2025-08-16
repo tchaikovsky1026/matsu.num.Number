@@ -8,12 +8,13 @@
 /*
  * 2025.8.14
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import matsu.num.number.Gcd;
 import matsu.num.number.modulo.ModuloInt;
 
 /**

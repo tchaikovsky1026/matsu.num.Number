@@ -24,12 +24,12 @@ final class PollardBrentRhoIntTest {
 
     public static final Class<?> TEST_CLASS = PollardBrentRhoInt.class;
 
-    private static final PrimeFactorInt FACTORIZE_INT = new PollardBrentRhoInt();
+    private static final PrimeFactorizeInt FACTORIZE_INT = new PollardBrentRhoInt();
 
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 
         @Override
-        IntFunction<int[]> getPrimeFactorize() {
+        IntFunction<PrimeFactorInt> getPrimeFactorize() {
             return FACTORIZE_INT::apply;
         }
 
@@ -59,7 +59,7 @@ final class PollardBrentRhoIntTest {
 
         @Test
         public void test_PollardBrentRhoIntの実行() {
-            PrimeFactorInt primeFactorizeInt = new PollardBrentRhoInt();
+            PrimeFactorizeInt primeFactorizeInt = new PollardBrentRhoInt();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "PollardBrentRhoInt: ", 1,
@@ -67,7 +67,7 @@ final class PollardBrentRhoIntTest {
                             this.d = 0;
                             int d = this.d;
                             for (int n = MIN; n < MAX; n++) {
-                                int[] f = primeFactorizeInt.apply(Math.max(n, d));
+                                int[] f = primeFactorizeInt.apply(Math.max(n, d)).factors();
                                 d = f[0];
                             }
                             this.d = d;
@@ -80,7 +80,7 @@ final class PollardBrentRhoIntTest {
         @Test
         public void test_NaiveTrialPrimeFactorizeIntの実行() {
             @SuppressWarnings("deprecation")
-            PrimeFactorInt primeFactorizeInt = new NaiveTrialPrimeFactorInt();
+            PrimeFactorizeInt primeFactorizeInt = new NaiveTrialPrimeFactorizeInt();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeInt: ", 1,
@@ -88,7 +88,7 @@ final class PollardBrentRhoIntTest {
                             this.d = 0;
                             int d = this.d;
                             for (int n = MIN; n < MAX; n++) {
-                                int[] f = primeFactorizeInt.apply(Math.max(n, d));
+                                int[] f = primeFactorizeInt.apply(Math.max(n, d)).factors();
                                 d = f[0];
                             }
                             this.d = d;
@@ -96,6 +96,16 @@ final class PollardBrentRhoIntTest {
                         });
                 executor.execute();
             }
+        }
+    }
+
+    public static class PrimeFactorIntのtoString表示 {
+
+        @Test
+        public void test_toString表示() {
+            System.out.println(TEST_CLASS.getName() + ":");
+            System.out.println(FACTORIZE_INT.apply(360));
+            System.out.println();
         }
     }
 }

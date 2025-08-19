@@ -14,31 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 素朴な試し割り法による {@link PrimeFactorLong} の実装.
+ * 素朴な試し割り法による {@link PrimeFactorizeLong} の実装.
  * 
  * @author Matsuura Y.
  * @deprecated このクラスはプロダクトコードから使用されていない
  */
 @Deprecated
-final class NaiveTrialPrimeFactorLong implements PrimeFactorLong {
+final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
 
     /**
      * 唯一のコンストラクタ.
      */
-    NaiveTrialPrimeFactorLong() {
+    NaiveTrialPrimeFactorizeLong() {
         super();
     }
 
     @Override
-    public long[] apply(long n) {
+    public PrimeFactorLong apply(long n) {
         if (n < 2L) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new long[] { n };
+            return new PrimeFactorLong(n, new long[] { n });
         }
+
+        final long original = n;
 
         List<Long> factor = new ArrayList<>(64);
 
@@ -71,9 +73,11 @@ final class NaiveTrialPrimeFactorLong implements PrimeFactorLong {
             factor.add(Long.valueOf(n));
         }
 
-        return factor.stream()
-                .mapToLong(m -> m.longValue())
-                .toArray();
+        return new PrimeFactorLong(
+                original,
+                factor.stream()
+                        .mapToLong(m -> m.longValue())
+                        .toArray());
     }
 
     /**

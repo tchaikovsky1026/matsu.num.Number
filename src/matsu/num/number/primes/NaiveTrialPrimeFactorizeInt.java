@@ -14,31 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 素朴な試し割り法による {@link PrimeFactorInt} の実装.
+ * 素朴な試し割り法による {@link PrimeFactorizeInt} の実装.
  * 
  * @author Matsuura Y.
  * @deprecated このクラスはプロダクトコードから使用されていない
  */
 @Deprecated
-final class NaiveTrialPrimeFactorInt implements PrimeFactorInt {
+final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
 
     /**
      * 唯一のコンストラクタ.
      */
-    NaiveTrialPrimeFactorInt() {
+    NaiveTrialPrimeFactorizeInt() {
         super();
     }
 
     @Override
-    public int[] apply(int n) {
+    public PrimeFactorInt apply(int n) {
         if (n < 2) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new int[] { n };
+            return new PrimeFactorInt(n, new int[] { n });
         }
+
+        final int original = n;
 
         List<Integer> factor = new ArrayList<>(32);
 
@@ -71,9 +73,11 @@ final class NaiveTrialPrimeFactorInt implements PrimeFactorInt {
             factor.add(Integer.valueOf(n));
         }
 
-        return factor.stream()
-                .mapToInt(m -> m.intValue())
-                .toArray();
+        return new PrimeFactorInt(
+                original,
+                factor.stream()
+                        .mapToInt(m -> m.intValue())
+                        .toArray());
     }
 
     /**

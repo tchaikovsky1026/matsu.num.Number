@@ -10,10 +10,6 @@
  */
 package matsu.num.number.primes;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
-
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
@@ -44,25 +40,14 @@ final class PrimeFactorizeTesting {
         public final void test_素因数分解検証_ランダム化() {
             int ite = 1000;
 
-            IntFunction<int[]> primeFactorize = getPrimeFactorize();
+            IntFunction<PrimeFactorInt> primeFactorize = getPrimeFactorize();
 
             for (int c = 0; c < ite; c++) {
 
                 int n = 2 + ThreadLocalRandom.current().nextInt(Math.max(1, max()));
-                int[] factors = primeFactorize.apply(n);
-                int prodFactors = 1;
 
-                // 素数判定しつつ総積を計算
-                for (int f : factors) {
-                    assertThat(
-                            f + "is not prime: n = " + n + ", " + Arrays.toString(factors),
-                            Primality.isPrime(f), is(true));
-                    prodFactors *= f;
-                }
-
-                assertThat(
-                        "product mismatch: n = " + n + ", " + Arrays.toString(factors),
-                        prodFactors, is(n));
+                PrimeFactorInt primeFactor = primeFactorize.apply(n);
+                PrimeFactorTestingHelper.testInt(primeFactor);
             }
         }
 
@@ -71,7 +56,7 @@ final class PrimeFactorizeTesting {
          * 
          * @return 素因数分解器
          */
-        abstract IntFunction<int[]> getPrimeFactorize();
+        abstract IntFunction<PrimeFactorInt> getPrimeFactorize();
 
         /**
          * 検証する被除数の最大値(概算)を返す.
@@ -93,25 +78,14 @@ final class PrimeFactorizeTesting {
         public void test_素因数分解検証_ランダム化() {
             int ite = 1000;
 
-            LongFunction<long[]> primeFactorize = getPrimeFactorize();
+            LongFunction<PrimeFactorLong> primeFactorize = getPrimeFactorize();
 
             for (int c = 0; c < ite; c++) {
 
                 long n = 2 + ThreadLocalRandom.current().nextLong(Math.max(1L, max()));
-                long[] factors = primeFactorize.apply(n);
-                long prodFactors = 1;
 
-                // 素数判定しつつ総積を計算
-                for (long f : factors) {
-                    assertThat(
-                            f + "is not prime: n = " + n + ", " + Arrays.toString(factors),
-                            Primality.isPrime(f), is(true));
-                    prodFactors *= f;
-                }
-
-                assertThat(
-                        "product mismatch: n = " + n + ", " + Arrays.toString(factors),
-                        prodFactors, is(n));
+                PrimeFactorLong primeFactor = primeFactorize.apply(n);
+                PrimeFactorTestingHelper.testLong(primeFactor);
             }
         }
 
@@ -120,7 +94,7 @@ final class PrimeFactorizeTesting {
          * 
          * @return 素因数分解器
          */
-        abstract LongFunction<long[]> getPrimeFactorize();
+        abstract LongFunction<PrimeFactorLong> getPrimeFactorize();
 
         /**
          * 検証する被除数の最大値(概算)を返す.

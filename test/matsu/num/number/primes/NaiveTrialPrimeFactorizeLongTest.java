@@ -16,20 +16,20 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 /**
- * {@link NaiveTrialPrimeFactorLong} のテスト.
+ * {@link NaiveTrialPrimeFactorizeLong} のテスト.
  */
 @Deprecated
 @RunWith(Enclosed.class)
-final class NaiveTrialPrimeFactorLongTest {
+final class NaiveTrialPrimeFactorizeLongTest {
 
-    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorLong.class;
+    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorizeLong.class;
 
-    private static final PrimeFactorLong FACTORIZE_LONG = new NaiveTrialPrimeFactorLong();
+    private static final PrimeFactorizeLong FACTORIZE_LONG = new NaiveTrialPrimeFactorizeLong();
 
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 
         @Override
-        LongFunction<long[]> getPrimeFactorize() {
+        LongFunction<PrimeFactorLong> getPrimeFactorize() {
             return FACTORIZE_LONG::apply;
         }
 

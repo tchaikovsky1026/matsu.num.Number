@@ -29,8 +29,8 @@ final class NaiveTrialPrimeFactorizeLongTest {
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 
         @Override
-        LongFunction<long[]> getPrimeFactorize() {
-            return n -> FACTORIZE_LONG.apply(n).factors();
+        LongFunction<PrimeFactorLong> getPrimeFactorize() {
+            return FACTORIZE_LONG::apply;
         }
 
         @Override

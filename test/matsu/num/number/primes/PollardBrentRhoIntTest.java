@@ -29,8 +29,8 @@ final class PollardBrentRhoIntTest {
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 
         @Override
-        IntFunction<int[]> getPrimeFactorize() {
-            return n -> FACTORIZE_INT.apply(n).factors();
+        IntFunction<PrimeFactorInt> getPrimeFactorize() {
+            return FACTORIZE_INT::apply;
         }
 
         @Override

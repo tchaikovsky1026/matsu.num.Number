@@ -25,8 +25,8 @@ final class PrimeFactorizeTest {
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 
         @Override
-        IntFunction<int[]> getPrimeFactorize() {
-            return (int n) -> apply(n).factors();
+        IntFunction<PrimeFactorInt> getPrimeFactorize() {
+            return (int n) -> apply(n);
         }
 
         @Override
@@ -38,8 +38,8 @@ final class PrimeFactorizeTest {
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 
         @Override
-        LongFunction<long[]> getPrimeFactorize() {
-            return (long n) -> apply(n).factors();
+        LongFunction<PrimeFactorLong> getPrimeFactorize() {
+            return (long n) -> apply(n);
         }
 
         @Override

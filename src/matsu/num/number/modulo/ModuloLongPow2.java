@@ -10,6 +10,8 @@
  */
 package matsu.num.number.modulo;
 
+import matsu.num.number.ModuloLong;
+
 /**
  * 2の累乗を除数とする, {@link ModuloLong}.
  * 

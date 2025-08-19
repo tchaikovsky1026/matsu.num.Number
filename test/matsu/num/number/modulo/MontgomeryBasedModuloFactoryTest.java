@@ -13,6 +13,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.ModuloInt;
+import matsu.num.number.ModuloLong;
+
 /**
  * {@link MontgomeryBasedModuloFactory} クラスのテスト.
  */

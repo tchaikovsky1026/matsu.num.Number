@@ -10,7 +10,7 @@
  */
 package matsu.num.number.factors;
 
-import matsu.num.number.modulo.ModuloInt;
+import matsu.num.number.ModuloInt;
 
 /**
  * int 型の Miller テストによる素数判定.

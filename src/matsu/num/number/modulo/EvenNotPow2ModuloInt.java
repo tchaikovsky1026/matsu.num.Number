@@ -10,6 +10,8 @@
  */
 package matsu.num.number.modulo;
 
+import matsu.num.number.ModuloInt;
+
 /**
  * Montgomery modular multiplication をベースとした,
  * {@code int} 型に関するモジュロ演算. <br>

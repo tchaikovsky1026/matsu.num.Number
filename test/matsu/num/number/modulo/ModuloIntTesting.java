@@ -25,6 +25,8 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.ModuloInt;
+
 /**
  * {@link ModuloInt} をテストするためのテスト骨格.
  * 

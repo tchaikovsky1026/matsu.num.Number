@@ -11,6 +11,8 @@ import java.util.function.IntFunction;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.ModuloInt;
+
 /**
  * {@link ModuloIntPow2} クラスのテスト.
  */

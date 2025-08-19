@@ -10,12 +10,15 @@
  */
 package matsu.num.number.modulo;
 
+import matsu.num.number.ModuloInt;
+import matsu.num.number.ModuloLong;
+
 /**
  * Montgomery modular multiplication をもとに構築されるモジュロ演算のファクトリ.
  * 
  * @author Matsuura Y.
  */
-final class MontgomeryBasedModuloFactory {
+public final class MontgomeryBasedModuloFactory {
 
     private MontgomeryBasedModuloFactory() {
         // インスタンス化不可
@@ -34,7 +37,7 @@ final class MontgomeryBasedModuloFactory {
      * @return 除数に対応するモジュロ演算
      * @throws IllegalArgumentException 引数が正の整数でない場合
      */
-    static ModuloInt get(int divisor) {
+    public static ModuloInt get(int divisor) {
         if (divisor <= 0) {
             throw new IllegalArgumentException("illegal: divisor <= 0");
         }
@@ -64,7 +67,7 @@ final class MontgomeryBasedModuloFactory {
      * @return 除数に対応するモジュロ演算
      * @throws IllegalArgumentException 引数が正の整数でない場合
      */
-    static ModuloLong get(long divisor) {
+    public static ModuloLong get(long divisor) {
         if (divisor <= 0L) {
             throw new IllegalArgumentException("illegal: divisor <= 0");
         }

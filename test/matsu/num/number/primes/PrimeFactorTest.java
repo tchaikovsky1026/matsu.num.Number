@@ -4,9 +4,9 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
-import static matsu.num.number.factors.PrimeFactor.*;
+import static matsu.num.number.primes.PrimeFactor.*;
 
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;

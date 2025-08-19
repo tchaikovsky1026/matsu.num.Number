@@ -8,7 +8,7 @@
 /*
  * 2025.8.9
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,14 +28,14 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link PrimalityInt} の実装をテストするためのテスト骨格.
+ * {@link PrimalityLong} の実装をテストするためのテスト骨格.
  * 
  * @author Matsuura Y.
  */
 @Ignore
-final class PrimalityIntTesting {
+final class PrimalityLongTesting {
 
-    private PrimalityIntTesting() {
+    private PrimalityLongTesting() {
         // インスタンス化不可
         throw new AssertionError();
     }
@@ -47,19 +47,19 @@ final class PrimalityIntTesting {
     @RunWith(Theories.class)
     static abstract class Enumeration {
 
-        private static final int test_min;
-        private static final int test_max;
-        private static final Set<Integer> primes;
+        private static final long test_min;
+        private static final long test_max;
+        private static final Set<Long> primes;
 
         @DataPoints
-        public static final int[] values;
+        public static final long[] values;
 
         static {
 
             /*
              * -5 から 1000 までの素数を扱う.
              */
-            int[] primesArr = {
+            long[] primesArr = {
                     2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                     31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
                     73, 79, 83, 89, 97, 101, 103, 107, 109, 113,
@@ -81,10 +81,10 @@ final class PrimalityIntTesting {
             test_min = -5;
             test_max = 1000;
 
-            values = IntStream.rangeClosed(test_min, test_max).toArray();
+            values = LongStream.rangeClosed(test_min, test_max).toArray();
 
             primes = Arrays.stream(primesArr)
-                    .mapToObj(p -> Integer.valueOf(p))
+                    .mapToObj(p -> Long.valueOf(p))
                     .collect(
                             Collectors.collectingAndThen(
                                     Collectors.toList(),
@@ -93,9 +93,9 @@ final class PrimalityIntTesting {
         }
 
         @Theory
-        public void test_素数であるかを検証する(int v) {
+        public void test_素数であるかを検証する(long v) {
             boolean expected = primes.contains(v);
-            boolean result = getPrimalityInt().isPrime(v);
+            boolean result = getPrimalityLong().isPrime(v);
 
             String displayString = createDisplayString(v, result, expected);
             assertThat(displayString, result, is(expected));
@@ -106,7 +106,7 @@ final class PrimalityIntTesting {
          * 
          * @return 素数判定器
          */
-        abstract PrimalityInt getPrimalityInt();
+        abstract PrimalityLong getPrimalityLong();
     }
 
     /**
@@ -115,17 +115,17 @@ final class PrimalityIntTesting {
     @Ignore
     static abstract class Randoms {
 
-        private static final PrimalityInt REFERENCE = new NaivePrimalityInt();
+        private static final PrimalityLong REFERENCE = new NaivePrimalityLong();
 
         @Test
         public void test_素数検証_ランダム化() {
             int ite = 1000;
 
-            PrimalityInt testingPrimalityInt = getPrimalityInt();
+            PrimalityLong testingPrimalityInt = getPrimalityLong();
 
             for (int c = 0; c < ite; c++) {
 
-                int n = ThreadLocalRandom.current().nextInt(1_000_000);
+                long n = ThreadLocalRandom.current().nextLong(10_000_000_000_000L);
 
                 boolean result = testingPrimalityInt.isPrime(n);
                 boolean expected = REFERENCE.isPrime(n);
@@ -140,10 +140,10 @@ final class PrimalityIntTesting {
          * 
          * @return 素数判定器
          */
-        abstract PrimalityInt getPrimalityInt();
+        abstract PrimalityLong getPrimalityLong();
     }
 
-    private static String createDisplayString(int v, boolean result, boolean expected) {
+    private static String createDisplayString(long v, boolean result, boolean expected) {
         return v + " is " + (expected ? "prime" : "not prime") +
                 ", result = \"" + (result ? "prime" : "not prime") +
                 "\"";

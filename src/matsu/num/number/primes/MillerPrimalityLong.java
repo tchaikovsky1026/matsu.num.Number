@@ -8,51 +8,51 @@
 /*
  * 2025.8.9
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
-import matsu.num.number.ModuloInt;
+import matsu.num.number.ModuloLong;
 
 /**
- * int 型の Miller テストによる素数判定.
+ * long 型の Miller テストによる素数判定.
  * 
  * @author Matsuura Y.
  */
-final class MillerPrimalityInt implements PrimalityInt {
+final class MillerPrimalityLong implements PrimalityLong {
 
-    private static final int[] testA = { 2, 3, 5, 7 };
+    private static final long[] testA = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 };
 
     /**
      * 唯一のコンストラクタ.
      */
-    MillerPrimalityInt() {
+    MillerPrimalityLong() {
         super();
     }
 
     @Override
-    public boolean isPrime(int n) {
-        if (n <= 1) {
+    public boolean isPrime(long n) {
+        if (n <= 1L) {
             return false;
         }
-        if ((n & 1) == 0) {
-            return n == 2;
+        if ((n & 1L) == 0L) {
+            return n == 2L;
         }
 
         // nは3以上の奇数
         // Miller テスト
-        int n_m1 = n - 1;
-        int pow2Exponent = Integer.numberOfTrailingZeros(n_m1);
-        int m = n_m1 >> pow2Exponent;
-        ModuloInt modN = ModuloInt.get(n);
+        long n_m1 = n - 1L;
+        long pow2Exponent = Long.numberOfTrailingZeros(n_m1);
+        long m = n_m1 >> pow2Exponent;
+        ModuloLong modN = ModuloLong.get(n);
 
-        labelA: for (int a : testA) {
+        labelA: for (long a : testA) {
             // a < n だけをテストに用いる
             if (a > n_m1) {
                 // testAは昇順に並んでいるハズ
                 break;
             }
 
-            int aPow = modN.modpow(a, m);
-            if (aPow == 1) {
+            long aPow = modN.modpow(a, m);
+            if (aPow == 1L) {
                 // a^m = 1 ならば, どちらの証拠にもならない
                 continue;
             }

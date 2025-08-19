@@ -8,7 +8,7 @@
 /*
  * 2025.8.10
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 /**
  * 整数型の素数判定に関連する機能を扱う.

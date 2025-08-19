@@ -22,7 +22,7 @@ import matsu.num.number.ModuloInt;
  * 
  * @author Matsuura Y.
  */
-final class PollardBrentRhoInt implements PrimeFactorInt {
+final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
     /**
      * rho 法に移行した場合の, 素因数の最小. <br>
@@ -44,15 +44,17 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
     }
 
     @Override
-    public int[] apply(int n) {
+    public PrimeFactorInt apply(int n) {
         if (n < 2) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new int[] { n };
+            return new PrimeFactorInt(n, new int[] { n });
         }
+
+        final int original = n;
 
         // 素因数を記憶する
         List<Integer> factors = new ArrayList<>(32);
@@ -89,7 +91,9 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
                 if (n > 1) {
                     factors.add(Integer.valueOf(n));
                 }
-                return toArray(factors);
+                return new PrimeFactorInt(
+                        original,
+                        toArray(factors));
             }
         }
 
@@ -100,7 +104,9 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
         // ロー法は昇順を保証しないのでソート
         factors.sort(Comparator.naturalOrder());
 
-        return toArray(factors);
+        return new PrimeFactorInt(
+                original,
+                toArray(factors));
     }
 
     /**

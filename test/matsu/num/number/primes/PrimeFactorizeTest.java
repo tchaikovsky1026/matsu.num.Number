@@ -6,7 +6,7 @@
  */
 package matsu.num.number.primes;
 
-import static matsu.num.number.primes.PrimeFactor.*;
+import static matsu.num.number.primes.PrimeFactorize.*;
 
 import java.util.function.IntFunction;
 import java.util.function.LongFunction;
@@ -15,18 +15,18 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 /**
- * {@link PrimeFactor} のテスト.
+ * {@link PrimeFactorize} のテスト.
  */
 @RunWith(Enclosed.class)
-final class PrimeFactorTest {
+final class PrimeFactorizeTest {
 
-    public static final Class<?> TEST_CLASS = PrimeFactor.class;
+    public static final Class<?> TEST_CLASS = PrimeFactorize.class;
 
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 
         @Override
         IntFunction<int[]> getPrimeFactorize() {
-            return (int n) -> apply(n);
+            return (int n) -> apply(n).factors();
         }
 
         @Override
@@ -39,7 +39,7 @@ final class PrimeFactorTest {
 
         @Override
         LongFunction<long[]> getPrimeFactorize() {
-            return (long n) -> apply(n);
+            return (long n) -> apply(n).factors();
         }
 
         @Override

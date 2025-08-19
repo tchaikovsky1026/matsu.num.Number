@@ -23,13 +23,13 @@ final class PollardBrentRhoLongTest {
 
     public static final Class<?> TEST_CLASS = PollardBrentRhoLong.class;
 
-    private static final PrimeFactorLong FACTORIZE_LONG = new PollardBrentRhoLong();
+    private static final PrimeFactorizeLong FACTORIZE_LONG = new PollardBrentRhoLong();
 
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 
         @Override
         LongFunction<long[]> getPrimeFactorize() {
-            return FACTORIZE_LONG::apply;
+            return n -> FACTORIZE_LONG.apply(n).factors();
         }
 
         @Override
@@ -58,7 +58,7 @@ final class PollardBrentRhoLongTest {
 
         @Test
         public void test_PollardBrentRhoLongの実行() {
-            PrimeFactorLong primeFactorizeLong = new PollardBrentRhoLong();
+            PrimeFactorizeLong primeFactorizeLong = new PollardBrentRhoLong();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "PollardBrentRhoLong: ", 10,
@@ -66,7 +66,7 @@ final class PollardBrentRhoLongTest {
                             this.d = 0L;
                             long d = this.d;
                             for (long n = MIN; n < MAX; n++) {
-                                long[] f = primeFactorizeLong.apply(Math.max(n, d));
+                                long[] f = primeFactorizeLong.apply(Math.max(n, d)).factors();
                                 d = f[0];
                             }
                             this.d = d;
@@ -79,7 +79,7 @@ final class PollardBrentRhoLongTest {
         @Test
         public void test_NaiveTrialPrimeFactorizeLongの実行() {
             @SuppressWarnings("deprecation")
-            PrimeFactorLong primeFactorizeLong = new NaiveTrialPrimeFactorLong();
+            PrimeFactorizeLong primeFactorizeLong = new NaiveTrialPrimeFactorizeLong();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeLong: ", 1,
@@ -87,7 +87,7 @@ final class PollardBrentRhoLongTest {
                             this.d = 0L;
                             long d = this.d;
                             for (long n = MIN; n < MAX; n++) {
-                                long[] f = primeFactorizeLong.apply(Math.max(n, d));
+                                long[] f = primeFactorizeLong.apply(Math.max(n, d)).factors();
                                 d = f[0];
                             }
                             this.d = d;
@@ -95,6 +95,16 @@ final class PollardBrentRhoLongTest {
                         });
                 executor.execute();
             }
+        }
+    }
+
+    public static class PrimeFactorLongのtoString表示 {
+
+        @Test
+        public void test_toString表示() {
+            System.out.println(TEST_CLASS.getName() + ":");
+            System.out.println(FACTORIZE_LONG.apply(360L << 32));
+            System.out.println();
         }
     }
 }

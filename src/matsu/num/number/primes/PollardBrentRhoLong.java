@@ -22,7 +22,7 @@ import matsu.num.number.ModuloLong;
  * 
  * @author Matsuura Y.
  */
-final class PollardBrentRhoLong implements PrimeFactorLong {
+final class PollardBrentRhoLong implements PrimeFactorizeLong {
 
     /**
      * rho 法に移行した場合の, 素因数の最小. <br>
@@ -43,15 +43,17 @@ final class PollardBrentRhoLong implements PrimeFactorLong {
     }
 
     @Override
-    public long[] apply(long n) {
+    public PrimeFactorLong apply(long n) {
         if (n < 2L) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new long[] { n };
+            return new PrimeFactorLong(n, new long[] { n });
         }
+
+        final long original = n;
 
         // 素因数を記憶する
         List<Long> factors = new ArrayList<>(64);
@@ -86,7 +88,9 @@ final class PollardBrentRhoLong implements PrimeFactorLong {
                 if (n > 1L) {
                     factors.add(Long.valueOf(n));
                 }
-                return toArray(factors);
+                return new PrimeFactorLong(
+                        original,
+                        toArray(factors));
             }
         }
 
@@ -97,7 +101,9 @@ final class PollardBrentRhoLong implements PrimeFactorLong {
         // ロー法は昇順を保証しないのでソート
         factors.sort(Comparator.naturalOrder());
 
-        return toArray(factors);
+        return new PrimeFactorLong(
+                original,
+                toArray(factors));
     }
 
     /**

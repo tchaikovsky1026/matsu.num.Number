@@ -10,6 +10,8 @@
  */
 package matsu.num.number.modulo;
 
+import matsu.num.number.ModuloInt;
+
 /**
  * {@link ModuloInt} の骨格実装.
  * 

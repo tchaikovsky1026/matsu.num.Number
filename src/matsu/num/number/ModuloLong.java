@@ -6,12 +6,14 @@
  */
 
 /*
- * 2025.8.15
+ * 2025.8.19
  */
-package matsu.num.number.modulo;
+package matsu.num.number;
+
+import matsu.num.number.modulo.MontgomeryBasedModuloFactory;
 
 /**
- * {@code int} 型の値のモジュロ演算を行うインターフェース.
+ * {@code long} 型の値のモジュロ演算を行うインターフェース.
  * 
  * <p>
  * 除数 (divisor) は必ず正整数でなければならない. <br>
@@ -20,7 +22,7 @@ package matsu.num.number.modulo;
  * 
  * <p>
  * このインターフェースの実装クラスは, イミュータブルかつスレッドセーフであることが保証されている. <br>
- * 最も基本的なインスタンスの取得方法は, {@link #get(int)} メソッドをコールすることである.
+ * 最も基本的なインスタンスの取得方法は, {@link #get(long)} メソッドをコールすることである.
  * </p>
  * 
  * @implSpec
@@ -29,14 +31,14 @@ package matsu.num.number.modulo;
  * 
  * @author Matsuura Y.
  */
-public interface ModuloInt {
+public interface ModuloLong {
 
     /**
      * このインスタンスの除数 <i>m</i> の値を返す.
      * 
      * @return 除数 <i>m</i>
      */
-    public abstract int divisor();
+    public abstract long divisor();
 
     /**
      * <i>m</i> を法とする剰余を計算する. <br>
@@ -45,7 +47,7 @@ public interface ModuloInt {
      * @param x 被除数
      * @return <i>x</i> mod <i>m</i>
      */
-    public abstract int mod(int x);
+    public abstract long mod(long x);
 
     /**
      * <i>m</i> を法とする, 積の剰余を計算する. <br>
@@ -55,7 +57,7 @@ public interface ModuloInt {
      * @param y 数2
      * @return <i>x</i><i>y</i> mod <i>m</i>
      */
-    public int modpr(int x, int y);
+    public long modpr(long x, long y);
 
     /**
      * 与えられた数
@@ -72,9 +74,8 @@ public interface ModuloInt {
      *            ..., <i>x</i><sub><i>n</i></sub>
      * @return (<i>x</i><sub>1</sub><i>x</i><sub>2</sub>&middot;&middot;&middot;<i>x</i><sub><i>n</i></sub>)
      *             mod <i>m</i>
-     * @throws NullPointerException 引数がnullの場合
      */
-    public int modpr(int... x);
+    public long modpr(long... x);
 
     /**
      * <i>m</i> を法とする, 累乗 (<i>x</i><sup><i>k</i></sup>) の剰余を計算する. <br>
@@ -92,10 +93,10 @@ public interface ModuloInt {
      * @return <i>x</i><sup><i>k</i></sup> mod <i>m</i>
      * @throws IllegalArgumentException 指数が0未満の場合
      */
-    public int modpow(int x, int k);
+    public long modpow(long x, long k);
 
     /**
-     * {@code int} 型整数 <i>m</i> について,
+     * {@code long} 型整数 <i>m</i> について,
      * <i>m</i> を法とするモジュロ演算を返す.
      * 
      * <p>
@@ -106,7 +107,7 @@ public interface ModuloInt {
      * @return <i>m</i> を法とするモジュロ演算
      * @throws IllegalArgumentException 引数が正の整数でない場合
      */
-    public static ModuloInt get(int divisor) {
+    public static ModuloLong get(long divisor) {
         return MontgomeryBasedModuloFactory.get(divisor);
     }
 }

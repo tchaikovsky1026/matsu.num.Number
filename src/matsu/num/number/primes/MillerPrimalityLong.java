@@ -8,9 +8,9 @@
 /*
  * 2025.8.9
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
-import matsu.num.number.modulo.ModuloLong;
+import matsu.num.number.ModuloLong;
 
 /**
  * long 型の Miller テストによる素数判定.

@@ -6,94 +6,92 @@
  */
 
 /*
- * 2025.8.14
+ * 2025.8.15
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import matsu.num.number.modulo.ModuloInt;
+import matsu.num.number.Gcd;
+import matsu.num.number.ModuloLong;
 
 /**
- * {@code int} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.
+ * {@code long} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.
  * 
  * @author Matsuura Y.
  */
-final class PollardBrentRhoInt implements PrimeFactorInt {
+final class PollardBrentRhoLong implements PrimeFactorLong {
 
     /**
      * rho 法に移行した場合の, 素因数の最小. <br>
-     * (小さい素因数は, 試し割り法により積極的に弾きたい) <br>
-     * MIN_RHO^4 > Integer.MAX_VALUE を要求する.
+     * (小さい素因数は, 試し割り法により積極的に弾きたい)
      */
-    private static final int MIN_RHO = 500;
+    private static final long MIN_RHO = 500L;
 
     /**
-     * 2乗がInteger.MAX_VALUE以下である最大のint
+     * 2乗がLong.MAX_VALUE以下である最大のlong
      */
-    private static final int MAX_SQRT_INT = 46340;
+    private static final long MAX_SQRT_LONG = 3_037_000_499L;
 
     /**
      * 唯一のコンストラクタ.
      */
-    PollardBrentRhoInt() {
+    PollardBrentRhoLong() {
         super();
     }
 
     @Override
-    public int[] apply(int n) {
-        if (n < 2) {
+    public long[] apply(long n) {
+        if (n < 2L) {
             throw new IllegalArgumentException("illegal: n < 2: n = " + n);
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new int[] { n };
+            return new long[] { n };
         }
 
         // 素因数を記憶する
-        List<Integer> factors = new ArrayList<>(32);
+        List<Long> factors = new ArrayList<>(64);
 
         // 素因数2, 3, 5を調べる
-        while ((n & 1) == 0) {
-            factors.add(Integer.valueOf(2));
+        while ((n & 1L) == 0L) {
+            factors.add(Long.valueOf(2L));
             n >>= 1;
         }
-        n = trial(n, 3, factors);
-        n = trial(n, 5, factors);
+        n = trial(n, 3L, factors);
+        n = trial(n, 5L, factors);
 
         // 検証済みの値を表す
-        int m = 5;
+        long m = 5L;
 
         /*
          * 試し割り法で検証すべき因数は, 6k + 1 と 6k + 5 である.
          * l = 6k とする.
-         * 
-         * MIN_RHO^4 > Integer.MAX_VALUE を満たしていることに注意.
          */
-        for (int l = 6; m < MIN_RHO; l += 6) {
+        for (long l = 6L; m < MIN_RHO || (m * m) * (m * m) <= n; l += 6L) {
 
             // 6k + 1 の検証
-            n = trial(n, l + 1, factors);
+            n = trial(n, l + 1L, factors);
 
             // 6k + 5 の検証
-            n = trial(n, l + 5, factors);
+            n = trial(n, l + 5L, factors);
 
-            m = l + 5;
+            m = l + 5L;
 
             // 試し割りで完了したパターン
             if (m * m > n) {
-                if (n > 1) {
-                    factors.add(Integer.valueOf(n));
+                if (n > 1L) {
+                    factors.add(Long.valueOf(n));
                 }
                 return toArray(factors);
             }
         }
 
         // 残りについて, rho 法を使う.
-        while (n > 1) {
+        while (n > 1L) {
             n = new RhoAlgorithm(n).factorize(factors);
         }
         // ロー法は昇順を保証しないのでソート
@@ -117,11 +115,11 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
      * @param factor 素因数のリスト
      * @return n を m で割り切った結果
      */
-    private static int trial(int n, int m, List<Integer> factor) {
+    private static long trial(long n, long m, List<Long> factor) {
         while (true) {
-            int r = n % m;
-            if (r == 0) {
-                factor.add(Integer.valueOf(m));
+            long r = n % m;
+            if (r == 0L) {
+                factor.add(Long.valueOf(m));
                 n /= m;
             } else {
                 break;
@@ -130,37 +128,37 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
         return n;
     }
 
-    private static int[] toArray(List<Integer> factor) {
+    private static long[] toArray(List<Long> factor) {
         return factor.stream()
-                .mapToInt(i -> i.intValue())
+                .mapToLong(i -> i.longValue())
                 .toArray();
     }
 
     private static final class RhoAlgorithm {
 
-        private final int n;
-        private final ModuloInt moduloN;
+        private final long n;
+        private final ModuloLong moduloN;
 
-        RhoAlgorithm(int n) {
+        RhoAlgorithm(long n) {
             this.n = n;
-            this.moduloN = ModuloInt.get(n);
+            this.moduloN = ModuloLong.get(n);
         }
 
         /**
          * @param n 検証する数
          * @return 残りの因数 (n が素数の場合は 1)
          */
-        int factorize(List<Integer> factors) {
+        long factorize(List<Long> factors) {
             if (Primality.isPrime(n)) {
-                factors.add(Integer.valueOf(n));
-                return 1;
+                factors.add(Long.valueOf(n));
+                return 1L;
             }
 
             /* rho法の実行 */
-            final int n = this.n;
+            final long n = this.n;
 
-            final int m = 64; // 剰余計算のマージサイズ, 2の累乗を要求する
-            final int x0 = n >> 1; // 初期値
+            final long m = 64L; // 剰余計算のマージサイズ, 2の累乗を要求する
+            final long x0 = n >> 1; // 初期値
 
             /*
              * 乱数生成器を,
@@ -168,35 +166,35 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
              * とする (c はパラメータ).
              * オーバーフロー対策のため, c <= 0 とする.
              */
-            int c = 0;
+            long c = 0L;
             while (true) {
                 c--;
                 if (c <= -n) {
                     throw new AssertionError("Bug?: Failure");
                 }
 
-                int x;
-                int y = x0;
-                int r = 1;
-                int g = 1; // 必ず上書きされるが, ダミーを代入
-                int ys = y; // 必ず上書きされるが, ダミーを代入
+                long x;
+                long y = x0;
+                long r = 1L;
+                long g = 1L; // 必ず上書きされるが, ダミーを代入
+                long ys = y; // 必ず上書きされるが, ダミーを代入
                 CycleFinding: while (true) {
                     x = y;
-                    for (int j = 0; j < r; j++) {
+                    for (long j = 0L; j < r; j++) {
                         y = f(y, c);
                     }
-                    int internalSize = Math.min(m, r);
-                    int externalSize = r / internalSize;
+                    long internalSize = Math.min(m, r);
+                    long externalSize = r / internalSize;
 
-                    for (int e = 0; e < externalSize; e++) {
+                    for (long e = 0; e < externalSize; e++) {
                         ys = y;
-                        int q = 1;
-                        for (int i = 0; i < internalSize; i++) {
+                        long q = 1L;
+                        for (long i = 0L; i < internalSize; i++) {
                             y = f(y, c);
                             q = moduloN.modpr(q, Math.abs(x - y));
                         }
                         g = Gcd.gcd(q, n);
-                        if (g != 1) {
+                        if (g != 1L) {
                             break CycleFinding;
                         }
                     }
@@ -204,7 +202,7 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
                 }
 
                 if (g == n) {
-                    for (int i = 0; i < r; i++) {
+                    for (long i = 0; i < r; i++) {
                         ys = f(ys, c);
                         g = Gcd.gcd(x - ys, n);
                         if (g != 1) {
@@ -214,11 +212,11 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
                 }
 
                 if (g < n) {
-                    if (g <= MAX_SQRT_INT && g * g <= n) {
-                        factors.add(Integer.valueOf(g));
+                    if (g <= MAX_SQRT_LONG && g * g <= n) {
+                        factors.add(Long.valueOf(g));
                         return n / g;
                     } else {
-                        factors.add(Integer.valueOf(n / g));
+                        factors.add(Long.valueOf(n / g));
                         return g;
                     }
                 }
@@ -230,8 +228,8 @@ final class PollardBrentRhoInt implements PrimeFactorInt {
          * 
          * @param c 0以下
          */
-        private int f(int y, int c) {
-            int y2_p_c = moduloN.modpr(y, y) + c;
+        private long f(long y, long c) {
+            long y2_p_c = moduloN.modpr(y, y) + c;
             if (y2_p_c < 0) {
                 y2_p_c += n;
             }

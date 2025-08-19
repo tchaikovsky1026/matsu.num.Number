@@ -8,7 +8,7 @@
 /*
  * 2025.8.10
  */
-package matsu.num.number.factors;
+package matsu.num.number.primes;
 
 /**
  * {@code long} 型の整数を素因数分解する仕組み.

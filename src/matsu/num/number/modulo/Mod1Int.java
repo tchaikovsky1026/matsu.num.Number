@@ -12,6 +12,8 @@ package matsu.num.number.modulo;
 
 import java.util.Objects;
 
+import matsu.num.number.ModuloInt;
+
 /**
  * 除数1に対する {@link ModuloInt} の実装.
  * 

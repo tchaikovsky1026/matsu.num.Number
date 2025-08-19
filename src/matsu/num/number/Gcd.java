@@ -8,7 +8,7 @@
 /*
  * 2025.8.15
  */
-package matsu.num.number.factors;
+package matsu.num.number;
 
 /**
  * 整数型の最大公約数 (GCD) に関連する機能を扱う.

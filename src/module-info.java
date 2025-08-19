@@ -19,7 +19,7 @@
  * </p>
  * 
  * @author Matsuura Y.
- * @version 0.6.0
+ * @version 1.0.0
  */
 module matsu.num.Number {
     exports matsu.num.number;

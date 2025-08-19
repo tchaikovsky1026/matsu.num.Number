@@ -27,6 +27,8 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.primes.Primality.PrimalityLong;
+
 /**
  * {@link PrimalityLong} の実装をテストするためのテスト骨格.
  * 

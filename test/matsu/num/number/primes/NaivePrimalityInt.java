@@ -10,6 +10,8 @@
  */
 package matsu.num.number.primes;
 
+import matsu.num.number.primes.Primality.PrimalityInt;
+
 /**
  * テスト用, 素朴な試し割り法による素数判定クラス.
  * 

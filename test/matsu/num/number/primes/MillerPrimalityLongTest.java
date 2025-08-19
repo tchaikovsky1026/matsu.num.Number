@@ -9,6 +9,8 @@ package matsu.num.number.primes;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.primes.Primality.PrimalityLong;
+
 /**
  * {@link MillerPrimalityLong} クラスのテスト.
  */

@@ -19,10 +19,9 @@
  * </p>
  * 
  * @author Matsuura Y.
- * @version 0.5.0
+ * @version 0.6.0
  */
 module matsu.num.Number {
     exports matsu.num.number;
-    exports matsu.num.number.factors;
-    exports matsu.num.number.modulo;
+    exports matsu.num.number.primes;
 }

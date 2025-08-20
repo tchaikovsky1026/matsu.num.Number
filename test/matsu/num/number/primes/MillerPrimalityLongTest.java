@@ -9,6 +9,8 @@ package matsu.num.number.primes;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.primes.Primality.PrimalityLong;
+
 /**
  * {@link MillerPrimalityLong} クラスのテスト.
  */
@@ -19,7 +21,7 @@ final class MillerPrimalityLongTest {
 
     private static final PrimalityLong Test_Primality = new MillerPrimalityLong();
 
-    public static class Enumeration extends PrimalityLongTesting.Enumeration {
+    public static class Enumeration extends PrimalityTesting.EnumerationLong {
 
         @Override
         PrimalityLong getPrimalityLong() {
@@ -27,7 +29,7 @@ final class MillerPrimalityLongTest {
         }
     }
 
-    public static class Randoms extends PrimalityLongTesting.Randoms {
+    public static class Randoms extends PrimalityTesting.RandomsLong {
 
         @Override
         PrimalityLong getPrimalityLong() {

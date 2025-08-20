@@ -86,7 +86,7 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @throws IllegalArgumentException {@literal 1 <= a <= p - 1} を満たさない場合
      */
     private void validateDividend(long a) {
-        if (!(1L <= a && a < this.divisor() - 1L)) {
+        if (!(1L <= a && a < this.divisor())) {
             throw new IllegalArgumentException(
                     "illegal: not 1 <= a <= p-1: a = " + a + ", p = " + this.divisor());
         }

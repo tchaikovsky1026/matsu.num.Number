@@ -13,6 +13,8 @@ package matsu.num.number.primes;
 import java.util.ArrayList;
 import java.util.List;
 
+import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeLong;
+
 /**
  * 素朴な試し割り法による {@link PrimeFactorizeLong} の実装.
  * 

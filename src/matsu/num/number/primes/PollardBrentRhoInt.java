@@ -16,6 +16,7 @@ import java.util.List;
 
 import matsu.num.number.Gcd;
 import matsu.num.number.ModuloInt;
+import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeInt;
 
 /**
  * {@code int} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.

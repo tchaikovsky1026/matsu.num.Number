@@ -13,6 +13,7 @@ package matsu.num.number.primes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.LongUnaryOperator;
@@ -34,8 +35,8 @@ import java.util.stream.LongStream;
 public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
     private final long original;
-
     private final SortedMap<Long, Integer> factor2Number;
+    private final boolean prime;
 
     // 遅延初期化ロック用オブジェクト
     private final Object lock = new Object();
@@ -106,6 +107,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
         this.original = original;
         this.factor2Number = factor2Number;
+        this.prime = this.factor2Number.containsKey(Long.valueOf(original));
     }
 
     /**
@@ -115,6 +117,15 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      */
     public final long original() {
         return original;
+    }
+
+    /**
+     * 元の値 <i>n</i> が素数かどうかを返す.
+     * 
+     * @return <i>n</i> が素数の場合は {@code true}
+     */
+    public final boolean isPrime() {
+        return prime;
     }
 
     /**
@@ -151,6 +162,56 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
             this.factors = out.clone();
             return out;
         }
+    }
+
+    /**
+     * {@code this} の素因数分解前の値 <i>n</i> に対し,
+     * <i>n</i> の素因数 <i>q</i> で除した,
+     * <i>n</i>/<i>q</i> の素因数分解を返す.
+     * 
+     * <p>
+     * <i>q</i> が <i>n</i> の素因数でない場合,
+     * <i>n</i> が素数であり <i>n</i>/<i>q</i> = 1 となってしまう場合は空が返る.
+     * </p>
+     * 
+     * @param q <i>q</i>, 素因数の1つ
+     * @return <i>n</i>/<i>q</i> に対する素因数分解, <i>q</i> が不適の場合は空
+     */
+    public final Optional<PrimeFactorLong> dividedBy(long q) {
+        return !this.isPrime() && this.factor2Number.containsKey(Long.valueOf(q))
+                ? Optional.of(this.dividedByConcrete(q))
+                : Optional.empty();
+    }
+
+    /**
+     * クラスの内部で使用する. <br>
+     * {@code this} の素因数分解前の値 <i>n</i> に対し,
+     * <i>n</i> の素因数 <i>q</i> で除した,
+     * <i>n</i>/<i>q</i> の素因数分解を返す.
+     * 
+     * <p>
+     * {@literal q < n} を満たし, かつ q を素因数に含んでいなければならない
+     * (バリデーションはされていない).
+     * </p>
+     * 
+     * @param q q
+     * @return n/q に対する素因数分解
+     */
+    private PrimeFactorLong dividedByConcrete(long q) {
+        long newOriginal = this.original / q;
+        SortedMap<Long, Integer> newFactor2Number = new TreeMap<>(this.factor2Number);
+
+        Long qLong = Long.valueOf(q);
+        Integer kInteger = newFactor2Number.get(qLong);
+        int k = kInteger.intValue();
+
+        if (k == 1) {
+            newFactor2Number.remove(qLong);
+        } else {
+            newFactor2Number.put(qLong, Integer.valueOf(k - 1));
+        }
+
+        return new PrimeFactorLong(newOriginal, newFactor2Number);
     }
 
     /**

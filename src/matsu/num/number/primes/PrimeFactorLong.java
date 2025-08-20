@@ -21,6 +21,7 @@ import java.util.Arrays;
  * </p>
  * 
  * @author Matsuura Y.
+ * @see PrimeFactorize
  */
 public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
@@ -69,8 +70,8 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
     }
 
     /**
-     * インスタンスの等価性を判定する. <br>
-     * 比較の仕様はクラス説明文の通りである.
+     * インスタンスが等価かどうかを判定する. <br>
+     * equality の仕様はクラス説明文の通りである.
      */
     @Override
     public final boolean equals(Object obj) {
@@ -105,17 +106,17 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * </p>
      */
     @Override
-    public String toString() {
+    public final String toString() {
         return "PrimeFactors(long, original = %s, factors = %s)"
                 .formatted(this.original(), Arrays.toString(this.factors()));
     }
 
     /**
      * インスタンスを比較する. <br>
-     * 比較の仕様はクラス説明文の通りである.
+     * comparability の仕様はクラス説明文の通りである.
      */
     @Override
-    public int compareTo(PrimeFactorLong o) {
+    public final int compareTo(PrimeFactorLong o) {
         return Long.compare(this.original, o.original);
     }
 }

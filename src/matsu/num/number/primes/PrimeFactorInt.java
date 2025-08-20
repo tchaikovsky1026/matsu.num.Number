@@ -12,6 +12,8 @@ package matsu.num.number.primes;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
@@ -263,5 +265,87 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
     @Override
     public final int compareTo(PrimeFactorInt o) {
         return Integer.compare(this.original, o.original);
+    }
+
+    /**
+     * {@code this} から素因数をひとつだけ取り除いた
+     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイテレータを返す.
+     * 
+     * <p>
+     * 自身の素因数分解前の値 <i>n</i> が素数の場合, イテレータは空になる.
+     * </p>
+     * 
+     * @return 素因数をひとつだけ取り除いた素因数分解のイテレータ
+     */
+    public final Iterator<PrimeFactorInt> subFactorsIterator() {
+        return this.isPrime()
+                ? EmptyIterator.INSTANCE
+                : new SubFactorsIterator();
+    }
+
+    /**
+     * 要素を持たないイテレータ.
+     */
+    private static final class EmptyIterator implements Iterator<PrimeFactorInt> {
+
+        /**
+         * このクラスのインスタンスはシングルトン.
+         */
+        static final Iterator<PrimeFactorInt> INSTANCE = new EmptyIterator();
+
+        /**
+         * シングルトンなのでエンクロージングクラスからも呼ぶことは許されない.
+         */
+        private EmptyIterator() {
+            super();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public PrimeFactorInt next() {
+            throw new NoSuchElementException();
+        }
+    }
+
+    private final class SubFactorsIterator implements Iterator<PrimeFactorInt> {
+
+        private final int[] qs;
+
+        private int cursor;
+
+        /**
+         * 唯一のコンストラクタ.
+         * 
+         * <p>
+         * エンクロージングインスタンスは素数であってはいけない.
+         * </p>
+         */
+        SubFactorsIterator() {
+            this.qs = factor2Number.keySet().stream()
+                    .mapToInt(i -> i.intValue())
+                    .toArray();
+            this.cursor = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor < qs.length;
+        }
+
+        @Override
+        public PrimeFactorInt next() {
+            if (!this.hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            int q = qs[cursor];
+            cursor++;
+
+            return PrimeFactorInt.this.dividedByConcrete(q);
+        }
     }
 }

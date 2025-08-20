@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -85,6 +87,57 @@ final class PrimeFactorLongTest {
                     .dividedBy(2L);
 
             assertThat(opFact, is(Optional.empty()));
+        }
+    }
+
+    public static class subFactorsIteratorに関するテスト {
+
+        @Test
+        public void test_元数20_イテレータの要素は10と4である() {
+
+            PrimeFactorLong primeFactor = new PrimeFactorLong(20L, List.of(2L, 2L, 5L));
+            testLong(primeFactor);
+
+            long[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToLong(PrimeFactorLong::original)
+                    .toArray();
+
+            assertThat(subNs, is(new long[] { 10L, 4L }));
+        }
+
+        @Test
+        public void test_元数10_イテレータの要素は5と2である() {
+
+            PrimeFactorLong primeFactor = new PrimeFactorLong(10L, List.of(2L, 5L));
+            testLong(primeFactor);
+
+            long[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToLong(PrimeFactorLong::original)
+                    .toArray();
+
+            assertThat(subNs, is(new long[] { 5L, 2L }));
+        }
+
+        @Test
+        public void test_元数5_イテレータの要素はなし() {
+
+            PrimeFactorLong primeFactor = new PrimeFactorLong(5L, List.of(5L));
+            testLong(primeFactor);
+
+            long[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToLong(PrimeFactorLong::original)
+                    .toArray();
+
+            assertThat(subNs, is(new long[] {}));
         }
     }
 

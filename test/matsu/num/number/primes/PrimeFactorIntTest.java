@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +86,57 @@ final class PrimeFactorIntTest {
                     .dividedBy(2);
 
             assertThat(opFact, is(Optional.empty()));
+        }
+    }
+
+    public static class subFactorsIteratorに関するテスト {
+
+        @Test
+        public void test_元数20_イテレータの要素は10と4である() {
+
+            PrimeFactorInt primeFactor = new PrimeFactorInt(20, List.of(2, 2, 5));
+            testInt(primeFactor);
+
+            int[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToInt(PrimeFactorInt::original)
+                    .toArray();
+
+            assertThat(subNs, is(new int[] { 10, 4 }));
+        }
+
+        @Test
+        public void test_元数10_イテレータの要素は5と2である() {
+
+            PrimeFactorInt primeFactor = new PrimeFactorInt(10, List.of(2, 5));
+            testInt(primeFactor);
+
+            int[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToInt(PrimeFactorInt::original)
+                    .toArray();
+
+            assertThat(subNs, is(new int[] { 5, 2 }));
+        }
+
+        @Test
+        public void test_元数5_イテレータの要素はなし() {
+
+            PrimeFactorInt primeFactor = new PrimeFactorInt(5, List.of(5));
+            testInt(primeFactor);
+
+            int[] subNs = StreamSupport
+                    .stream(
+                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
+                            false)
+                    .mapToInt(PrimeFactorInt::original)
+                    .toArray();
+
+            assertThat(subNs, is(new int[] {}));
         }
     }
 

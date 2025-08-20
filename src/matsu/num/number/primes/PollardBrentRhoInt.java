@@ -11,7 +11,6 @@
 package matsu.num.number.primes;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import matsu.num.number.Gcd;
@@ -52,7 +51,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorInt(n, new int[] { n });
+            return new PrimeFactorInt(n, List.of(Integer.valueOf(n)));
         }
 
         final int original = n;
@@ -92,9 +91,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
                 if (n > 1) {
                     factors.add(Integer.valueOf(n));
                 }
-                return new PrimeFactorInt(
-                        original,
-                        toArray(factors));
+                return new PrimeFactorInt(original, factors);
             }
         }
 
@@ -102,12 +99,8 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
         while (n > 1) {
             n = new RhoAlgorithm(n).factorize(factors);
         }
-        // ロー法は昇順を保証しないのでソート
-        factors.sort(Comparator.naturalOrder());
 
-        return new PrimeFactorInt(
-                original,
-                toArray(factors));
+        return new PrimeFactorInt(original, factors);
     }
 
     /**
@@ -136,12 +129,6 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
             }
         }
         return n;
-    }
-
-    private static int[] toArray(List<Integer> factor) {
-        return factor.stream()
-                .mapToInt(i -> i.intValue())
-                .toArray();
     }
 
     private static final class RhoAlgorithm {

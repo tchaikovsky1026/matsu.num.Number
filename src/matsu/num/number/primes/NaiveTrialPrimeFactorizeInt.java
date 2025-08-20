@@ -39,7 +39,7 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorInt(n, new int[] { n });
+            return new PrimeFactorInt(n, List.of(Integer.valueOf(n)));
         }
 
         final int original = n;
@@ -75,11 +75,7 @@ final class NaiveTrialPrimeFactorizeInt implements PrimeFactorizeInt {
             factor.add(Integer.valueOf(n));
         }
 
-        return new PrimeFactorInt(
-                original,
-                factor.stream()
-                        .mapToInt(m -> m.intValue())
-                        .toArray());
+        return new PrimeFactorInt(original, factor);
     }
 
     /**

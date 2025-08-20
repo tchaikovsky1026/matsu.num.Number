@@ -1,3 +1,6 @@
+develop:
+素因数分解構造クラスに機能を追加.
+
 1:
 1.0.0: リリース. Semantic versioning.
 

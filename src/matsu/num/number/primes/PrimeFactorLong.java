@@ -6,11 +6,19 @@
  */
 
 /*
- * 2025.8.19
+ * 2025.8.20
  */
 package matsu.num.number.primes;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.function.LongUnaryOperator;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * 2 以上の {@code long} 型整数 <i>n</i> の素因数を表すクラス. <br>
@@ -26,7 +34,14 @@ import java.util.Arrays;
 public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
     private final long original;
-    private final long[] factors;
+
+    private final SortedMap<Long, Integer> factor2Number;
+
+    // 遅延初期化ロック用オブジェクト
+    private final Object lock = new Object();
+
+    // 遅延初期化される
+    private volatile long[] factors;
 
     /**
      * 唯一の非公開コンストラクタ.
@@ -36,13 +51,61 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * </p>
      * 
      * @param original 素因数分解前の値: 2以上の整数
-     * @param factors 素因数分解結果: 素因数が昇順に並び, 総積がoriginalに一致
+     * @param factors 素因数分解結果: 総積がoriginalに一致
      */
-    PrimeFactorLong(long original, long[] factors) {
+    PrimeFactorLong(long original, Collection<Long> factorsList) {
+        this(original, Factors2MapHolder.factors2Map(factorsList));
+
+        this.factors = factorsList.stream()
+                .mapToLong(i -> i.longValue())
+                .toArray();
+        Arrays.sort(this.factors);
+    }
+
+    /**
+     * 素因数のストリームを "素因数とその個数のマップ" に変換する機能.
+     */
+    private static final class Factors2MapHolder {
+
+        private static final Collector<Long, ?, SortedMap<Long, Integer>> factors2MapCollector;
+
+        static {
+            Collector<Object, ?, Integer> counting = Collectors.collectingAndThen(
+                    Collectors.counting(),
+                    (Long i) -> Integer.valueOf(i.intValue()));
+
+            factors2MapCollector = Collectors.groupingBy(
+                    i -> i, TreeMap<Long, Integer>::new, counting);
+        }
+
+        /**
+         * エンクロージングクラスからはこのメソッドを呼ぶ.
+         */
+        static SortedMap<Long, Integer> factors2Map(Collection<Long> factorsList) {
+            return factorsList.stream()
+                    .collect(Factors2MapHolder.factors2MapCollector);
+        }
+    }
+
+    /**
+     * 内部から呼ばれる.
+     * 
+     * <p>
+     * 引数のバリデーションは行われていないので, 呼び出しもとでチェックすること. <br>
+     * パッケージに対しても非公開であり, 強力な契約を持つ.
+     * </p>
+     * 
+     * @param original 素因数分解前の値: 2以上の整数
+     * @param factor2Number 素因数とその個数のマップ:
+     *            自然順序のcompare,
+     *            Value は1以上,
+     *            マップへの参照は外部に漏れていない
+     */
+    private PrimeFactorLong(long original, SortedMap<Long, Integer> factor2Number) {
         super();
 
         this.original = original;
-        this.factors = factors;
+        this.factor2Number = factor2Number;
     }
 
     /**
@@ -66,7 +129,28 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * @return 素因数
      */
     public final long[] factors() {
-        return factors.clone();
+        long[] out = this.factors;
+        if (Objects.nonNull(out)) {
+            return out.clone();
+        }
+
+        synchronized (lock) {
+            out = this.factors;
+            if (Objects.nonNull(out)) {
+                return out.clone();
+            }
+
+            out = this.factor2Number.entrySet().stream()
+                    .flatMapToLong(
+                            // Entry(素因数, 繰り返し) を Stream(素因数,素因数,...)に変換
+                            e -> LongStream
+                                    .iterate(
+                                            e.getKey().longValue(), LongUnaryOperator.identity())
+                                    .limit(e.getValue().intValue()))
+                    .toArray();
+            this.factors = out.clone();
+            return out;
+        }
     }
 
     /**

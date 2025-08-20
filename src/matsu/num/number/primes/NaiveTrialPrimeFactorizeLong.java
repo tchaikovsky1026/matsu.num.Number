@@ -39,7 +39,7 @@ final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorLong(n, new long[] { n });
+            return new PrimeFactorLong(n, List.of(Long.valueOf(n)));
         }
 
         final long original = n;
@@ -75,11 +75,7 @@ final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
             factor.add(Long.valueOf(n));
         }
 
-        return new PrimeFactorLong(
-                original,
-                factor.stream()
-                        .mapToLong(m -> m.longValue())
-                        .toArray());
+        return new PrimeFactorLong(original, factor);
     }
 
     /**

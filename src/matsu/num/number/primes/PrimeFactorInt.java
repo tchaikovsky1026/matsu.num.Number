@@ -6,11 +6,19 @@
  */
 
 /*
- * 2025.8.19
+ * 2025.8.20
  */
 package matsu.num.number.primes;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.function.IntUnaryOperator;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 2 以上の {@code int} 型整数 <i>n</i> の素因数を表すクラス. <br>
@@ -26,7 +34,13 @@ import java.util.Arrays;
 public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
 
     private final int original;
-    private final int[] factors;
+    private final SortedMap<Integer, Integer> factor2Number;
+
+    // 遅延初期化ロック用オブジェクト
+    private final Object lock = new Object();
+
+    // 遅延初期化される
+    private volatile int[] factors;
 
     /**
      * 唯一の非公開コンストラクタ.
@@ -36,13 +50,61 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * </p>
      * 
      * @param original 素因数分解前の値: 2以上の整数
-     * @param factors 素因数分解結果: 素因数が昇順に並び, 総積がoriginalに一致
+     * @param factorsList 素因数分解結果: 総積がoriginalに一致
      */
-    PrimeFactorInt(int original, int[] factors) {
+    PrimeFactorInt(int original, Collection<Integer> factorsList) {
+        this(original, Factors2MapHolder.factors2Map(factorsList));
+
+        this.factors = factorsList.stream()
+                .mapToInt(i -> i.intValue())
+                .toArray();
+        Arrays.sort(this.factors);
+    }
+
+    /**
+     * 素因数のストリームを "素因数とその個数のマップ" に変換する機能.
+     */
+    private static final class Factors2MapHolder {
+
+        private static final Collector<Integer, ?, SortedMap<Integer, Integer>> factors2MapCollector;
+
+        static {
+            Collector<Object, ?, Integer> counting = Collectors.collectingAndThen(
+                    Collectors.counting(),
+                    (Long i) -> Integer.valueOf(i.intValue()));
+
+            factors2MapCollector = Collectors.groupingBy(
+                    i -> i, TreeMap<Integer, Integer>::new, counting);
+        }
+
+        /**
+         * エンクロージングクラスからはこのメソッドを呼ぶ.
+         */
+        static SortedMap<Integer, Integer> factors2Map(Collection<Integer> factorsList) {
+            return factorsList.stream()
+                    .collect(Factors2MapHolder.factors2MapCollector);
+        }
+    }
+
+    /**
+     * 内部から呼ばれる.
+     * 
+     * <p>
+     * 引数のバリデーションは行われていないので, 呼び出しもとでチェックすること. <br>
+     * パッケージに対しても非公開であり, 強力な契約を持つ.
+     * </p>
+     * 
+     * @param original 素因数分解前の値: 2以上の整数
+     * @param factor2Number 素因数とその個数のマップ:
+     *            自然順序のcompare,
+     *            Value は1以上,
+     *            マップへの参照は外部に漏れていない
+     */
+    private PrimeFactorInt(int original, SortedMap<Integer, Integer> factor2Number) {
         super();
 
         this.original = original;
-        this.factors = factors;
+        this.factor2Number = factor2Number;
     }
 
     /**
@@ -66,7 +128,28 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * @return 素因数
      */
     public final int[] factors() {
-        return factors.clone();
+        int[] out = this.factors;
+        if (Objects.nonNull(out)) {
+            return out.clone();
+        }
+
+        synchronized (lock) {
+            out = this.factors;
+            if (Objects.nonNull(out)) {
+                return out.clone();
+            }
+
+            out = this.factor2Number.entrySet().stream()
+                    .flatMapToInt(
+                            // Entry(素因数, 繰り返し) を Stream(素因数,素因数,...)に変換
+                            e -> IntStream
+                                    .iterate(
+                                            e.getKey().intValue(), IntUnaryOperator.identity())
+                                    .limit(e.getValue().intValue()))
+                    .toArray();
+            this.factors = out.clone();
+            return out;
+        }
     }
 
     /**

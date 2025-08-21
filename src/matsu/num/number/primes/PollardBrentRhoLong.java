@@ -44,8 +44,13 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
 
     @Override
     public PrimeFactorLong apply(long n) {
-        if (n < 2L) {
-            throw new IllegalArgumentException("illegal: n < 2: n = " + n);
+        if (n < 1L) {
+            throw new IllegalArgumentException("illegal: n < 1: n = " + n);
+        }
+
+        // 1をはじく
+        if (n == 1) {
+            return new PrimeFactorLong(n, List.of());
         }
 
         // 素数ははじく

@@ -45,8 +45,13 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
     @Override
     public PrimeFactorInt apply(int n) {
-        if (n < 2) {
-            throw new IllegalArgumentException("illegal: n < 2: n = " + n);
+        if (n < 1) {
+            throw new IllegalArgumentException("illegal: n < 1: n = " + n);
+        }
+
+        // 1をはじく
+        if (n == 1) {
+            return new PrimeFactorInt(n, List.of());
         }
 
         // 素数ははじく

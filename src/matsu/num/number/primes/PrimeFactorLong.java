@@ -28,6 +28,7 @@ import java.util.stream.LongStream;
  * <i>n</i> の値に基づく equality と comparability を提供する.
  * 
  * <p>
+ * このクラスは, イミュータブルかつスレッドセーフであることが保証されている. <br>
  * このクラスは素因数分解の結果を返すための型であり, ユーザーがインスタンスを生成する手段は提供しない.
  * </p>
  * 
@@ -268,7 +269,8 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
     /**
      * {@code this} から素因数をひとつだけ取り除いた
-     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイテレータを返す.
+     * {@link PrimeFactorLong} の重複なしのバリエーションを列挙するイテレータを返す. <br>
+     * 返されるイテレータはスレッドセーフでない.
      * 
      * <p>
      * 自身の <i>n</i> が1の場合, イテレータは空になる.

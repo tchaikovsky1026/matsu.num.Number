@@ -10,18 +10,23 @@
  */
 package matsu.num.number.primes;
 
+import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.PrimitiveIterator;
 import java.util.SortedMap;
+import java.util.Spliterator;
 import java.util.TreeMap;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * 1 以上の {@code int} 型整数 <i>n</i> の素因数を表すクラス. <br>
@@ -44,8 +49,10 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
     // 遅延初期化ロック用オブジェクト
     private final Object lock = new Object();
 
-    // 遅延初期化される
+    /* 遅延初期化される */
     private volatile int[] factors;
+    // コレクションはイミュータブルなので, 使いまわしてよい
+    private volatile Collection<PrimeFactorInt> subFactorsCollection;
 
     /**
      * 唯一の非公開コンストラクタ.
@@ -269,54 +276,137 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
 
     /**
      * {@code this} から素因数をひとつだけ取り除いた
-     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイテレータを返す. <br>
-     * 返されるイテレータはスレッドセーフでない.
+     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す.
      * 
      * <p>
-     * 自身の <i>n</i> が1の場合, イテレータは空になる.
+     * 返される {@link Collection} は拡張 {@code for} 文や {@link Stream}
+     * を使うことを補助する目的に適している. <br>
+     * コレクションを実体として取り扱う場合,
+     * 他の {@link Collection} の実装に詰め直したほうが良い.
      * </p>
      * 
-     * @return 素因数をひとつだけ取り除いた素因数分解のイテレータ
+     * <p>
+     * 自身の <i>n</i> が1の場合, コレクションは空になる.
+     * </p>
+     * 
+     * @return 素因数をひとつだけ取り除いた素因数分解のコレクション
      */
-    public final Iterator<PrimeFactorInt> subFactorsIterator() {
-        return new SubFactorsIterator();
-    }
+    public final Collection<PrimeFactorInt> subFactorsCollection() {
 
-    private final class SubFactorsIterator implements Iterator<PrimeFactorInt> {
-
-        private final int[] qs;
-
-        private int cursor;
-
-        /**
-         * 唯一のコンストラクタ.
-         * 
-         * <p>
-         * エンクロージングインスタンスは素数であってはいけない.
-         * </p>
-         */
-        SubFactorsIterator() {
-            this.qs = factor2Number.keySet().stream()
-                    .mapToInt(i -> i.intValue())
-                    .toArray();
-            this.cursor = 0;
+        Collection<PrimeFactorInt> out = this.subFactorsCollection;
+        if (Objects.nonNull(out)) {
+            return out;
         }
 
-        @Override
-        public boolean hasNext() {
-            return cursor < qs.length;
-        }
-
-        @Override
-        public PrimeFactorInt next() {
-            if (!this.hasNext()) {
-                throw new NoSuchElementException();
+        synchronized (lock) {
+            out = this.subFactorsCollection;
+            if (Objects.nonNull(out)) {
+                return out;
             }
 
-            int q = qs[cursor];
-            cursor++;
+            out = new SubFactorsCollection();
+            this.subFactorsCollection = out;
+            return out;
+        }
+    }
 
-            return PrimeFactorInt.this.dividedByConcrete(q);
+    private final class SubFactorsCollection extends AbstractCollection<PrimeFactorInt> {
+
+        private final IntFunction<PrimeFactorInt> mapper =
+                q -> PrimeFactorInt.this.dividedByConcrete(q);
+
+        private final int[] qs = factor2Number.keySet().stream()
+                .mapToInt(i -> i.intValue())
+                .toArray();
+
+        /**
+         * 唯一のコストラクタ.
+         */
+        SubFactorsCollection() {
+            super();
+        }
+
+        @Override
+        public int size() {
+            return qs.length;
+        }
+
+        @Override
+        public Iterator<PrimeFactorInt> iterator() {
+            PrimitiveIterator.OfInt qsIte = IntStream.of(qs).iterator();
+
+            return new Iterator<>() {
+
+                @Override
+                public boolean hasNext() {
+                    return qsIte.hasNext();
+                }
+
+                @Override
+                public PrimeFactorInt next() {
+                    // ここで例外をスローする可能性がある
+                    int q = qsIte.nextInt();
+
+                    return mapper.apply(q);
+                }
+            };
+        }
+
+        @Override
+        public Spliterator<PrimeFactorInt> spliterator() {
+            return new IntToObjMappedSpliterator<PrimeFactorInt>(
+                    Arrays.spliterator(qs),
+                    mapper);
+        }
+
+        /*
+         * stream(), parallelStream() は Collection のデフォルトの実装が最適.
+         */
+    }
+
+    private static final class IntToObjMappedSpliterator<R> implements Spliterator<R> {
+
+        private final Spliterator.OfInt source;
+        private final IntFunction<R> mapper;
+
+        /**
+         * source は
+         * SIZED
+         * SUBSIZED
+         * ORDERED
+         * IMMUTABLE
+         * を報告する.
+         * 
+         * @param source
+         * @param mapper
+         */
+        IntToObjMappedSpliterator(Spliterator.OfInt source, IntFunction<R> mapper) {
+            super();
+            this.source = source;
+            this.mapper = mapper;
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super R> action) {
+            return source.tryAdvance((int v) -> action.accept(mapper.apply(v)));
+        }
+
+        @Override
+        public Spliterator<R> trySplit() {
+            Spliterator.OfInt splitSource = source.trySplit();
+            return splitSource == null
+                    ? null
+                    : new IntToObjMappedSpliterator<>(splitSource, mapper);
+        }
+
+        @Override
+        public long estimateSize() {
+            return source.estimateSize();
+        }
+
+        @Override
+        public int characteristics() {
+            return source.characteristics() | Spliterator.NONNULL;
         }
     }
 }

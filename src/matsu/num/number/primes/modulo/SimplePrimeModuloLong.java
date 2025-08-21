@@ -10,8 +10,6 @@
  */
 package matsu.num.number.primes.modulo;
 
-import java.util.Iterator;
-
 import matsu.num.number.ModuloLong;
 import matsu.num.number.primes.PrimeFactorLong;
 import matsu.num.number.primes.PrimeFactorize;
@@ -60,8 +58,7 @@ final class SimplePrimeModuloLong extends SkeletalPrimeModuloLong {
         PrimeFactorLong orderCandidate = factorOfPm1;
 
         candidateValidation: while (true) {
-            for (Iterator<PrimeFactorLong> ite = orderCandidate.subFactorsIterator(); ite.hasNext();) {
-                PrimeFactorLong sub = ite.next();
+            for (PrimeFactorLong sub : orderCandidate.subFactorsCollection()) {
                 if (this.modpow(a, sub.original()) == 1) {
                     orderCandidate = sub;
                     continue candidateValidation;
@@ -78,8 +75,7 @@ final class SimplePrimeModuloLong extends SkeletalPrimeModuloLong {
     @Override
     boolean isPrimitiveRootConcrete(long a) {
 
-        for (Iterator<PrimeFactorLong> ite = factorOfPm1.subFactorsIterator(); ite.hasNext();) {
-            PrimeFactorLong sub = ite.next();
+        for (PrimeFactorLong sub : factorOfPm1.subFactorsCollection()) {
             if (this.modpow(a, sub.original()) == 1) {
                 return false;
             }

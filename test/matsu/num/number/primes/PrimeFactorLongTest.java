@@ -80,13 +80,13 @@ final class PrimeFactorLongTest {
         }
 
         @Test
-        public void test_2を2回と5を除くことはできない() {
-            Optional<PrimeFactorLong> opFact = primeFactorLong
+        public void test_2を2回と5を除くと1である() {
+            PrimeFactorLong fact1 = primeFactorLong
                     .dividedBy(2L).get()
                     .dividedBy(5L).get()
-                    .dividedBy(2L);
-
-            assertThat(opFact, is(Optional.empty()));
+                    .dividedBy(2L).get();
+            assertThat(fact1.original(), is(1L));
+            testLong(fact1);
         }
     }
 
@@ -125,7 +125,7 @@ final class PrimeFactorLongTest {
         }
 
         @Test
-        public void test_元数5_イテレータの要素はなし() {
+        public void test_元数5_イテレータの要素は1() {
 
             PrimeFactorLong primeFactor = new PrimeFactorLong(5L, List.of(5L));
             testLong(primeFactor);
@@ -137,7 +137,7 @@ final class PrimeFactorLongTest {
                     .mapToLong(PrimeFactorLong::original)
                     .toArray();
 
-            assertThat(subNs, is(new long[] {}));
+            assertThat(subNs, is(new long[] { 1L }));
         }
     }
 

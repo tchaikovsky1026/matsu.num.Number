@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.20
+ * 2025.8.21
  */
 package matsu.num.number.primes;
 
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 /**
- * 2 以上の {@code long} 型整数 <i>n</i> の素因数を表すクラス. <br>
+ * 1 以上の {@code long} 型整数 <i>n</i> の素因数を表すクラス. <br>
  * <i>n</i> の値に基づく equality と comparability を提供する.
  * 
  * <p>
@@ -53,7 +53,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * 引数のバリデーションは行われていないので, 呼び出しもとでチェックすること.
      * </p>
      * 
-     * @param original 素因数分解前の値: 2以上の整数
+     * @param original 素因数分解前の値: 1以上の整数
      * @param factors 素因数分解結果: 総積がoriginalに一致
      */
     PrimeFactorLong(long original, Collection<Long> factorsList) {
@@ -98,7 +98,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * パッケージに対しても非公開であり, 強力な契約を持つ.
      * </p>
      * 
-     * @param original 素因数分解前の値: 2以上の整数
+     * @param original 素因数分解前の値: 1以上の整数
      * @param factor2Number 素因数とその個数のマップ:
      *            自然順序のcompare,
      *            Value は1以上,
@@ -134,9 +134,9 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * <i>n</i> の素因数を配列として返す.
      * 
      * <p>
-     * 配列は長さ 1 以上であり,
-     * 昇順にソートされている. <br>
-     * また, 要素の総積は <i>n</i> に一致する.
+     * 配列は昇順にソートされている. <br>
+     * また, 要素の総積は <i>n</i> に一致する. <br>
+     * <i>n</i> = 1 の場合は空配列である.
      * </p>
      * 
      * @return 素因数
@@ -172,15 +172,14 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * <i>n</i>/<i>q</i> の素因数分解を返す.
      * 
      * <p>
-     * <i>q</i> が <i>n</i> の素因数でない場合,
-     * <i>n</i> が素数であり <i>n</i>/<i>q</i> = 1 となってしまう場合は空が返る.
+     * <i>q</i> が <i>n</i> の素因数でない場合は空が返る.
      * </p>
      * 
      * @param q <i>q</i>, 素因数の1つ
      * @return <i>n</i>/<i>q</i> に対する素因数分解, <i>q</i> が不適の場合は空
      */
     public final Optional<PrimeFactorLong> dividedBy(long q) {
-        return !this.isPrime() && this.factor2Number.containsKey(Long.valueOf(q))
+        return this.factor2Number.containsKey(Long.valueOf(q))
                 ? Optional.of(this.dividedByConcrete(q))
                 : Optional.empty();
     }
@@ -192,7 +191,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * <i>n</i>/<i>q</i> の素因数分解を返す.
      * 
      * <p>
-     * {@literal q < n} を満たし, かつ q を素因数に含んでいなければならない
+     * q を素因数に含んでいなければならない
      * (バリデーションはされていない).
      * </p>
      * 
@@ -272,43 +271,13 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイテレータを返す.
      * 
      * <p>
-     * 自身の素因数分解前の値 <i>n</i> が素数の場合, イテレータは空になる.
+     * 自身の <i>n</i> が1の場合, イテレータは空になる.
      * </p>
      * 
      * @return 素因数をひとつだけ取り除いた素因数分解のイテレータ
      */
     public final Iterator<PrimeFactorLong> subFactorsIterator() {
-        return this.isPrime()
-                ? EmptyIterator.INSTANCE
-                : new SubFactorsIterator();
-    }
-
-    /**
-     * 要素を持たないイテレータ.
-     */
-    private static final class EmptyIterator implements Iterator<PrimeFactorLong> {
-
-        /**
-         * このクラスのインスタンスはシングルトン.
-         */
-        static final Iterator<PrimeFactorLong> INSTANCE = new EmptyIterator();
-
-        /**
-         * シングルトンなのでエンクロージングクラスからも呼ぶことは許されない.
-         */
-        private EmptyIterator() {
-            super();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-
-        @Override
-        public PrimeFactorLong next() {
-            throw new NoSuchElementException();
-        }
+        return new SubFactorsIterator();
     }
 
     private final class SubFactorsIterator implements Iterator<PrimeFactorLong> {

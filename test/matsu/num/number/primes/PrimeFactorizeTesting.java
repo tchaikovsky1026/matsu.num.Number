@@ -37,6 +37,14 @@ final class PrimeFactorizeTesting {
     static abstract class IntFactorize {
 
         @Test
+        public void test_素因数分解検証_1() {
+            IntFunction<PrimeFactorInt> primeFactorize = getPrimeFactorize();
+            int n = 1;
+            PrimeFactorInt primeFactor = primeFactorize.apply(n);
+            PrimeFactorIntTest.testInt(primeFactor);
+        }
+
+        @Test
         public final void test_素因数分解検証_ランダム化() {
             int ite = 1000;
 
@@ -47,7 +55,7 @@ final class PrimeFactorizeTesting {
                 int n = 2 + ThreadLocalRandom.current().nextInt(Math.max(1, max()));
 
                 PrimeFactorInt primeFactor = primeFactorize.apply(n);
-                PrimeFactorTestingHelper.testInt(primeFactor);
+                PrimeFactorIntTest.testInt(primeFactor);
             }
         }
 
@@ -75,6 +83,14 @@ final class PrimeFactorizeTesting {
     static abstract class LongFactorize {
 
         @Test
+        public void test_素因数分解検証_1() {
+            LongFunction<PrimeFactorLong> primeFactorize = getPrimeFactorize();
+            long n = 1L;
+            PrimeFactorLong primeFactor = primeFactorize.apply(n);
+            PrimeFactorLongTest.testLong(primeFactor);
+        }
+
+        @Test
         public void test_素因数分解検証_ランダム化() {
             int ite = 1000;
 
@@ -85,7 +101,7 @@ final class PrimeFactorizeTesting {
                 long n = 2 + ThreadLocalRandom.current().nextLong(Math.max(1L, max()));
 
                 PrimeFactorLong primeFactor = primeFactorize.apply(n);
-                PrimeFactorTestingHelper.testLong(primeFactor);
+                PrimeFactorLongTest.testLong(primeFactor);
             }
         }
 

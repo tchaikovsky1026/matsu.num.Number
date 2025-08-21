@@ -11,6 +11,7 @@
 package matsu.num.number.primes;
 
 import matsu.num.number.ModuloLong;
+import matsu.num.number.primes.Primality.PrimalityLong;
 
 /**
  * long 型の Miller テストによる素数判定.

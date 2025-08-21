@@ -11,11 +11,11 @@
 package matsu.num.number.primes;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import matsu.num.number.Gcd;
 import matsu.num.number.ModuloLong;
+import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeLong;
 
 /**
  * {@code long} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.
@@ -44,13 +44,18 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
 
     @Override
     public PrimeFactorLong apply(long n) {
-        if (n < 2L) {
-            throw new IllegalArgumentException("illegal: n < 2: n = " + n);
+        if (n < 1L) {
+            throw new IllegalArgumentException("illegal: n < 1: n = " + n);
+        }
+
+        // 1をはじく
+        if (n == 1) {
+            return new PrimeFactorLong(n, List.of());
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorLong(n, new long[] { n });
+            return new PrimeFactorLong(n, List.of(Long.valueOf(n)));
         }
 
         final long original = n;
@@ -88,9 +93,7 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
                 if (n > 1L) {
                     factors.add(Long.valueOf(n));
                 }
-                return new PrimeFactorLong(
-                        original,
-                        toArray(factors));
+                return new PrimeFactorLong(original, factors);
             }
         }
 
@@ -98,12 +101,8 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
         while (n > 1L) {
             n = new RhoAlgorithm(n).factorize(factors);
         }
-        // ロー法は昇順を保証しないのでソート
-        factors.sort(Comparator.naturalOrder());
 
-        return new PrimeFactorLong(
-                original,
-                toArray(factors));
+        return new PrimeFactorLong(original, factors);
     }
 
     /**
@@ -132,12 +131,6 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
             }
         }
         return n;
-    }
-
-    private static long[] toArray(List<Long> factor) {
-        return factor.stream()
-                .mapToLong(i -> i.longValue())
-                .toArray();
     }
 
     private static final class RhoAlgorithm {

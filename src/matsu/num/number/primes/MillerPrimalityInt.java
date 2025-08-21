@@ -11,6 +11,7 @@
 package matsu.num.number.primes;
 
 import matsu.num.number.ModuloInt;
+import matsu.num.number.primes.Primality.PrimalityInt;
 
 /**
  * int 型の Miller テストによる素数判定.

@@ -13,6 +13,8 @@ package matsu.num.number.primes;
 import java.util.ArrayList;
 import java.util.List;
 
+import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeLong;
+
 /**
  * 素朴な試し割り法による {@link PrimeFactorizeLong} の実装.
  * 
@@ -31,13 +33,18 @@ final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
 
     @Override
     public PrimeFactorLong apply(long n) {
-        if (n < 2L) {
-            throw new IllegalArgumentException("illegal: n < 2: n = " + n);
+        if (n < 1L) {
+            throw new IllegalArgumentException("illegal: n < 1: n = " + n);
+        }
+
+        // 1をはじく
+        if (n == 1) {
+            return new PrimeFactorLong(n, List.of());
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorLong(n, new long[] { n });
+            return new PrimeFactorLong(n, List.of(Long.valueOf(n)));
         }
 
         final long original = n;
@@ -73,11 +80,7 @@ final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
             factor.add(Long.valueOf(n));
         }
 
-        return new PrimeFactorLong(
-                original,
-                factor.stream()
-                        .mapToLong(m -> m.longValue())
-                        .toArray());
+        return new PrimeFactorLong(original, factor);
     }
 
     /**

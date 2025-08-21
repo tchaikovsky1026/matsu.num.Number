@@ -11,11 +11,11 @@
 package matsu.num.number.primes;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import matsu.num.number.Gcd;
 import matsu.num.number.ModuloInt;
+import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeInt;
 
 /**
  * {@code int} 型整数についての Pollard の &rho; 法の Brent 最適化をベースとした素因数分解.
@@ -45,13 +45,18 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
     @Override
     public PrimeFactorInt apply(int n) {
-        if (n < 2) {
-            throw new IllegalArgumentException("illegal: n < 2: n = " + n);
+        if (n < 1) {
+            throw new IllegalArgumentException("illegal: n < 1: n = " + n);
+        }
+
+        // 1をはじく
+        if (n == 1) {
+            return new PrimeFactorInt(n, List.of());
         }
 
         // 素数ははじく
         if (Primality.isPrime(n)) {
-            return new PrimeFactorInt(n, new int[] { n });
+            return new PrimeFactorInt(n, List.of(Integer.valueOf(n)));
         }
 
         final int original = n;
@@ -91,9 +96,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
                 if (n > 1) {
                     factors.add(Integer.valueOf(n));
                 }
-                return new PrimeFactorInt(
-                        original,
-                        toArray(factors));
+                return new PrimeFactorInt(original, factors);
             }
         }
 
@@ -101,12 +104,8 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
         while (n > 1) {
             n = new RhoAlgorithm(n).factorize(factors);
         }
-        // ロー法は昇順を保証しないのでソート
-        factors.sort(Comparator.naturalOrder());
 
-        return new PrimeFactorInt(
-                original,
-                toArray(factors));
+        return new PrimeFactorInt(original, factors);
     }
 
     /**
@@ -135,12 +134,6 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
             }
         }
         return n;
-    }
-
-    private static int[] toArray(List<Integer> factor) {
-        return factor.stream()
-                .mapToInt(i -> i.intValue())
-                .toArray();
     }
 
     private static final class RhoAlgorithm {

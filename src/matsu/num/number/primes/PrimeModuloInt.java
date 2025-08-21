@@ -11,6 +11,7 @@
 package matsu.num.number.primes;
 
 import matsu.num.number.ModuloInt;
+import matsu.num.number.primes.modulo.SimplePrimeModuloFactory;
 
 /**
  * {@code int} 型の素数を法とするモジュロ演算を行うインターフェース.
@@ -72,10 +73,8 @@ public interface PrimeModuloInt extends ModuloInt {
      * @param p 除数 <i>p</i>
      * @return <i>p</i> を法とするモジュロ演算
      * @throws IllegalArgumentException 引数が素数でない場合
-     * @deprecated throw new AssertionError("TODO")
      */
-    @Deprecated
     public static PrimeModuloInt get(int p) {
-        throw new AssertionError("TODO");
+        return SimplePrimeModuloFactory.createFrom(ModuloInt.get(p));
     }
 }

@@ -11,6 +11,7 @@
 package matsu.num.number.primes;
 
 import matsu.num.number.ModuloLong;
+import matsu.num.number.primes.modulo.SimplePrimeModuloFactory;
 
 /**
  * {@code long} 型の素数を法とするモジュロ演算を行うインターフェース.
@@ -62,7 +63,7 @@ public interface PrimeModuloLong extends ModuloLong {
     public abstract long primitiveRoot();
 
     /**
-     * {@code int} 型の素数 <i>p</i> について,
+     * {@code long} 型の素数 <i>p</i> について,
      * <i>p</i> を法とするモジュロ演算を返す.
      * 
      * <p>
@@ -72,10 +73,8 @@ public interface PrimeModuloLong extends ModuloLong {
      * @param p 除数 <i>p</i>
      * @return <i>p</i> を法とするモジュロ演算
      * @throws IllegalArgumentException 引数が素数でない場合
-     * @deprecated throw new AssertionError("TODO")
      */
-    @Deprecated
     public static PrimeModuloLong get(long p) {
-        throw new AssertionError("TODO");
+        return SimplePrimeModuloFactory.createFrom(ModuloLong.get(p));
     }
 }

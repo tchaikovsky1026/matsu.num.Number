@@ -14,8 +14,6 @@ import static org.hamcrest.Matchers.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -97,10 +95,8 @@ final class PrimeFactorIntTest {
             PrimeFactorInt primeFactor = new PrimeFactorInt(20, List.of(2, 2, 5));
             testInt(primeFactor);
 
-            int[] subNs = StreamSupport
-                    .stream(
-                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
-                            false)
+            int[] subNs = primeFactor.subFactorsCollection()
+                    .stream()
                     .mapToInt(PrimeFactorInt::original)
                     .toArray();
 
@@ -113,10 +109,8 @@ final class PrimeFactorIntTest {
             PrimeFactorInt primeFactor = new PrimeFactorInt(10, List.of(2, 5));
             testInt(primeFactor);
 
-            int[] subNs = StreamSupport
-                    .stream(
-                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
-                            false)
+            int[] subNs = primeFactor.subFactorsCollection()
+                    .stream()
                     .mapToInt(PrimeFactorInt::original)
                     .toArray();
 
@@ -129,10 +123,8 @@ final class PrimeFactorIntTest {
             PrimeFactorInt primeFactor = new PrimeFactorInt(5, List.of(5));
             testInt(primeFactor);
 
-            int[] subNs = StreamSupport
-                    .stream(
-                            Spliterators.spliteratorUnknownSize(primeFactor.subFactorsIterator(), 0),
-                            false)
+            int[] subNs = primeFactor.subFactorsCollection()
+                    .stream()
                     .mapToInt(PrimeFactorInt::original)
                     .toArray();
 

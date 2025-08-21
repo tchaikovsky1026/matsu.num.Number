@@ -79,13 +79,13 @@ final class PrimeFactorIntTest {
         }
 
         @Test
-        public void test_2を2回と5を除くことはできない() {
-            Optional<PrimeFactorInt> opFact = primeFactorInt
+        public void test_2を2回と5を除くと1である() {
+            PrimeFactorInt fact1 = primeFactorInt
                     .dividedBy(2).get()
                     .dividedBy(5).get()
-                    .dividedBy(2);
-
-            assertThat(opFact, is(Optional.empty()));
+                    .dividedBy(2).get();
+            assertThat(fact1.original(), is(1));
+            testInt(fact1);
         }
     }
 
@@ -124,7 +124,7 @@ final class PrimeFactorIntTest {
         }
 
         @Test
-        public void test_元数5_イテレータの要素はなし() {
+        public void test_元数5_イテレータの要素は1() {
 
             PrimeFactorInt primeFactor = new PrimeFactorInt(5, List.of(5));
             testInt(primeFactor);
@@ -136,7 +136,7 @@ final class PrimeFactorIntTest {
                     .mapToInt(PrimeFactorInt::original)
                     .toArray();
 
-            assertThat(subNs, is(new int[] {}));
+            assertThat(subNs, is(new int[] { 1 }));
         }
     }
 

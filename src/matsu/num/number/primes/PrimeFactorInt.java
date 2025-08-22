@@ -275,11 +275,13 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
     }
 
     /**
-     * {@code this} から素因数をひとつだけ取り除いた
+     * {@code this} から素因数をひとつだけ取り除いた ({@link #dividedBy(int)} を適用した)
      * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す.
      * 
      * <p>
-     * 返される {@link Collection} は拡張 {@code for} 文や {@link Stream}
+     * 返される {@link Collection} は,
+     * 要素を取得するために毎回 {@link #dividedBy(int)} を実行する可能性がある. <br>
+     * そのため, 拡張 {@code for} 文や {@link Stream}
      * を使うことを補助する目的に適している. <br>
      * コレクションを実体として取り扱う場合,
      * 他の {@link Collection} の実装に詰め直したほうが良い.
@@ -290,6 +292,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * </p>
      * 
      * @return 素因数をひとつだけ取り除いた素因数分解のコレクション
+     * @see #dividedBy(int)
      */
     public final Collection<PrimeFactorInt> subFactorsCollection() {
 

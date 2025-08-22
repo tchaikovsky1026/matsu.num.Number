@@ -46,6 +46,17 @@ public interface PrimeModuloInt extends ModuloInt {
 
     /**
      * 1 以上 <i>p</i> - 1 以下の整数 <i>a</i> について,
+     * mod&nbsp;<i>p</i> に対する <i>a</i> の逆元を返す. <br>
+     * 戻り値は 1 以上 <i>p</i> - 1 以下である.
+     * 
+     * @param a 逆元を求める整数
+     * @return <i>a</i> の逆元
+     * @throws IllegalArgumentException <i>a</i> が 1 以上 <i>p</i> - 1 以下でない場合
+     */
+    public abstract int inverse(int a);
+
+    /**
+     * 1 以上 <i>p</i> - 1 以下の整数 <i>a</i> について,
      * mod&nbsp;<i>p</i> に対する原始根かどうか (位数が <i>p</i> - 1 かどうか) を判定する.
      * 
      * @param a 原始根かどうかを判定する整数

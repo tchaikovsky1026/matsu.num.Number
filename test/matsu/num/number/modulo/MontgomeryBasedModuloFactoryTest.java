@@ -50,6 +50,14 @@ final class MontgomeryBasedModuloFactoryTest {
         }
     }
 
+    public static class GcdInverseIntのテスト extends ModuloIntTesting.GcdInverse {
+
+        @Override
+        ModuloInt getModulusInt(int m) {
+            return moduloIntGetter.apply(m);
+        }
+    }
+
     public static class ModProd2Longのテスト extends ModuloLongTesting.Prod2 {
 
         @Override
@@ -67,6 +75,14 @@ final class MontgomeryBasedModuloFactoryTest {
     }
 
     public static class ModPowLongのテスト extends ModuloLongTesting.Pow {
+
+        @Override
+        ModuloLong getModulusLong(long m) {
+            return moduloLongGetter.apply(m);
+        }
+    }
+
+    public static class GcdInverseLongのテスト extends ModuloLongTesting.GcdInverse {
 
         @Override
         ModuloLong getModulusLong(long m) {

@@ -25,6 +25,7 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+import matsu.num.number.Gcd;
 import matsu.num.number.ModuloLong;
 
 /**
@@ -370,5 +371,53 @@ final class ModuloLongTesting {
                 this.k = k;
             }
         }
+    }
+    
+    @Ignore
+    @RunWith(Theories.class)
+    static abstract class GcdInverse {
+
+        @DataPoints
+        public static long[] divisors = {
+                1, 2, 4, 8, 16, 31, 126, 30513, 2874127,
+                100000000001L, 1L << 42, 11 * (1L << 42)
+        };
+
+        @Theory
+        public void test_GcdInverseをテスト_ランダム化(long divisor) {
+
+            int ite = 100;
+
+            try {
+                ModuloLong modulus = getModulusLong(divisor);
+                if (modulus.divisor() != divisor) {
+                    throw new AssertionError("assert: getModulusInt: modulus.divisor() != divisor");
+                }
+
+                for (int c = 0; c < ite; c++) {
+
+                    long a = ThreadLocalRandom.current().nextLong(divisor * 5);
+
+                    long r = modulus.gcdInverse(a);
+                    long gcd = Gcd.gcd(a, divisor);
+
+                    assertThat(
+                            "a = " + a + "m = " + divisor + "gcd(a,m) = " + gcd,
+                            modulus.modpr(a, r), is(modulus.mod(gcd)));
+                }
+            } catch (UnsupportedOperationException igonred) {
+                // divisorが対応していない場合は無視する
+            }
+        }
+
+        /**
+         * 与えた値を除数とする ModulusLong を返す.
+         * 
+         * @param m 除数
+         * @return
+         * @throws UnsupportedOperationException
+         *             引数の値が対応しておらず, ModulusLong を返せない場合
+         */
+        abstract ModuloLong getModulusLong(long m);
     }
 }

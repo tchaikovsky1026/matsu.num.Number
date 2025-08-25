@@ -66,10 +66,22 @@ abstract class SkeletalPrimeModuloInt implements PrimeModuloInt {
     }
 
     @Override
+    public final int gcdInverse(int a) {
+        return this.modulo.gcdInverse(a);
+    }
+
+    @Override
     public final int order(int a) {
         validateDividend(a);
 
         return this.orderConcrete(a);
+    }
+
+    @Override
+    public final int inverse(int a) {
+        validateDividend(a);
+
+        return this.inverseConcrete(a);
     }
 
     @Override
@@ -110,6 +122,34 @@ abstract class SkeletalPrimeModuloInt implements PrimeModuloInt {
      * @return mod&nbsp;<i>p</i> に対する位数
      */
     abstract int orderConcrete(int a);
+
+    /**
+     * {@link #inverse(int)} の具体的処理を実装するメソッド.
+     * 
+     * <p>
+     * 外部から {@link #order(int)} を呼んだとき, 引数が正当かどうか
+     * (1 以上 <i>p</i> - 1 以下かどうか)
+     * が判定され, 正当な場合はこのメソッドがコールされる. <br>
+     * このメソッド内で例外をスローしてはいけない. <br>
+     * このメソッドを継承先から直接コールすることは, ほとんどの場合不適切である.
+     * </p>
+     * 
+     * @implSpec
+     *               このメソッドのオーバーライドは許可されている. <br>
+     *               デフォルトでは
+     *               {@link #gcdInverse(int)}
+     *               を返す.
+     * 
+     *               <p>
+     *               アクセスレベルを継承先で緩和してはいけない.
+     *               </p>
+     * 
+     * @param a 位数を計算する整数, 1 以上 <i>p</i> - 1 以下が確定
+     * @return mod&nbsp;<i>p</i> に対する <i>a</i> の逆元
+     */
+    int inverseConcrete(int a) {
+        return this.gcdInverse(a);
+    }
 
     /**
      * {@link #isPrimitiveRoot(int)} の具体的処理を実装する抽象メソッド.

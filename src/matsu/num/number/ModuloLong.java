@@ -41,71 +41,110 @@ public interface ModuloLong {
     public abstract long divisor();
 
     /**
-     * <i>m</i> を法とする剰余を計算する. <br>
-     * 剰余は 0 以上 <i>m</i> 未満の値である.
+     * 整数 <i>x</i> に対する <i>m</i> を法とする剰余 <i>r</i> を返す. <br>
+     * 0 &le; <i>r</i> &lt; <i>m</i> である.
      * 
-     * @param x 被除数
-     * @return <i>x</i> mod <i>m</i>
+     * @param x 数
+     * @return <i>x</i> mod&nbsp;<i>m</i>
      */
     public abstract long mod(long x);
 
     /**
-     * <i>m</i> を法とする, 積の剰余を計算する. <br>
-     * 剰余は 0 以上 <i>m</i> 未満の値である.
+     * 整数の積 <i>x</i><i>y</i> に対する <i>m</i> を法とする剰余 <i>r</i> を返す. <br>
+     * 0 &le; <i>r</i> &lt; <i>m</i> である.
      * 
      * @param x 数1
      * @param y 数2
-     * @return <i>x</i><i>y</i> mod <i>m</i>
+     * @return <i>x</i><i>y</i> mod&nbsp;<i>m</i>
      */
     public long modpr(long x, long y);
 
     /**
-     * 与えられた数
-     * <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
-     * ..., <i>x</i><sub><i>n</i></sub> について,
-     * <i>m</i> を法とする総積の剰余を計算する. <br>
-     * 剰余は 0 以上 <i>m</i> 未満の値である.
+     * 整数の総積
+     * <i>x</i><sub>1</sub><i>x</i><sub>2</sub>&middot;&middot;&middot;<i>x</i><sub><i>n</i></sub>
+     * に対する
+     * <i>m</i> を法とする剰余 <i>r</i> を返す. <br>
+     * 0 &le; <i>r</i> &lt; <i>m</i> である.
      * 
      * <p>
-     * 引数が空の場合は 1 mod <i>m</i> を返す.
+     * 引数が空の場合は 1 mod&nbsp;<i>m</i> を返す.
      * </p>
      * 
      * @param x <i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>,
      *            ..., <i>x</i><sub><i>n</i></sub>
      * @return (<i>x</i><sub>1</sub><i>x</i><sub>2</sub>&middot;&middot;&middot;<i>x</i><sub><i>n</i></sub>)
-     *             mod <i>m</i>
+     *             mod&nbsp;<i>m</i>
+     * @throws NullPointerException 引数がnullの場合
      */
     public long modpr(long... x);
 
     /**
-     * <i>m</i> を法とする, 累乗 (<i>x</i><sup><i>k</i></sup>) の剰余を計算する. <br>
-     * 剰余は 0 以上 <i>m</i> 未満の値である.
+     * 整数の累乗 <i>x</i><sup><i>k</i></sup> に対する
+     * <i>m</i> を法とする剰余 <i>r</i> を返す. <br>
+     * 0 &le; <i>r</i> &lt; <i>m</i> である.
      * 
      * <p>
-     * 指数 <i>k</i> は 0 以上でなければならない. <br>
+     * <i>k</i> &ge; 0 でなければならない. <br>
      * <i>k</i> = 0 の場合は
      * (<i>x</i> = 0 であっても)
-     * 1 mod <i>m</i> を返す.
+     * 1 mod&nbsp;<i>m</i>
+     * を返す.
      * </p>
      * 
      * @param x 底
      * @param k 指数
-     * @return <i>x</i><sup><i>k</i></sup> mod <i>m</i>
-     * @throws IllegalArgumentException 指数が0未満の場合
+     * @return <i>x</i><sup><i>k</i></sup> mod&nbsp;<i>m</i>
+     * @throws IllegalArgumentException <i>k</i> &lt; 0 の場合
      */
     public long modpow(long x, long k);
+
+    /**
+     * 整数 <i>a</i> に対する
+     * <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>) (mod&nbsp;<i>m</i>)
+     * を満たす整数 <i>r</i> のうちの1つを返す (GCD乗法逆元). <br>
+     * 0 &le; <i>r</i> &lt; <i>m</i> である.
+     * 
+     * <p>
+     * <i>a</i>, <i>m</i> に対して,
+     * <i>a</i><i>r</i> + <i>m</i><i>s</i> = gcd(<i>a</i>, <i>m</i>)
+     * を満たす <i>r</i>, <i>s</i> の組は必ず存在する
+     * (B&eacute;zout's identity). <br>
+     * <i>r</i> に着目すると,
+     * <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>)
+     * (mod&nbsp;<i>m</i>)
+     * である. <br>
+     * B&eacute;zout's identity を満たす <i>r</i> は
+     * mod&nbsp;(<i>m</i> / gcd(<i>a</i>, <i>m</i>))
+     * で一意であるので,
+     * mod&nbsp;<i>m</i> においては複数候補がある.
+     * </p>
+     * 
+     * <p>
+     * このメソッドの戻り値 <i>r</i> を使い, gcd(<i>a</i>, <i>m</i>) を
+     * <i>a</i><i>r</i> mod&nbsp;<i>m</i>
+     * により得ることができる ({@link #modpr(long, long) modpr(a,r)}). <br>
+     * ただし, gcd(<i>a</i>, <i>m</i>) を得ることのみが目的であれば,
+     * {@link Gcd#gcd(long, long)} の方が適切である.
+     * </p>
+     * 
+     * @param a 数
+     * @return GCD乗法逆元,
+     *             <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>)
+     *             を満たす <i>r</i>
+     */
+    public long gcdInverse(long a);
 
     /**
      * {@code long} 型整数 <i>m</i> について,
      * <i>m</i> を法とするモジュロ演算を返す.
      * 
      * <p>
-     * 除数 <i>m</i> は正でなければならない.
+     * <i>m</i> &gt; 0 でなければならない.
      * </p>
      * 
      * @param divisor 除数 <i>m</i>
      * @return <i>m</i> を法とするモジュロ演算
-     * @throws IllegalArgumentException 引数が正の整数でない場合
+     * @throws IllegalArgumentException <i>m</i> &le; 0 の場合
      */
     public static ModuloLong get(long divisor) {
         return MontgomeryBasedModuloFactory.get(divisor);

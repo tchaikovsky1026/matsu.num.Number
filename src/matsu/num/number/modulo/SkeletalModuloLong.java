@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2025.8.25
  */
 package matsu.num.number.modulo;
 
@@ -24,6 +24,22 @@ abstract class SkeletalModuloLong implements ModuloLong {
      */
     SkeletalModuloLong() {
         super();
+    }
+
+    /**
+     * {@inheritDoc }
+     * 
+     * <p>
+     * 処理は {@link GcdInverseTransfer} に転送されている. <br>
+     * この転送は, 安全かつ実用的な実装である.
+     * </p>
+     * 
+     * @implSpec
+     *               継承先でさらに効率的な実装が提供できる場合は, オーバーライドしても良い.
+     */
+    @Override
+    public long gcdInverse(long a) {
+        return GcdInverseTransfer.gcdInverse(a, this);
     }
 
     /**

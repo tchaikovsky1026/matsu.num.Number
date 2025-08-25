@@ -119,6 +119,14 @@ public interface ModuloLong {
      * mod&nbsp;<i>m</i> においては複数候補がある.
      * </p>
      * 
+     * <p>
+     * このメソッドの戻り値 <i>r</i> を使い, gcd(<i>a</i>, <i>m</i>) を
+     * <i>a</i><i>r</i> mod&nbsp;<i>m</i>
+     * により得ることができる ({@link #modpr(long, long) modpr(a,r)}). <br>
+     * ただし, gcd(<i>a</i>, <i>m</i>) を得ることのみが目的であれば,
+     * {@link Gcd#gcd(long, long)} の方が適切である.
+     * </p>
+     * 
      * @param a 数
      * @return GCD逆元,
      *             <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>)

@@ -54,7 +54,10 @@ public interface PrimeModuloLong extends ModuloLong {
      * 1 &le; <i>a</i> &lt; <i>p</i> を満たす整数 <i>a</i> について,
      * <i>a</i><i>r</i> &equiv; 1 (mod&nbsp;<i>p</i>)
      * を満たす整数 <i>r</i> を返す (逆元). <br>
-     * 1 &le; <i>r</i> &lt; <i>p</i> である.
+     * 1 &le; <i>r</i> &lt; <i>p</i> である. <br>
+     * このような <i>r</i> は唯一であり,
+     * <i>a</i><sup><i>p</i> - 2</sup> mod&nbsp;<i>p</i>
+     * に一致する.
      * 
      * @param a 数
      * @return mod&nbsp;<i>p</i> に対する <i>a</i> の逆元

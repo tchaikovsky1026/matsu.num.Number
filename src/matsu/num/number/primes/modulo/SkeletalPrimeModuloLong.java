@@ -78,6 +78,13 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
     }
 
     @Override
+    public final long inverse(long a) {
+        validateDividend(a);
+
+        return this.inverseConcrete(a);
+    }
+
+    @Override
     public final boolean isPrimitiveRoot(long a) {
         validateDividend(a);
 
@@ -115,6 +122,34 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @return mod&nbsp;<i>p</i> に対する位数
      */
     abstract long orderConcrete(long a);
+
+    /**
+     * {@link #inverse(long)} の具体的処理を実装するメソッド.
+     * 
+     * <p>
+     * 外部から {@link #order(long)} を呼んだとき, 引数が正当かどうか
+     * (1 以上 <i>p</i> - 1 以下かどうか)
+     * が判定され, 正当な場合はこのメソッドがコールされる. <br>
+     * このメソッド内で例外をスローしてはいけない. <br>
+     * このメソッドを継承先から直接コールすることは, ほとんどの場合不適切である.
+     * </p>
+     * 
+     * @implSpec
+     *               このメソッドのオーバーライドは許可されている. <br>
+     *               デフォルトでは
+     *               {@link #gcdInverse(long)}
+     *               を計算して返す.
+     * 
+     *               <p>
+     *               アクセスレベルを継承先で緩和してはいけない.
+     *               </p>
+     * 
+     * @param a 位数を計算する整数, 1 以上 <i>p</i> - 1 以下が確定
+     * @return mod&nbsp;<i>p</i> に対する <i>a</i> の逆元
+     */
+    long inverseConcrete(long a) {
+        return this.gcdInverse(a);
+    }
 
     /**
      * {@link #isPrimitiveRoot(long)} の具体的処理を実装する抽象メソッド.

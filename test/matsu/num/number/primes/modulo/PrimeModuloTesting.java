@@ -71,6 +71,21 @@ final class PrimeModuloTesting {
         }
 
         @Theory
+        public void test_逆元の検証(int p) {
+            PrimeModuloInt primeModulo = getPrimeModuloFactory().apply(p);
+
+            // a = 1 から a = p-1 まで逆元を検証する
+            for (int a = 1; a < p; a++) {
+
+                int invA = primeModulo.inverse(a);
+
+                assertThat(
+                        "check a*invA mod p == 1. p = %s, a = %s".formatted(p, a),
+                        primeModulo.modpr(a, invA), is(1));
+            }
+        }
+
+        @Theory
         public void test_原始根判定の検証(int p) {
             PrimeModuloInt primeModulo = getPrimeModuloFactory().apply(p);
 
@@ -130,6 +145,21 @@ final class PrimeModuloTesting {
                 assertThat(
                         "p = %s, a = %s".formatted(p, a),
                         primeModulo.order(a), is(expected));
+            }
+        }
+
+        @Theory
+        public void test_逆元の検証(long p) {
+            PrimeModuloLong primeModulo = getPrimeModuloFactory().apply(p);
+
+            // a = 1 から a = p-1 まで逆元を検証する
+            for (long a = 1L; a < p; a++) {
+
+                long invA = primeModulo.inverse(a);
+
+                assertThat(
+                        "check a*invA mod p == 1. p = %s, a = %s".formatted(p, a),
+                        primeModulo.modpr(a, invA), is(1L));
             }
         }
 

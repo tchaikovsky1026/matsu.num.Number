@@ -26,6 +26,38 @@ import matsu.num.number.primes.modulo.SimplePrimeModuloFactory;
  * 最も基本的なインスタンスの取得方法は, {@link #get(int)} メソッドをコールすることである.
  * </p>
  * 
+ * 
+ * <hr>
+ * 
+ * <h2>素数を法とするモジュロ演算</h2>
+ * 
+ * <p>
+ * 一般に, <i>m</i> を法とするモジュロ演算において,
+ * 与えられた整数 <i>a</i> に対して
+ * <i>a</i> <sup><i>k</i></sup> &equiv; 1
+ * となる 正整数 <i>k</i> が存在するとき,
+ * そのような <i>k</i> の最小値を <i>a</i> の<b>位数</b>という
+ * (存在しないときは無限として扱う). <br>
+ * <i>a</i> <sup><i>k</i></sup> &equiv; 1 が成立するとき,
+ * <i>a</i> の位数は必ず <i>k</i> の約数である. <br>
+ * 法が素数であるとき
+ * (<i>m</i> = <i>p</i>),
+ * Fermat の小定理により 1 &le; <i>a</i> &lt; <i>p</i> なる <i>a</i> に対して
+ * <i>a</i><sup><i>p</i> - 1</sup> &equiv; 1
+ * であるので,
+ * そのような <i>a</i> の位数は有限である.
+ * </p>
+ * 
+ * <p>
+ * 素数 <i>p</i> を法とするとき,
+ * 位数が <i>p</i> - 1 であるような <i>a</i> が必ず存在する
+ * (証明は少々複雑). <br>
+ * このような <i>a</i> を mod&nbsp;<i>p</i> に対する<b>原始根</b>という. <br>
+ * <i>a</i> が原始根であるとき,
+ * <i>a</i><sup>1</sup>, <i>a</i><sup>2</sup>, ...,
+ * <i>a</i><sup><i>p</i> - 1</sup> は mod&nbsp;<i>p</i> について相異なる.
+ * </p>
+ * 
  * @implSpec
  *               このインターフェースは実装を隠ぺいして型を公開するためのものである. <br>
  *               モジュール外で継承・実装してはいけない.
@@ -35,39 +67,47 @@ import matsu.num.number.primes.modulo.SimplePrimeModuloFactory;
 public interface PrimeModuloInt extends ModuloInt {
 
     /**
-     * 1 以上 <i>p</i> - 1 以下の整数 <i>a</i> について,
-     * mod&nbsp;<i>p</i> に対する位数を返す.
+     * 1 &le; <i>a</i> &lt; <i>p</i> を満たす整数 <i>a</i> について,
+     * mod&nbsp;<i>p</i> に対する位数 <i>k</i> を返す. <br>
+     * 1 &le; <i>k</i> &lt; <i>p</i> である.
      * 
-     * @param a 位数を計算する整数
-     * @return mod&nbsp;<i>p</i> に対する位数
-     * @throws IllegalArgumentException <i>a</i> が 1 以上 <i>p</i> - 1 以下でない場合
+     * @param a 数
+     * @return mod&nbsp;<i>p</i> に対する <i>a</i> の位数
+     * @throws IllegalArgumentException
+     *             1 &le; <i>a</i> &lt; <i>p</i> でない場合
      */
     public abstract int order(int a);
 
     /**
-     * 1 以上 <i>p</i> - 1 以下の整数 <i>a</i> について,
-     * mod&nbsp;<i>p</i> に対する <i>a</i> の逆元を返す. <br>
-     * 戻り値は 1 以上 <i>p</i> - 1 以下である.
+     * 1 &le; <i>a</i> &lt; <i>p</i> を満たす整数 <i>a</i> について,
+     * <i>a</i><i>r</i> &equiv; 1 (mod&nbsp;<i>p</i>)
+     * を満たす整数 <i>r</i> を返す (逆元). <br>
+     * 1 &le; <i>r</i> &lt; <i>p</i> である. <br>
+     * このような <i>r</i> は唯一であり,
+     * <i>a</i><sup><i>p</i> - 2</sup> mod&nbsp;<i>p</i>
+     * に一致する.
      * 
-     * @param a 逆元を求める整数
-     * @return <i>a</i> の逆元
-     * @throws IllegalArgumentException <i>a</i> が 1 以上 <i>p</i> - 1 以下でない場合
+     * @param a 数
+     * @return mod&nbsp;<i>p</i> に対する <i>a</i> の逆元
+     * @throws IllegalArgumentException
+     *             1 &le; <i>a</i> &lt; <i>p</i> でない場合
      */
     public abstract int inverse(int a);
 
     /**
-     * 1 以上 <i>p</i> - 1 以下の整数 <i>a</i> について,
+     * 1 &le; <i>a</i> &lt; <i>p</i> を満たす整数 <i>a</i> が
      * mod&nbsp;<i>p</i> に対する原始根かどうか (位数が <i>p</i> - 1 かどうか) を判定する.
      * 
-     * @param a 原始根かどうかを判定する整数
-     * @return 原始根である場合は {@code true}
-     * @throws IllegalArgumentException <i>a</i> が 1 以上 <i>p</i> - 1 以下でない場合
+     * @param a 数
+     * @return <i>a</i> がmod&nbsp;<i>p</i> に対する原始根である場合は {@code true}
+     * @throws IllegalArgumentException
+     *             1 &le; <i>a</i> &lt; <i>p</i> でない場合
      */
     public abstract boolean isPrimitiveRoot(int a);
 
     /**
-     * mod&nbsp;<i>p</i> に対する原始根のうちの1つを返す. <br>
-     * 戻り値は 1 以上 <i>p</i> - 1 以下である.
+     * mod&nbsp;<i>p</i> に対する原始根 <i>a</i> のうちの1つを返す. <br>
+     * 1 &le; <i>a</i> &lt; <i>p</i> である.
      * 
      * @return mod&nbsp;<i>p</i> に対する原始根
      */
@@ -83,7 +123,7 @@ public interface PrimeModuloInt extends ModuloInt {
      * 
      * @param p 除数 <i>p</i>
      * @return <i>p</i> を法とするモジュロ演算
-     * @throws IllegalArgumentException 引数が素数でない場合
+     * @throws IllegalArgumentException <i>p</i> が素数でない場合
      */
     public static PrimeModuloInt get(int p) {
         return SimplePrimeModuloFactory.createFrom(ModuloInt.get(p));

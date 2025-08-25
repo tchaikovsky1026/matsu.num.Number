@@ -101,7 +101,7 @@ public interface ModuloLong {
     /**
      * 整数 <i>a</i> に対する
      * <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>) (mod&nbsp;<i>m</i>)
-     * を満たす整数 <i>r</i> のうちの1つを返す (GCD逆元). <br>
+     * を満たす整数 <i>r</i> のうちの1つを返す (GCD乗法逆元). <br>
      * 0 &le; <i>r</i> &lt; <i>m</i> である.
      * 
      * <p>
@@ -128,7 +128,7 @@ public interface ModuloLong {
      * </p>
      * 
      * @param a 数
-     * @return GCD逆元,
+     * @return GCD乗法逆元,
      *             <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>)
      *             を満たす <i>r</i>
      */

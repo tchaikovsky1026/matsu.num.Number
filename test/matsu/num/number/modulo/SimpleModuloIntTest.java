@@ -45,4 +45,12 @@ final class SimpleModuloIntTest {
             return moduloGetter.apply(m);
         }
     }
+
+    public static class GcdInverseのテスト extends ModuloIntTesting.GcdInverse {
+
+        @Override
+        ModuloInt getModulusInt(int m) {
+            return moduloGetter.apply(m);
+        }
+    }
 }

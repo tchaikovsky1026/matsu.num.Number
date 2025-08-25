@@ -60,6 +60,14 @@ final class EvenNotPow2ModuloIntTest {
         }
     }
 
+    public static class GcdInverseのテスト extends ModuloIntTesting.GcdInverse {
+
+        @Override
+        ModuloInt getModulusInt(int m) {
+            return moduloGetter.apply(m);
+        }
+    }
+
     @Ignore
     public static class 計算時間評価 {
 

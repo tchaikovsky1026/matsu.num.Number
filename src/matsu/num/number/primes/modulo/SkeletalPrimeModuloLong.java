@@ -66,6 +66,11 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
     }
 
     @Override
+    public final long gcdInverse(long a) {
+        return this.modulo.gcdInverse(a);
+    }
+
+    @Override
     public final long order(long a) {
         validateDividend(a);
 

@@ -66,6 +66,11 @@ abstract class SkeletalPrimeModuloInt implements PrimeModuloInt {
     }
 
     @Override
+    public final int gcdInverse(int a) {
+        return this.modulo.gcdInverse(a);
+    }
+
+    @Override
     public final int order(int a) {
         validateDividend(a);
 

@@ -55,4 +55,12 @@ final class MontgomeryLongTest {
             return moduloGetter.apply(m);
         }
     }
+
+    public static class GcdInverseのテスト extends ModuloLongTesting.GcdInverse {
+
+        @Override
+        ModuloLong getModulusLong(long m) {
+            return moduloGetter.apply(m);
+        }
+    }
 }

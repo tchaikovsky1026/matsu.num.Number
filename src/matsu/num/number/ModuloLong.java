@@ -96,6 +96,17 @@ public interface ModuloLong {
     public long modpow(long x, long k);
 
     /**
+     * 与えられた整数 <i>a</i> に対する,
+     * <i>a</i><i>r</i> &equiv; gcd(<i>a</i>, <i>m</i>) (mod&nbsp;<i>m</i>)
+     * を満たす整数 <i>r</i> のうちの1つを返す (GCD逆元). <br>
+     * <i>r</i> は 0 以上 <i>m</i> 未満の値である.
+     * 
+     * @param a 整数
+     * @return GCD逆元
+     */
+    public long gcdInverse(long a);
+
+    /**
      * {@code long} 型整数 <i>m</i> について,
      * <i>m</i> を法とするモジュロ演算を返す.
      * 

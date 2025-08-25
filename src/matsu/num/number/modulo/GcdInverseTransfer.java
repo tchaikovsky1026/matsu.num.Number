@@ -15,7 +15,7 @@ import matsu.num.number.ModuloLong;
 
 /**
  * {@code Modulo} の
- * {@code gcdInverse} メソッドの転送先を扱う. <br>
+ * {@code gcdInverse} メソッドの転送先 (委譲先) である. <br>
  * 実装を補助する役目.
  * 
  * @author Matsuura Y.
@@ -115,13 +115,5 @@ final class GcdInverseTransfer {
         }
 
         return modulo.mod(u);
-    }
-
-    public static void main(String[] args) {
-        int m = 12;
-        ModuloInt modM = ModuloInt.get(m);
-
-        int a = 8;
-        System.out.println(modM.gcdInverse(a));
     }
 }

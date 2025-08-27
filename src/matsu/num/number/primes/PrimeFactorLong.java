@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.21
+ * 2025.8.27
  */
 package matsu.num.number.primes;
 
@@ -392,6 +392,11 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
         @Override
         public boolean tryAdvance(Consumer<? super R> action) {
             return source.tryAdvance((long v) -> action.accept(mapper.apply(v)));
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super R> action) {
+            source.forEachRemaining((long v) -> action.accept(mapper.apply(v)));
         }
 
         @Override

@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.27
+ * 2025.8.28
  */
 package matsu.num.number.primes;
 
@@ -42,16 +42,44 @@ import java.util.stream.Stream;
  */
 public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
 
+    /**
+     * 素因数分解前の元の値.
+     */
     private final int original;
+
+    /**
+     * 素因数分解
+     * n = p_1^{k_1} * p_2^{k_2} ...
+     * について,
+     * {@literal (p_i -> k_i)}
+     * を表現する.
+     */
     private final SortedMap<Integer, Integer> factor2Number;
+
+    /**
+     * original が素数であるかどうか
+     */
     private final boolean prime;
 
-    // 遅延初期化ロック用オブジェクト
+    /**
+     * 遅延初期化ロック用オブジェクト.
+     */
     private final Object lock = new Object();
 
-    /* 遅延初期化される */
+    /**
+     * 素因数分解
+     * n = p_1^{k_1} * p_2^{k_2} ...
+     * について, [p_1, p_1, ...]
+     * と展開したもの.
+     * 遅延初期化される.
+     */
     private volatile int[] factors;
-    // コレクションはイミュータブルなので, 使いまわしてよい
+
+    /**
+     * {@link #subFactorsCollection()}
+     * の戻り値.
+     * 遅延初期化される.
+     */
     private volatile Collection<PrimeFactorInt> subFactorsCollection;
 
     /**
@@ -313,6 +341,16 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
         }
     }
 
+    /**
+     * {@link #subFactorsCollection()} の戻り値となる, サブコレクション.
+     * 
+     * <p>
+     * コレクション要素としての PrimeFactor は, インスタンス生成時には生成されない. <br>
+     * イテレータ, スプリッテレータ, ストリームなどで要素にアクセスされた際に,
+     * {@link #dividedByConcrete(int)} が実行されて生成される. <br>
+     * そのため, 何度も要素にアクセスされる場合は, 実体を要素に持つコレクションに詰め直されるほうが良い.
+     * </p>
+     */
     private final class SubFactorsCollection extends AbstractCollection<PrimeFactorInt> {
 
         private final IntFunction<PrimeFactorInt> mapper =
@@ -358,8 +396,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
         @Override
         public Spliterator<PrimeFactorInt> spliterator() {
             return new IntToObjMappedSpliterator<PrimeFactorInt>(
-                    Arrays.spliterator(qs),
-                    mapper);
+                    qs, mapper);
         }
 
         /*
@@ -367,23 +404,36 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
          */
     }
 
+    /**
+     * 不変の整数配列から mapper により要素を生成するスプリッテレータ.
+     */
     private static final class IntToObjMappedSpliterator<R> implements Spliterator<R> {
 
         private final Spliterator.OfInt source;
         private final IntFunction<R> mapper;
 
         /**
+         * エンクロージングクラスから呼ばれる.
+         * source は不変を保証しなければならない.
+         */
+        IntToObjMappedSpliterator(int[] source, IntFunction<R> mapper) {
+            this(Arrays.spliterator(source), mapper);
+        }
+
+        /**
+         * 内部から呼ばれる.
+         * エンクロージングから呼んではいけない. <br>
          * source は
-         * SIZED
-         * SUBSIZED
-         * ORDERED
+         * SIZED,
+         * SUBSIZED,
+         * ORDERED,
          * IMMUTABLE
-         * を報告する.
+         * を報告すること.
          * 
          * @param source
          * @param mapper
          */
-        IntToObjMappedSpliterator(Spliterator.OfInt source, IntFunction<R> mapper) {
+        private IntToObjMappedSpliterator(Spliterator.OfInt source, IntFunction<R> mapper) {
             super();
             this.source = source;
             this.mapper = mapper;

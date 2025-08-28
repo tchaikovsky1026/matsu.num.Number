@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.27
+ * 2025.8.28
  */
 package matsu.num.number.primes;
 
@@ -41,17 +41,44 @@ import java.util.stream.Stream;
  * @see PrimeFactorize
  */
 public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
-
+    /**
+     * 素因数分解前の元の値.
+     */
     private final long original;
+
+    /**
+     * 素因数分解
+     * n = p_1^{k_1} * p_2^{k_2} ...
+     * について,
+     * {@literal (p_i -> k_i)}
+     * を表現する.
+     */
     private final SortedMap<Long, Integer> factor2Number;
+
+    /**
+     * original が素数であるかどうか
+     */
     private final boolean prime;
 
-    // 遅延初期化ロック用オブジェクト
+    /**
+     * 遅延初期化ロック用オブジェクト.
+     */
     private final Object lock = new Object();
 
-    /* 遅延初期化される */
+    /**
+     * 素因数分解
+     * n = p_1^{k_1} * p_2^{k_2} ...
+     * について, [p_1, p_1, ...]
+     * と展開したもの.
+     * 遅延初期化される.
+     */
     private volatile long[] factors;
-    // コレクションはイミュータブルなので, 使いまわしてよい
+
+    /**
+     * {@link #subFactorsCollection()}
+     * の戻り値.
+     * 遅延初期化される.
+     */
     private volatile Collection<PrimeFactorLong> subFactorsCollection;
 
     /**
@@ -313,6 +340,16 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
         }
     }
 
+    /**
+     * {@link #subFactorsCollection()} の戻り値となる, サブコレクション.
+     * 
+     * <p>
+     * コレクション要素としての PrimeFactor は, インスタンス生成時には生成されない. <br>
+     * イテレータ, スプリッテレータ, ストリームなどで要素にアクセスされた際に,
+     * {@link #dividedByConcrete(long)} が実行されて生成される. <br>
+     * そのため, 何度も要素にアクセスされる場合は, 実体を要素に持つコレクションに詰め直されるほうが良い.
+     * </p>
+     */
     private final class SubFactorsCollection extends AbstractCollection<PrimeFactorLong> {
 
         private final LongFunction<PrimeFactorLong> mapper =
@@ -358,8 +395,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
         @Override
         public Spliterator<PrimeFactorLong> spliterator() {
             return new LongToObjMappedSpliterator<PrimeFactorLong>(
-                    Arrays.spliterator(qs),
-                    mapper);
+                    qs, mapper);
         }
 
         /*
@@ -367,23 +403,36 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
          */
     }
 
+    /**
+     * 不変の整数配列から mapper により要素を生成するスプリッテレータ.
+     */
     private static final class LongToObjMappedSpliterator<R> implements Spliterator<R> {
 
         private final Spliterator.OfLong source;
         private final LongFunction<R> mapper;
 
         /**
+         * エンクロージングクラスから呼ばれる.
+         * source は不変を保証しなければならない.
+         */
+        LongToObjMappedSpliterator(long[] source, LongFunction<R> mapper) {
+            this(Arrays.spliterator(source), mapper);
+        }
+
+        /**
+         * 内部から呼ばれる.
+         * エンクロージングから呼んではいけない. <br>
          * source は
-         * SIZED
-         * SUBSIZED
-         * ORDERED
+         * SIZED,
+         * SUBSIZED,
+         * ORDERED,
          * IMMUTABLE
-         * を報告する.
+         * を報告すること.
          * 
          * @param source
          * @param mapper
          */
-        LongToObjMappedSpliterator(Spliterator.OfLong source, LongFunction<R> mapper) {
+        private LongToObjMappedSpliterator(Spliterator.OfLong source, LongFunction<R> mapper) {
             super();
             this.source = source;
             this.mapper = mapper;

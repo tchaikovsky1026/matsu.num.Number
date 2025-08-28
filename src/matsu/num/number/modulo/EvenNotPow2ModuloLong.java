@@ -112,6 +112,19 @@ final class EvenNotPow2ModuloLong extends SkeletalModuloLong {
      * @return mod ((2^s)*m)
      */
     private long combinedMod(long modM, long modPow2) {
+        /*
+         * 中国剰余定理により, (l,m) が互いに素の場合,
+         * 正規化された任意の r, s に対して
+         * x = r (mod m)
+         * x = s (mod l)
+         * となるような x は法 lm について一意に存在する.
+         * 
+         * x = t1 + m*t2 (0 <= t1 < m, 0 <= t2 < l)
+         * とおくと, 法lmについて t1, t2 は一意であり, t1 = r は直ちにわかる.
+         * 次に, 法lに対するmの乗法逆元をm^(-1)とすると(逆元は必ず存在),
+         * t2 = [(s - r) * m^(-1)] mod l
+         * となる.
+         */
         return modM + m * (((modPow2 - modM) * minv) & modPow2BitMask);
     }
 }

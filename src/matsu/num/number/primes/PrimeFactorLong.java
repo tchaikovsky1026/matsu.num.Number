@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.28
+ * 2026.1.9
  */
 package matsu.num.number.primes;
 
@@ -334,9 +334,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
                 return out;
             }
 
-            out = new SubFactorsCollection();
-            this.subFactorsCollection = out;
-            return out;
+            return this.subFactorsCollection = new SubFactorsCollection();
         }
     }
 

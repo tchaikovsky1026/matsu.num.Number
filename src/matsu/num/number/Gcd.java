@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.15
+ * 2026.6.29
  */
 package matsu.num.number;
 
@@ -45,10 +45,13 @@ public final class Gcd {
      * @return gcd(<i>a</i>, <i>b</i>)
      */
     public static int gcd(int a, int b) {
+
         /*
-         * Stein のアルゴリズムに基づく.
-         * a,bが奇数,
-         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
+         * 方針:
+         * 特殊パターンを最初に処理し, a, b とも 1以上 2^31 以下にする.
+         * (2^31 は int としては -2^31 である.)
+         * a, b に含まれる素因数 2 を除去する (最終結果では考慮, この時点で 2^31 は 1 まで動く).
+         * 奇数となった a, b に対して Stein のアルゴリズムを実行.
          */
 
         a = Math.abs(a);
@@ -75,11 +78,18 @@ public final class Gcd {
             b = t;
         }
 
+        /*
+         * Stein のアルゴリズムに基づく.
+         * 初期: a,bが奇数,
+         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
+         */
         while (true) {
             // ここの時点で, a >= b かつ a, bとも奇数である.
-
             while (a >= b) {
+                // gcd(a,b) = gcd(a-b,b)
                 a -= b;
+
+                // a に含まれる素因数 2 を除去: a の末尾0を削除 (a = 0 でも正常動作)
                 a >>= Integer.numberOfTrailingZeros(a);
             }
 
@@ -120,10 +130,13 @@ public final class Gcd {
      * @return gcd(<i>a</i>, <i>b</i>)
      */
     public static long gcd(long a, long b) {
+
         /*
-         * Stein のアルゴリズムに基づく.
-         * a,bが奇数,
-         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
+         * 方針:
+         * 特殊パターンを最初に処理し, a, b とも 1以上 2^31 以下にする.
+         * (2^31 は int としては -2^31 である.)
+         * a, b に含まれる素因数 2 を除去する (最終結果では考慮, この時点で 2^31 は 1 まで動く).
+         * 奇数となった a, b に対して Stein のアルゴリズムを実行.
          */
 
         a = Math.abs(a);
@@ -150,11 +163,18 @@ public final class Gcd {
             b = t;
         }
 
+        /*
+         * Stein のアルゴリズムに基づく.
+         * 初期: a,bが奇数,
+         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
+         */
         while (true) {
             // ここの時点で, a >= b かつ a, bとも奇数である.
-
             while (a >= b) {
+                // gcd(a,b) = gcd(a-b,b)
                 a -= b;
+
+                // a に含まれる素因数 2 を除去: a の末尾0を削除 (a = 0 でも正常動作)
                 a >>= Long.numberOfTrailingZeros(a);
             }
 

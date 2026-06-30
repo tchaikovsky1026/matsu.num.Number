@@ -56,10 +56,7 @@ abstract class SimpleModuloInt extends SkeletalModuloInt {
     }
 
     @Override
-    public final int modpow(int x, int k) {
-        if (k < 0) {
-            throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
-        }
+    int modpowConcrete(int x, int k) {
         int out = 1;
         int xPow2 = mod(x);
         while (k > 0) {

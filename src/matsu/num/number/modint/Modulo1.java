@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2026.6.30
  */
 package matsu.num.number.modint;
 
@@ -55,10 +55,7 @@ final class Modulo1 extends SkeletalModuloInt {
     }
 
     @Override
-    public int modpow(int x, int k) {
-        if (k < 0) {
-            throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
-        }
+    int modpowConcrete(int x, int k) {
         return 0;
     }
 }

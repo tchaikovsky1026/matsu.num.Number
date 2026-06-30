@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.8
+ * 2026.6.30
  */
 package matsu.num.number.modint;
 
@@ -96,7 +96,7 @@ final class ModuloEvenNotPow2 extends SkeletalModuloInt {
     }
 
     @Override
-    public int modpow(int x, int k) {
+    int modpowConcrete(int x, int k) {
         int modM = modMCalculator.modpow(x, k);
         int modPow2 = modPow2Calculator.modpow(x, k);
 

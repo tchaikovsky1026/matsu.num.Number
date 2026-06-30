@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.6.30
+ * 2026.7.1
  */
 package matsu.num.number.modint;
 
@@ -17,18 +17,18 @@ import matsu.num.number.ModuloInt;
 /**
  * 除数1に対する {@link ModuloInt} の実装.
  * 
+ * <p>
+ * mod 1 ではあらゆる dividend に対して常に 0 を返す.
+ * </p>
+ * 
  * @author Matsuura Y.
  */
 final class Modulo1 extends SkeletalModuloInt {
 
-    /**
-     * シングルトン.
-     */
+    /** このクラスの シングルトンインスタンス. */
     static final ModuloInt INSTANCE = new Modulo1();
 
-    /**
-     * 内部から呼ばれる.
-     */
+    /** 非公開コンストラクタ. 内部から呼ばれる. */
     private Modulo1() {
         super();
     }

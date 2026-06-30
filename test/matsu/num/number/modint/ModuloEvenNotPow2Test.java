@@ -11,60 +11,70 @@ import java.util.function.IntFunction;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
+import org.junit.experimental.theories.DataPoints;
 import org.junit.runner.RunWith;
 
 import matsu.num.number.ModuloInt;
 import matsu.num.number.speedutil.SpeedTestExecutor;
 
-/**
- * {@link ModuloEvenNotPow2} クラスのテスト.
- */
+/** {@link ModuloEvenNotPow2} クラスのテスト. */
 @RunWith(Enclosed.class)
 final class ModuloEvenNotPow2Test {
 
     public static final Class<?> TEST_CLASS = ModuloEvenNotPow2.class;
 
+    private static final int[] DIVISORS = {
+            12, 14, 30, 40, 126, 11 * (1 << 20)
+    };
+
     private static final IntFunction<ModuloInt> moduloGetter =
             divisor -> {
                 int pow2Exponent = Integer.numberOfTrailingZeros(divisor);
                 int innerDivisor = divisor >> pow2Exponent;
-
-                if (!(pow2Exponent >= 1 && innerDivisor != 1)) {
-                    throw new UnsupportedOperationException();
-                }
-
                 return new ModuloEvenNotPow2(pow2Exponent, innerDivisor);
             };
 
-    public static class ModProd2のテスト extends ModuloIntTesting.Prod2 {
+    public static class ModProd2のテスト extends ModuloTestingUtil.Prod2 {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloGetter;
         }
     }
 
-    public static class ModProdArrayのテスト extends ModuloIntTesting.ProdArray {
+    public static class ModProdArrayのテスト extends ModuloTestingUtil.ProdArray {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloGetter;
         }
     }
 
-    public static class ModPowのテスト extends ModuloIntTesting.Pow {
+    public static class ModPowのテスト extends ModuloTestingUtil.Pow {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloGetter;
         }
     }
 
-    public static class GcdInverseのテスト extends ModuloIntTesting.GcdInverse {
+    public static class GcdInverseのテスト extends ModuloTestingUtil.GcdInverse {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloGetter;
         }
     }
 

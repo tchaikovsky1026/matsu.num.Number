@@ -10,48 +10,65 @@ import java.util.function.IntFunction;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
+import org.junit.experimental.theories.DataPoints;
 import org.junit.runner.RunWith;
 
 import matsu.num.number.ModuloInt;
 
-/**
- * {@link MontgomeryBasedModuloIntFactory} クラスのテスト.
- */
+/** {@link MontgomeryBasedModuloIntFactory} クラスのテスト. */
 @RunWith(Enclosed.class)
 final class MontgomeryBasedModuloIntFactoryTest {
 
     public static Class<?> TEST_CLASS = MontgomeryBasedModuloIntFactory.class;
+
+    private static final int[] DIVISORS = {
+            1, 2, 3, 4, 5, 6, 7, 8, 10, 16, 30, 31, 126, 30513, 2874127,
+            1000000001, 1 << 20, 11 * (1 << 20)
+    };
+
     private static final IntFunction<ModuloInt> moduloIntGetter = MontgomeryBasedModuloIntFactory::get;
 
-    public static class ModProd2Intのテスト extends ModuloIntTesting.Prod2 {
+    public static class ModProd2のテスト extends ModuloTestingUtil.Prod2 {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloIntGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloIntGetter;
         }
     }
 
-    public static class ModProdArrayIntのテスト extends ModuloIntTesting.ProdArray {
+    public static class ModProdArrayのテスト extends ModuloTestingUtil.ProdArray {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloIntGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloIntGetter;
         }
     }
 
-    public static class ModPowIntのテスト extends ModuloIntTesting.Pow {
+    public static class ModPowのテスト extends ModuloTestingUtil.Pow {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloIntGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloIntGetter;
         }
     }
 
-    public static class GcdInverseIntのテスト extends ModuloIntTesting.GcdInverse {
+    public static class GcdInverseのテスト extends ModuloTestingUtil.GcdInverse {
+
+        @DataPoints
+        public static int[] divisors = DIVISORS;
 
         @Override
-        ModuloInt getModulusInt(int m) {
-            return moduloIntGetter.apply(m);
+        IntFunction<ModuloInt> getModulo() {
+            return moduloIntGetter;
         }
     }
 

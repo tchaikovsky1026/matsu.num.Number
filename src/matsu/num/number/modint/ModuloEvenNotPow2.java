@@ -82,7 +82,7 @@ final class ModuloEvenNotPow2 extends SkeletalModuloInt {
         this.modMCalculator = new ModuloMontgomery(innerDivisor);
 
         this.modPow2BitMask = (1 << pow2Exponent) - 1;
-        this.minv = InverseModPow2.invModR(innerDivisor) & this.modPow2BitMask;
+        this.minv = ModPow2InverseUtil.invModR(innerDivisor) & this.modPow2BitMask;
     }
 
     @Override

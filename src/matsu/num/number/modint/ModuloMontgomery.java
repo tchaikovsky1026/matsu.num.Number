@@ -55,7 +55,7 @@ final class ModuloMontgomery extends SkeletalModuloInt {
         this.modPositivize = new DividendPositivize(divisor);
         this.r2 = DividendShifter.computeInt(1, 64, divisor);
 
-        this.n_prime = -InverseModPow2.invModR(divisor);
+        this.n_prime = -ModPow2InverseUtil.invModR(divisor);
         this.mc_identity = toMong(1);
     }
 

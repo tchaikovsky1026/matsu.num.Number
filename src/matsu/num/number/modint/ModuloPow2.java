@@ -6,20 +6,27 @@
  */
 
 /*
- * 2026.6.30
+ * 2026.7.1
  */
 package matsu.num.number.modint;
 
 import matsu.num.number.ModuloInt;
 
 /**
- * 2の累乗を除数とする, {@link ModuloInt}.
+ * 2の累乗を除数とする, {@link ModuloInt}. <br>
+ * {@code int} で扱える範囲である, 2^1 から 2^30 の範囲を扱う.
  * 
  * @author Matsuura Y.
  */
 final class ModuloPow2 extends SkeletalModuloInt {
 
     private final int divisor;
+
+    /** mod 2^k を計算するためのマスク. */
+    /*
+     * x mod 2^k は, x & (2^k-1) に等しい.
+     * x が負であってもよい.
+     */
     private final int bitMask;
 
     /**
@@ -53,14 +60,13 @@ final class ModuloPow2 extends SkeletalModuloInt {
 
     @Override
     public int modpr(int x, int y) {
-        // 注: 2の累乗を法としたmodは, 符号ありなしで同一である.
+        // 下位 bit の抽出目的ではオーバーフローしても良い.
+        // 負でもよい.
         return (x * y) & bitMask;
     }
 
     @Override
     public int modpr(int... x) {
-        // 注: 2の累乗を法としたmodは, 符号ありなしで同一である.
-
         switch (x.length) {
             case 0:
                 return 1;
@@ -72,8 +78,10 @@ final class ModuloPow2 extends SkeletalModuloInt {
                 // ブロック外で処理
         }
 
-        // サイズ3以上
-        x = x.clone();
+        // 以下は, サイズ3以上の処理である.
+
+        // 積の下位 bit の抽出目的ではオーバーフローしても良い.
+        // 負でもよい.
         int len = x.length;
 
         // 結合法則を利用して, 4系列に分割
@@ -109,7 +117,12 @@ final class ModuloPow2 extends SkeletalModuloInt {
                 // ブロック外で処理
         }
 
-        // 指数3以上
+        // 以下は, 指数3以上の処理である.
+
+        /*
+         * 指数 k を bit 解析し, x^k を x^(2^n) の積として表現
+         * x^(2^(n+1)) = (x^(2^n))^2 の関係を使い, 逐次 x^(2^n) (mod m) の値を計算.
+         */
         int out = 1;
         int xPow = x;
         while (k > 0) {
@@ -118,7 +131,7 @@ final class ModuloPow2 extends SkeletalModuloInt {
             }
 
             k >>= 1;
-            xPow *= xPow;
+            xPow = xPow * xPow;
         }
 
         return out & bitMask;

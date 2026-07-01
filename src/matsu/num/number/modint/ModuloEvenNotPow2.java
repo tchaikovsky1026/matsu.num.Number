@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.6.30
+ * 2026.7.1
  */
 package matsu.num.number.modint;
 
@@ -15,7 +15,7 @@ import matsu.num.number.ModuloInt;
 /**
  * Montgomery modular multiplication をベースとした,
  * {@code int} 型に関するモジュロ演算. <br>
- * 2の累乗でない偶数を除数としたもので扱う.
+ * {@code int} で扱える範囲, かつ 2 の累乗でない偶数を divisor とするものを扱う.
  * 
  * @author Matsuura Y.
  */
@@ -23,12 +23,36 @@ final class ModuloEvenNotPow2 extends SkeletalModuloInt {
 
     private final int divisor;
 
+    /*
+     * 基本方針:
+     * m を 3 以上の奇数として,
+     * x mod (2^d * m) を, x mod 2^d と x mod m から計算する.
+     * l = 2^d とする. l と m は互いに素である.
+     * 
+     * 中国剰余定理により, (l,m) が互いに素の場合,
+     * 任意の r, s に対して
+     * x = r (mod m)
+     * x = s (mod l)
+     * となるような x は法 lm について一意に存在する.
+     * この x の値は次のように求まる.
+     * 
+     * 今, r, s は正規化済み (0 以上 divisor 未満) であるとする.
+     * x = t1 + m*t2 (0 <= t1 < m, 0 <= t2 < l)
+     * とおくと, 法lmについて t1, t2 は一意であり, t1 = r は直ちにわかる.
+     * 次に, 法 l に対する m の乗法逆元を m^(-1) とすると,
+     * t2 = [(s - r) * m^(-1)] mod l
+     * となる.
+     * 
+     * 
+     * mod 2^d と mod m の計算, 2^d を法とする m の逆元の計算は,
+     * 他のクラスに依存する.
+     */
+
     private final ModuloInt modPow2Calculator;
     private final ModuloInt modMCalculator;
 
-    /**
-     * 2^s - 1
-     */
+    /** mod 2^d を計算するためのマスク. */
+    // x mod 2^d は, x & (2^d-1) に等しい.
     private final int modPow2BitMask;
 
     private final int minv;
@@ -104,27 +128,26 @@ final class ModuloEvenNotPow2 extends SkeletalModuloInt {
     }
 
     /**
-     * mod m と mod 2^s を与えて, mod ((2^s)*m) を計算する. <br>
+     * mod m と mod 2^d の値を与えて, mod (m * (2^d)) を計算する. <br>
      * 引数は正規化されていなければならない.
      * 
-     * @param modM mod m
-     * @param modPow2 mod 2^s
-     * @return mod ((2^s)*m)
+     * @param modMRemainder mod m
+     * @param modPow2Remainder mod 2^d
+     * @return mod (m * (2^d))
      */
-    private int combinedMod(int modM, int modPow2) {
+    private int combinedMod(int modMRemainder, int modPow2Remainder) {
+
         /*
-         * 中国剰余定理により, (l,m) が互いに素の場合,
-         * 正規化された任意の r, s に対して
-         * x = r (mod m)
-         * x = s (mod l)
-         * となるような x は法 lm について一意に存在する.
+         * l = 2^d とする.
          * 
-         * x = t1 + m*t2 (0 <= t1 < m, 0 <= t2 < l)
-         * とおくと, 法lmについて t1, t2 は一意であり, t1 = r は直ちにわかる.
-         * 次に, 法lに対するmの乗法逆元をm^(-1)とすると(逆元は必ず存在),
-         * t2 = [(s - r) * m^(-1)] mod l
-         * となる.
+         * x = r (mod m) と x = s (mod l) を満たす r, s を与えたときの,
+         * x mod (rs) を返す.
+         * 
+         * r, s が正規化されているとき,
+         * t1 = r, t2 = [(s - r) * m^(-1)] mod l
+         * として, t1 + m*t2 が求める値である.
          */
-        return modM + m * (((modPow2 - modM) * minv) & modPow2BitMask);
+
+        return modMRemainder + m * (((modPow2Remainder - modMRemainder) * minv) & modPow2BitMask);
     }
 }

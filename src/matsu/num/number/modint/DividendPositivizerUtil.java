@@ -6,37 +6,25 @@
  */
 
 /*
- * 2025.8.7
+ * 2026.7.4
  */
 package matsu.num.number.modint;
 
 /**
- * {@code int} 型の符号付き整数を, mod を不変のまま0以上に変換する.
+ * {@code int} 型の符号付き整数を, mod を不変のまま 0 以上に変換するユーティリティ.
  * 
  * @author Matsuura Y.
  */
-final class DividendPositivize {
+final class DividendPositivizerUtil {
 
-    /**
-     * 除数
-     */
+    /** 除数 */
     private final int divisor;
 
     /**
-     * 2^31 - (2^31 % N), 最大で2^31
+     * 2^31 以下で最も大きい (mod m = 0) の値を表す. <br>
+     * k = 2^31 - (2^31 % N) であり, 最小で 2^30 + 1, 最大で 2^31 である.
      */
     private final int k;
-
-    /**
-     * -k を表す.
-     */
-    private final int negK;
-
-    /**
-     * kの2倍を表す.
-     * オーバーフローしても良い.
-     */
-    private final int doubleK;
 
     /**
      * 除数を与えてインスタンスを構築する. <br>
@@ -49,25 +37,23 @@ final class DividendPositivize {
      * 
      * @param divisor 除数, 1以上
      */
-    DividendPositivize(int divisor) {
+    DividendPositivizerUtil(int divisor) {
         super();
         if (divisor <= 0) {
             throw new IllegalArgumentException();
         }
         this.divisor = divisor;
 
-        /*
-         * もっとも2^31に近い, (mod m = 0)の値
-         * 2^31 の場合もあり得る.
-         */
-        this.k = (1 << 31) - DividendShifterUtil.computeInt(1, 31, divisor);
-        this.doubleK = k << 1;
-        this.negK = -k;
+        k = (1 << 31) - DividendShifterUtil.computeInt(1, 31, divisor);
 
-        assert this.k == Integer.MIN_VALUE ||
-                this.k % divisor == 0;
+        assert k == Integer.MIN_VALUE || k % divisor == 0;
     }
 
+    /**
+     * 除数を返す.
+     * 
+     * @return 除数
+     */
     int divisor() {
         return divisor;
     }
@@ -83,9 +69,17 @@ final class DividendPositivize {
             return x;
         }
 
-        // 負の場合, 2回加えれば必ず0以上になる
-        return x >= negK
+        /*
+         * x が 負の場合,
+         * 2^30 + 1 <= k <= 2^31 より, k を 2 回加えれば必ず 0 以上になる.
+         * 
+         * (-k) は 符号付き整数として正確である.
+         * 
+         * k << 1 は k の 2 倍を表す.
+         * (k << 1) が実行される条件では, (k << 1) は符号なし整数として正確に k の 2 倍である.
+         */
+        return x >= (-k)
                 ? x + k
-                : x + doubleK;
+                : x + (k << 1);
     }
 }

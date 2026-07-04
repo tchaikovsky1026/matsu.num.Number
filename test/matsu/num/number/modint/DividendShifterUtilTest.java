@@ -21,12 +21,12 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link DividendShifter} のテスト.
+ * {@link DividendShifterUtil} のテスト.
  */
 @RunWith(Enclosed.class)
-final class DividendShifterTest {
+final class DividendShifterUtilTest {
 
-    public static final Class<?> TEST_CLASS = DividendShifter.class;
+    public static final Class<?> TEST_CLASS = DividendShifterUtil.class;
 
     @RunWith(Theories.class)
     public static class int型の値テスト {
@@ -47,7 +47,7 @@ final class DividendShifterTest {
         public void test_modShiftのテスト(int n, int m) {
             int shift = 100;
             assertThat(
-                    DividendShifter.computeInt(n, shift, m),
+                    DividendShifterUtil.computeInt(n, shift, m),
                     is(computeIntNaive(n, shift, m)));
         }
 

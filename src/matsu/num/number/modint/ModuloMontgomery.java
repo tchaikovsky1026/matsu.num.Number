@@ -53,7 +53,7 @@ final class ModuloMontgomery extends SkeletalModuloInt {
         // この2個は, 内部に重複する部分がある.
         // ただし, コストは大きくないので, 共通化しなくてもいいかも知れない.
         this.modPositivize = new DividendPositivize(divisor);
-        this.r2 = DividendShifter.computeInt(1, 64, divisor);
+        this.r2 = DividendShifterUtil.computeInt(1, 64, divisor);
 
         this.n_prime = -ModPow2InverseUtil.invModR(divisor);
         this.mc_identity = toMong(1);

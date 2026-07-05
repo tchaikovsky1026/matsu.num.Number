@@ -20,16 +20,61 @@ import matsu.num.number.MultUtil;
  */
 final class ModuloMontgomery extends SkeletalModuloInt {
 
+    /*
+     * 事前準備: Montgomery multiplication (モンゴメリ乗算)
+     * 
+     * R は 2 の累乗数である. (int なら 2^32, long なら 2^64 とする)
+     * m を 3 以上の奇数かつ m < R とする. m と R は互いに素である.
+     * m' を, m*m' mod R = -1 を満たす, 0 <= m' < R である整数とする.
+     * 
+     * a を, 0 <= a < m*R を満たす整数とし, a のモンゴメリリダクション MR(a) を次で定義する.
+     * MR(a) = (a * R^(-1)) mod m
+     * ここで, 0 <= MR(a) < m であり, R^(-1) は R * R^(-1) = 1 mod m を満たす整数である.
+     * MR(a) は次のアルゴリズムで計算できる.
+     * 
+     * 1. t = (a + m*((a * m') mod R)) / R
+     * 2. MR(a) = t or t - m
+     * (初段の / R は通常の意味の除算である (被除数は R の倍数となっている).)
+     * 
+     * モンゴメリリダクションの逆演算をモンゴメリ変換といい, a のモンゴメリ変換 M(a) は次で計算される.
+     * M(a) = MR(a * R^2)
+     * 0 <= a < R のモンゴメリ変換を扱いたい場合, R_2 = R^2 mod m を計算しておき,
+     * M(a) = MR(a * R_2) とすればよい.
+     */
+
+    /*
+     * このクラスの実装方針: 3 以上の奇数を法とする剰余計算を, Montgomery multiplication (モンゴメリ乗算) で行う.
+     * 
+     * 単純な剰余: a mod m = MR(M(a))
+     * 
+     * 2数の乗算剰余: ab mod m = MR(M(a) * b)
+     * 
+     * 3数以上の乗算剰余:
+     * M(ab) = MR(M(a) * M(b)) という性質を使い,
+     * abc... の積を求めるとき, a, b, c, ... を M(a), M(b), M(c), ... に変換後,
+     * M(abc...) = MR(M(a) * MR(M(b) * MR(M(c) * ...)))
+     * と計算し, MR(M(abc...)) を得る.
+     */
+
+    /*
+     * R = 2^32 とする.
+     */
+
+    /** 除数 m */
     private final int divisor;
-    private final int r2;
+
+    /** R_2 = R^2 mod m */
+    private final int R_2;
 
     /**
-     * divisor の 2^(32)を法とするモジュロ逆数. <br>
+     * m*m' mod R = -1 を満たす, 0 <= m' < R である整数.
+     * <br>
      * 符号なしで解釈する.
      */
-    private final int n_prime;
+    private final int m_prime;
 
-    private final int mc_identity;
+    /** M(1) の値 */
+    private final int montg_1;
 
     private final DividendPositivizerUtil modPositivize;
 
@@ -53,43 +98,38 @@ final class ModuloMontgomery extends SkeletalModuloInt {
         // この2個は, 内部に重複する部分がある.
         // ただし, コストは大きくないので, 共通化しなくてもいいかも知れない.
         this.modPositivize = new DividendPositivizerUtil(divisor);
-        this.r2 = DividendShifterUtil.computeInt(1, 64, divisor);
+        this.R_2 = DividendShifterUtil.computeInt(1, 64, divisor);
 
-        this.n_prime = -ModPow2InverseUtil.invModR(divisor);
-        this.mc_identity = toMong(1);
+        // m' は符号なしで解釈するので, 負符号を付けて良い.
+        this.m_prime = -ModPow2InverseUtil.invModR(divisor);
+        this.montg_1 = toMontg(1);
     }
 
     @Override
     public int divisor() {
-        return this.divisor;
+        return divisor;
     }
 
     @Override
     public int mod(int n) {
 
-        // n -> mod m　を維持して正に変換
-        // モンゴメリ変換とリダクションでmodに戻す.
-        n = this.modPositivize.apply(n);
+        // n mod m = MR(M(n))
+        // 剰余演算 (%) よりパフォーマンスが良いかどうかについては, 何も保証しない.
+        n = modPositivize.apply(n);
 
-        return n < this.divisor
+        return n < divisor
                 ? n
-                : reduceMong(toMong(n));
+                : reduceMontg(toMontg(n));
     }
 
     @Override
     public int modpr(int a, int b) {
 
-        // a,bは2^31-1以下にマップされる
-        a = this.modPositivize.apply(a);
-        b = this.modPositivize.apply(b);
+        a = modPositivize.apply(a);
+        b = modPositivize.apply(b);
 
-        /*
-         * 以下の等式は mod m として見る.
-         * a*b = aR b R^(-1) = mr(mong(a)*b)
-         */
-        // (mod m) ab = ()
-
-        return reduceMong(toMong(a), b);
+        // ab mod m = MR(M(a) * b)
+        return reduceMontg(toMontg(a), b);
     }
 
     @Override
@@ -106,37 +146,37 @@ final class ModuloMontgomery extends SkeletalModuloInt {
         }
 
         // サイズ3以上
-        x = x.clone();
-        int len = x.length;
 
-        //xを正に変換してモンゴメリ変換
+        //xを正に変換, x -> M(x)
+        int len = x.length;
+        x = x.clone();
         for (int i = 0; i < len; i++) {
-            x[i] = toMong(this.modPositivize.apply(x[i]));
+            x[i] = toMontg(modPositivize.apply(x[i]));
         }
 
         // 結合法則を利用して, 4系列に分割
-        // mcの単位元で初期化
-        int v0 = mc_identity;
+        // M(1)で初期化
+        int v0 = montg_1;
         int v1 = v0;
         int v2 = v0;
         int v3 = v0;
         int i;
         for (i = 0; i < len - 3; i += 4) {
-            v0 = reduceMong(v0, x[i]);
-            v1 = reduceMong(v1, x[i + 1]);
-            v2 = reduceMong(v2, x[i + 2]);
-            v3 = reduceMong(v3, x[i + 3]);
+            v0 = reduceMontg(v0, x[i]);
+            v1 = reduceMontg(v1, x[i + 1]);
+            v2 = reduceMontg(v2, x[i + 2]);
+            v3 = reduceMontg(v3, x[i + 3]);
         }
         for (; i < len; i++) {
-            v0 = reduceMong(v0, x[i]);
+            v0 = reduceMontg(v0, x[i]);
         }
 
-        return reduceMong(reduceMong(reduceMong(v0, v1), reduceMong(v2, v3)));
+        return reduceMontg(reduceMontg(reduceMontg(v0, v1), reduceMontg(v2, v3)));
     }
 
     @Override
     int modpowConcrete(int x, int k) {
-        x = this.modPositivize.apply(x);
+        x = modPositivize.apply(x);
         switch (k) {
             case 0:
                 return 1;
@@ -149,18 +189,18 @@ final class ModuloMontgomery extends SkeletalModuloInt {
         }
 
         // 指数3以上
-        int mong_out = mc_identity;
-        int mong_xPow = toMong(x);
+        int mong_out = montg_1;
+        int mong_xPow = toMontg(x);
         while (k > 0) {
             if ((k & 1) == 1) {
-                mong_out = reduceMong(mong_out, mong_xPow);
+                mong_out = reduceMontg(mong_out, mong_xPow);
             }
 
             k >>= 1;
-            mong_xPow = reduceMong(mong_xPow, mong_xPow);
+            mong_xPow = reduceMontg(mong_xPow, mong_xPow);
         }
 
-        return reduceMong(mong_out);
+        return reduceMontg(mong_out);
     }
 
     /**
@@ -173,10 +213,10 @@ final class ModuloMontgomery extends SkeletalModuloInt {
      * @param b b
      * @return mr(ab)
      */
-    private int reduceMong(int a, int b) {
+    private int reduceMontg(int a, int b) {
         long ab = MultUtil.unsignedMultiplyFull(a, b);
         int low_ab = (int) ab;
-        int Tnn_high = MultUtil.unsignedMultiplyHigh(low_ab * n_prime, divisor);
+        int Tnn_high = MultUtil.unsignedMultiplyHigh(low_ab * m_prime, divisor);
         if (low_ab != 0) {
             Tnn_high++;
         }
@@ -196,8 +236,8 @@ final class ModuloMontgomery extends SkeletalModuloInt {
      * @param a a
      * @return mong(a)
      */
-    private int toMong(int a) {
-        return reduceMong(a, r2);
+    private int toMontg(int a) {
+        return reduceMontg(a, R_2);
     }
 
     /**
@@ -207,13 +247,13 @@ final class ModuloMontgomery extends SkeletalModuloInt {
      * @param a a
      * @return mr(a)
      */
-    private int reduceMong(int a) {
+    private int reduceMontg(int a) {
         if (a == 0) {
             return 0;
         }
 
         // 1 <= a < 2^(32)より, 
         // モンゴメリリダクションでは, (TN' mod R)*N の上位32bitに1を加えればよい.
-        return MultUtil.unsignedMultiplyHigh(a * n_prime, divisor) + 1;
+        return MultUtil.unsignedMultiplyHigh(a * m_prime, divisor) + 1;
     }
 }

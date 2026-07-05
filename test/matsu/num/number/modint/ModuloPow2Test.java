@@ -32,19 +32,6 @@ final class ModuloPow2Test {
         }
     }
 
-    private static final IntFunction<ModuloInt> moduloGetter =
-            m -> {
-                if (!(2 <= m && m <= (1 << 30))) {
-                    throw new UnsupportedOperationException();
-                }
-                int shift = Integer.numberOfTrailingZeros(m);
-                if (m - (1 << shift) != 0) {
-                    throw new UnsupportedOperationException();
-                }
-
-                return new ModuloPow2(shift);
-            };
-
     public static class ModProd2のテスト extends ModuloTestingUtil.Prod2 {
 
         @DataPoints

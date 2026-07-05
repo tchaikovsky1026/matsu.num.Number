@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.10
+ * 2026.7.5
  */
 package matsu.num.number.modlong;
 
@@ -17,18 +17,18 @@ import matsu.num.number.ModuloLong;
 /**
  * 除数1に対する {@link ModuloLong} の実装.
  * 
+ * <p>
+ * mod 1 ではあらゆる dividend に対して常に 0 を返す.
+ * </p>
+ * 
  * @author Matsuura Y.
  */
 final class Modulo1 extends SkeletalModuloLong {
 
-    /**
-     * シングルトン.
-     */
+    /** このクラスの シングルトンインスタンス. */
     static final ModuloLong INSTANCE = new Modulo1();
 
-    /**
-     * 内部から呼ばれる.
-     */
+    /** 非公開コンストラクタ. 内部から呼ばれる. */
     private Modulo1() {
         super();
     }

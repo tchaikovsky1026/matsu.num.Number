@@ -76,7 +76,7 @@ final class ModuloMontgomery extends SkeletalModuloInt {
     /** M(1) の値 */
     private final int montg_1;
 
-    private final DividendPositivizerUtil modPositivize;
+    private final DividendPositivizer modPositivize;
 
     /**
      * 与えた正整数を法としたモジュロ演算を構築する.
@@ -97,7 +97,7 @@ final class ModuloMontgomery extends SkeletalModuloInt {
 
         // この2個は, 内部に重複する部分がある.
         // ただし, コストは大きくないので, 共通化しなくてもいいかも知れない.
-        this.modPositivize = new DividendPositivizerUtil(divisor);
+        this.modPositivize = new DividendPositivizer(divisor);
         this.R_2 = DividendShifterUtil.computeInt(1, 64, divisor);
 
         // m' は符号なしで解釈するので, 負符号を付けて良い.

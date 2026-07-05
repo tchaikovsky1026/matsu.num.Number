@@ -23,16 +23,19 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * {@link DividendPositivizerUtil} のテスト.
+ * {@link DividendPositivizer} のテスト.
  */
 @RunWith(Enclosed.class)
-final class DividendPositivizerUtilTest {
+final class DividendPositivizerTest {
 
-    public static final Class<?> TEST_CLASS = DividendPositivizerUtil.class;
+    public static final Class<?> TEST_CLASS = DividendPositivizer.class;
 
     @RunWith(Theories.class)
     public static class int型modShiftの値テスト {
 
+        /**
+         * x,m に用いる, 1 以上の整数の集まり.
+         */
         @DataPoints
         public static int[] values;
 
@@ -57,7 +60,7 @@ final class DividendPositivizerUtilTest {
             //負の数にして検証する
             x = -x;
 
-            DividendPositivizerUtil modPositivize = new DividendPositivizerUtil(m);
+            DividendPositivizer modPositivize = new DividendPositivizer(m);
 
             int xMod = modPositivize.apply(x);
             assertThat(xMod, is(greaterThanOrEqualTo(0)));

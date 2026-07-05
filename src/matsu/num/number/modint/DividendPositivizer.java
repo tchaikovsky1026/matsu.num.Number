@@ -15,7 +15,7 @@ package matsu.num.number.modint;
  * 
  * @author Matsuura Y.
  */
-final class DividendPositivizerUtil {
+final class DividendPositivizer {
 
     /** 除数 */
     private final int divisor;
@@ -37,7 +37,7 @@ final class DividendPositivizerUtil {
      * 
      * @param divisor 除数, 1以上
      */
-    DividendPositivizerUtil(int divisor) {
+    DividendPositivizer(int divisor) {
         super();
         if (divisor <= 0) {
             throw new IllegalArgumentException();

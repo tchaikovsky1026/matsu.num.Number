@@ -69,9 +69,7 @@ final class ModuloTestingUtil {
             }
         }
 
-        /**
-         * divisor を与えて ModulusInt を返す関数.
-         */
+        /** divisor を与えて ModuloInt を返す関数. */
         abstract IntFunction<ModuloInt> getModulo();
 
         private static void executeTestProduct(ModuloInt modulus, int x, int y) {
@@ -86,7 +84,7 @@ final class ModuloTestingUtil {
     }
 
     /**
-     * {@link ModuloInt#modpr(int, int)} のテスト. <br>
+     * {@link ModuloInt#modpr(int...)} のテスト. <br>
      * 継承先で, 除数を表す {@code @DataPoints int[]} の整備が必要.
      */
     @Ignore
@@ -110,9 +108,7 @@ final class ModuloTestingUtil {
             }
         }
 
-        /**
-         * divisor を与えて ModulusInt を返す関数.
-         */
+        /** divisor を与えて ModuloInt を返す関数. */
         abstract IntFunction<ModuloInt> getModulo();
 
         private static void executeTestProduct(ModuloInt modulus, int[] x) {
@@ -134,7 +130,7 @@ final class ModuloTestingUtil {
     }
 
     /**
-     * {@link ModuloInt#modpr(int, int)} のテスト. <br>
+     * {@link ModuloInt#modpow(int, int)} のテスト. <br>
      * 継承先で, 除数を表す {@code @DataPoints int[]} の整備が必要.
      */
     @Ignore
@@ -153,9 +149,7 @@ final class ModuloTestingUtil {
             }
         }
 
-        /**
-         * divisor を与えて ModulusInt を返す関数.
-         */
+        /** divisor を与えて ModuloInt を返す関数. */
         abstract IntFunction<ModuloInt> getModulo();
 
         private static void executeTestPow(ModuloInt modulus, int x, int k) {
@@ -172,7 +166,7 @@ final class ModuloTestingUtil {
     }
 
     /**
-     * {@link ModuloInt#modpr(int, int)} のテスト. <br>
+     * {@link ModuloInt#gcdInverse(int)} のテスト. <br>
      * 継承先で, 除数を表す {@code @DataPoints int[]} の整備が必要.
      */
     @Ignore
@@ -193,9 +187,7 @@ final class ModuloTestingUtil {
             }
         }
 
-        /**
-         * divisor を与えて ModulusInt を返す関数.
-         */
+        /** divisor を与えて ModuloInt を返す関数. */
         abstract IntFunction<ModuloInt> getModulo();
     }
 }

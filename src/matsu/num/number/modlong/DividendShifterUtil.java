@@ -6,25 +6,33 @@
  */
 
 /*
- * 2025.8.7
+ * 2026.7.5
  */
 package matsu.num.number.modlong;
 
 /**
- * {@literal (N << shift) % m} を計算することに関する. <br>
+ * {@literal (N << shift) % m} を計算することに関するユーティリティ. <br>
+ * すべて符号有り整数として解釈される. <br>
  * shiftによるオーバーフローを回避するように実装される.
  * 
  * @author Matsuura Y.
  */
 final class DividendShifterUtil {
+
     private DividendShifterUtil() {
         //インスタンス化不可
         throw new AssertionError();
     }
 
     /**
-     * long型のN(0以上),m(1以上)について, {@literal (N << shift) % m}
+     * {@code int} 型の N (0以上), m (1以上) について, {@literal (N << shift) % m}
      * を計算する.
+     * 
+     * <p>
+     * 引数はバリデーションされない. <br>
+     * {@code N}, {@code shift} は 0 以上,
+     * {@code m} は 1 以上でなければならない.
+     * </p>
      *
      * @param n N
      * @param shift shift
@@ -50,7 +58,6 @@ final class DividendShifterUtil {
             // m < 2^62
             while (shift > 0) {
                 int currentShift = Math.min(shift, Long.numberOfLeadingZeros(n) - 1);
-
                 n <<= currentShift;
                 n %= m;
                 shift -= currentShift;
@@ -60,13 +67,16 @@ final class DividendShifterUtil {
             // m >= 2^62
 
             //最初にnを正規化しておく
-            while (n < 0 || n >= m) {
+            // n が 2^63 - 1 以下, m が 2^62 以上なので, n - m <= m - 1 は確定している.
+            if (n >= m) {
                 n -= m;
             }
 
             for (; shift > 0; shift--) {
                 n <<= 1;
-                //左シフトは2倍なので, 1回の判定で必ず正規化される.
+
+                // 符号なし整数の意味での n >= m の判定: n < 0 || n >= m
+                // 左シフトは2倍なので, 1回の判定で必ず正規化される.
                 if (n < 0 || n >= m) {
                     n -= m;
                 }

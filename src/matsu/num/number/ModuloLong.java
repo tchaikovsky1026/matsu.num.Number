@@ -10,7 +10,7 @@
  */
 package matsu.num.number;
 
-import matsu.num.number.modulo.MontgomeryBasedModuloFactory;
+import matsu.num.number.modlong.MontgomeryBasedModuloLongFactory;
 
 /**
  * {@code long} 型の値のモジュロ演算を行うインターフェース.
@@ -147,6 +147,6 @@ public interface ModuloLong {
      * @throws IllegalArgumentException <i>m</i> &le; 0 の場合
      */
     public static ModuloLong get(long divisor) {
-        return MontgomeryBasedModuloFactory.get(divisor);
+        return MontgomeryBasedModuloLongFactory.get(divisor);
     }
 }

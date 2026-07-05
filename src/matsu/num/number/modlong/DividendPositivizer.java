@@ -6,25 +6,25 @@
  */
 
 /*
- * 2026.7.4
+ * 2026.7.5
  */
-package matsu.num.number.modint;
+package matsu.num.number.modlong;
 
 /**
- * {@code int} 型の符号付き整数を, mod を不変のまま 0 以上に変換するユーティリティ.
+ * {@code long} 型の符号付き整数を, mod を不変のまま 0 以上に変換するユーティリティ.
  * 
  * @author Matsuura Y.
  */
 final class DividendPositivizer {
 
     /** 除数 */
-    private final int divisor;
+    private final long divisor;
 
     /**
-     * 2^31 以下で最も大きい (mod m = 0) の値を表す. <br>
-     * k = 2^31 - (2^31 % m) であり, 最小で 2^30 + 1, 最大で 2^31 である.
+     * 2^63 以下で最も大きい (mod m = 0) の値を表す. <br>
+     * k = 2^63 - (2^63 % m) であり, 最小で 2^62 + 1, 最大で 2^63 である.
      */
-    private final int k;
+    private final long k;
 
     /**
      * 除数を与えてインスタンスを構築する. <br>
@@ -37,16 +37,16 @@ final class DividendPositivizer {
      * 
      * @param divisor 除数, 1以上
      */
-    DividendPositivizer(int divisor) {
+    DividendPositivizer(long divisor) {
         super();
         if (divisor <= 0) {
             throw new IllegalArgumentException();
         }
         this.divisor = divisor;
 
-        k = (1 << 31) - DividendShifterUtil.computeInt(1, 31, divisor);
+        k = (1L << 63) - DividendShifterUtil.computeLong(1L, 63, divisor);
 
-        assert k == Integer.MIN_VALUE || k % divisor == 0;
+        assert k == Long.MIN_VALUE || k % divisor == 0;
     }
 
     /**
@@ -54,7 +54,7 @@ final class DividendPositivizer {
      * 
      * @return 除数
      */
-    int divisor() {
+    long divisor() {
         return divisor;
     }
 
@@ -64,14 +64,14 @@ final class DividendPositivizer {
      * @param x x
      * @return x + const * m
      */
-    int apply(int x) {
+    long apply(long x) {
         if (x >= 0) {
             return x;
         }
 
         /*
          * x が 負の場合,
-         * 2^30 + 1 <= k <= 2^31 より, k を 2 回加えれば必ず 0 以上になる.
+         * 2^62 + 1 <= k <= 2^63 より, k を 2 回加えれば必ず 0 以上になる.
          * 
          * (-k) は 符号付き整数として正確である.
          * 

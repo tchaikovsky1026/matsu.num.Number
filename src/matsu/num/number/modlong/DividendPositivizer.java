@@ -6,37 +6,25 @@
  */
 
 /*
- * 2025.8.7
+ * 2026.7.5
  */
 package matsu.num.number.modlong;
 
 /**
- * {@code long} 型の符号付き整数を, mod を不変のまま0以上に変換する.
+ * {@code long} 型の符号付き整数を, mod を不変のまま 0 以上に変換するユーティリティ.
  * 
  * @author Matsuura Y.
  */
 final class DividendPositivizer {
 
-    /**
-     * 除数
-     */
+    /** 除数 */
     private final long divisor;
 
     /**
-     * 2^63 - (2^63 % N), 最大で2^63
+     * 2^63 以下で最も大きい (mod m = 0) の値を表す. <br>
+     * k = 2^63 - (2^63 % m) であり, 最小で 2^62 + 1, 最大で 2^63 である.
      */
     private final long k;
-
-    /**
-     * -k を表す.
-     */
-    private final long negK;
-
-    /**
-     * kの2倍を表す.
-     * オーバーフローしても良い.
-     */
-    private final long doubleK;
 
     /**
      * 除数を与えてインスタンスを構築する. <br>
@@ -56,18 +44,16 @@ final class DividendPositivizer {
         }
         this.divisor = divisor;
 
-        /*
-         * もっとも2^63に近い, (mod m = 0)の値
-         * 2^63 の場合もあり得る.
-         */
-        this.k = (1L << 63) - DividendShifterUtil.computeLong(1L, 63, divisor);
-        this.doubleK = k << 1;
-        this.negK = -k;
+        k = (1L << 63) - DividendShifterUtil.computeLong(1L, 63, divisor);
 
-        assert this.k == Integer.MIN_VALUE ||
-                this.k % divisor == 0;
+        assert k == Long.MIN_VALUE || k % divisor == 0;
     }
 
+    /**
+     * 除数を返す.
+     * 
+     * @return 除数
+     */
     long divisor() {
         return divisor;
     }
@@ -83,9 +69,17 @@ final class DividendPositivizer {
             return x;
         }
 
-        // 負の場合, 2回加えれば必ず0以上になる
-        return x >= negK
+        /*
+         * x が 負の場合,
+         * 2^62 + 1 <= k <= 2^63 より, k を 2 回加えれば必ず 0 以上になる.
+         * 
+         * (-k) は 符号付き整数として正確である.
+         * 
+         * k << 1 は k の 2 倍を表す.
+         * (k << 1) が実行される条件では, (k << 1) は符号なし整数として正確に k の 2 倍である.
+         */
+        return x >= (-k)
                 ? x + k
-                : x + doubleK;
+                : x + (k << 1);
     }
 }

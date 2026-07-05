@@ -22,7 +22,7 @@ final class DividendPositivizer {
 
     /**
      * 2^31 以下で最も大きい (mod m = 0) の値を表す. <br>
-     * k = 2^31 - (2^31 % N) であり, 最小で 2^30 + 1, 最大で 2^31 である.
+     * k = 2^31 - (2^31 % m) であり, 最小で 2^30 + 1, 最大で 2^31 である.
      */
     private final int k;
 

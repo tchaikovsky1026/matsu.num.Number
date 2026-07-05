@@ -55,10 +55,7 @@ final class Modulo1 extends SkeletalModuloLong {
     }
 
     @Override
-    public long modpow(long x, long k) {
-        if (k < 0L) {
-            throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
-        }
+    long modpowConcrete(long x, long k) {
         return 0L;
     }
 }

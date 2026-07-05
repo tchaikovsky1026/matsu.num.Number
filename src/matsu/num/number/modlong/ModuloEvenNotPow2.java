@@ -96,7 +96,7 @@ final class ModuloEvenNotPow2 extends SkeletalModuloLong {
     }
 
     @Override
-    public long modpow(long x, long k) {
+    long modpowConcrete(long x, long k) {
         long modM = modMCalculator.modpow(x, k);
         long modPow2 = modPow2Calculator.modpow(x, k);
 

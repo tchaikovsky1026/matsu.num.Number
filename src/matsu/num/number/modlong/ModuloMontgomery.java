@@ -135,11 +135,7 @@ final class ModuloMontgomery extends SkeletalModuloLong {
     }
 
     @Override
-    public long modpow(long x, long k) {
-        if (k < 0) {
-            throw new IllegalArgumentException("illegal: exponent k is negative: k = " + k);
-        }
-
+    long modpowConcrete(long x, long k) {
         x = this.modPositivize.apply(x);
 
         if (k <= Integer.MAX_VALUE) {

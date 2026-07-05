@@ -6,11 +6,11 @@
  */
 
 /*
- * 2025.8.15
+ * 2026.7.5
  */
 package matsu.num.number;
 
-import matsu.num.number.modulo.MontgomeryBasedModuloFactory;
+import matsu.num.number.modint.MontgomeryBasedModuloIntFactory;
 
 /**
  * {@code int} 型の値のモジュロ演算を行うインターフェース.
@@ -147,6 +147,6 @@ public interface ModuloInt {
      * @throws IllegalArgumentException <i>m</i> &le; 0 の場合
      */
     public static ModuloInt get(int divisor) {
-        return MontgomeryBasedModuloFactory.get(divisor);
+        return MontgomeryBasedModuloIntFactory.get(divisor);
     }
 }

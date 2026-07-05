@@ -33,6 +33,9 @@ final class DividendPositivizerTest {
     @RunWith(Theories.class)
     public static class int型modShiftの値テスト {
 
+        /**
+         * x,m に用いる, 1 以上の整数の集まり.
+         */
         @DataPoints
         public static int[] values;
 

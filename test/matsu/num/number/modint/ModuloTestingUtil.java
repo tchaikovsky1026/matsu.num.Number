@@ -14,14 +14,10 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.IntFunction;
 
-import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
@@ -61,48 +57,14 @@ final class ModuloTestingUtil {
     @RunWith(Theories.class)
     static abstract class Prod2 {
 
-        @DataPoints
-        public static Fixture[] FIXTURES;
-
-        @BeforeClass
-        public static void before_fixtureの用意() {
-            List<Fixture> list = new ArrayList<>();
-
-            list.add(new Fixture(4, 2));
-            list.add(new Fixture(-6, 2));
-            list.add(new Fixture(881, -64));
-            list.add(new Fixture(3, 382));
-            list.add(new Fixture(64, 25));
-            list.add(new Fixture(-52, 83));
-            list.add(new Fixture(-543, 1281));
-
-            FIXTURES = list.toArray(Fixture[]::new);
-        }
-
-        @Theory
-        public final void test_2値積のモジュロをテスト(Fixture fixture, int divisor) {
-            int x = fixture.x;
-            int y = fixture.y;
-            ModuloInt modulus = getModulo().apply(divisor);
-            executeTestProduct(modulus, x, y);
-        }
-
         @Theory
         public final void test_2値積のモジュロをテスト_ランダム化(int divisor) {
 
-            int ite = 100;
+            int ite = 1000;
             ModuloInt modulus = getModulo().apply(divisor);
             for (int c = 0; c < ite; c++) {
-
-                int x = ThreadLocalRandom.current().nextInt(divisor * 5);
-                int y = ThreadLocalRandom.current().nextInt(divisor * 5);
-                if (ThreadLocalRandom.current().nextBoolean()) {
-                    x = -x;
-                }
-                if (ThreadLocalRandom.current().nextBoolean()) {
-                    y = -y;
-                }
-
+                int x = ThreadLocalRandom.current().nextInt();
+                int y = ThreadLocalRandom.current().nextInt();
                 executeTestProduct(modulus, x, y);
             }
         }
@@ -121,17 +83,6 @@ final class ModuloTestingUtil {
 
             assertThat(result, is(expected));
         }
-
-        private static final class Fixture {
-            final int x;
-            final int y;
-
-            Fixture(int x, int y) {
-                super();
-                this.x = x;
-                this.y = y;
-            }
-        }
     }
 
     /**
@@ -142,48 +93,17 @@ final class ModuloTestingUtil {
     @RunWith(Theories.class)
     static abstract class ProdArray {
 
-        @DataPoints
-        public static Fixture[] FIXTURES;
-
-        @BeforeClass
-        public static void before_fixtureの用意() {
-            List<Fixture> list = new ArrayList<>();
-
-            list.add(new Fixture(new int[] { 4, 2, 7 }));
-            list.add(new Fixture(new int[] { -6, 2, 4 }));
-            list.add(new Fixture(new int[] { 881, -64, -31 }));
-            list.add(new Fixture(new int[] { 3, 382, -216 }));
-            list.add(new Fixture(new int[] { 64, 25, 541 }));
-            list.add(new Fixture(new int[] { -52, 83, -52 }));
-            list.add(new Fixture(new int[] { -543, 1281, 2195 }));
-            list.add(new Fixture(new int[] { -543, 1281, 1000351, 318162 }));
-
-            FIXTURES = list.toArray(Fixture[]::new);
-        }
-
-        @Theory
-        public final void test_配列の要素積のモジュロをテスト(Fixture fixture, int divisor) {
-            int[] x = fixture.x;
-            ModuloInt modulus = getModulo().apply(divisor);
-            executeTestProduct(modulus, x);
-        }
-
         @Theory
         public final void test_配列の要素積のモジュロをテスト_ランダム化(int divisor) {
 
-            int ite = 100;
-
+            int ite = 1000;
             ModuloInt modulus = getModulo().apply(divisor);
-
             for (int c = 0; c < ite; c++) {
 
                 int size = ThreadLocalRandom.current().nextInt(10);
                 int[] x = new int[size];
                 for (int i = 0; i < size; i++) {
-                    x[i] = ThreadLocalRandom.current().nextInt(divisor * 5);
-                    if (ThreadLocalRandom.current().nextBoolean()) {
-                        x[i] = -x[i];
-                    }
+                    x[i] = ThreadLocalRandom.current().nextInt();
                 }
 
                 executeTestProduct(modulus, x);
@@ -211,15 +131,6 @@ final class ModuloTestingUtil {
 
             assertThat(result, is(expected));
         }
-
-        private static final class Fixture {
-            final int[] x;
-
-            Fixture(int[] x) {
-                super();
-                this.x = x;
-            }
-        }
     }
 
     /**
@@ -230,49 +141,14 @@ final class ModuloTestingUtil {
     @RunWith(Theories.class)
     static abstract class Pow {
 
-        @DataPoints
-        public static Fixture[] FIXTURES;
-
-        @BeforeClass
-        public static void before_fixtureの用意() {
-            List<Fixture> list = new ArrayList<>();
-
-            list.add(new Fixture(4, 2));
-            list.add(new Fixture(-6, 2));
-            list.add(new Fixture(881, 64));
-            list.add(new Fixture(3, 0));
-            list.add(new Fixture(64, 25));
-            list.add(new Fixture(-52, 83));
-            list.add(new Fixture(-543, 1281));
-            list.add(new Fixture(-543, 1281));
-
-            FIXTURES = list.toArray(Fixture[]::new);
-        }
-
-        @Theory
-        public final void test_累乗のモジュロをテスト(Fixture fixture, int divisor) {
-            int x = fixture.x;
-            int k = fixture.k;
-
-            ModuloInt modulus = getModulo().apply(divisor);
-            executeTestPow(modulus, x, k);
-        }
-
         @Theory
         public final void test_累乗のモジュロをテスト_ランダム化(int divisor) {
 
-            int ite = 100;
-
+            int ite = 1000;
             ModuloInt modulus = getModulo().apply(divisor);
-
             for (int c = 0; c < ite; c++) {
-
-                int x = ThreadLocalRandom.current().nextInt(divisor * 5);
-                if (ThreadLocalRandom.current().nextBoolean()) {
-                    x = -x;
-                }
+                int x = ThreadLocalRandom.current().nextInt();
                 int k = ThreadLocalRandom.current().nextInt(200);
-
                 executeTestPow(modulus, x, k);
             }
         }
@@ -293,17 +169,6 @@ final class ModuloTestingUtil {
 
             assertThat(result, is(expected));
         }
-
-        private static final class Fixture {
-            final int x;
-            final int k;
-
-            Fixture(int x, int k) {
-                super();
-                this.x = x;
-                this.k = k;
-            }
-        }
     }
 
     /**
@@ -316,10 +181,10 @@ final class ModuloTestingUtil {
 
         @Theory
         public final void test_GcdInverseをテスト_ランダム化(int divisor) {
-            int ite = 100;
+            int ite = 1000;
             ModuloInt modulus = getModulo().apply(divisor);
             for (int c = 0; c < ite; c++) {
-                int a = ThreadLocalRandom.current().nextInt(divisor * 5);
+                int a = ThreadLocalRandom.current().nextInt();
                 int r = modulus.gcdInverse(a);
                 int gcd = Gcd.gcd(a, divisor);
                 assertThat(

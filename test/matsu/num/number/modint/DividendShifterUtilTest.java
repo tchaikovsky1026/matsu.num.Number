@@ -31,6 +31,10 @@ final class DividendShifterUtilTest {
     @RunWith(Theories.class)
     public static class int型の値テスト {
 
+        /**
+         * n,m に使用する0以上の整数の集まり.
+         * mに使用するときは, 0を弾くようにする.
+         */
         @DataPoints
         public static int[] values;
 
@@ -46,6 +50,7 @@ final class DividendShifterUtilTest {
         @Theory
         public void test_modShiftのテスト(int n, int m) {
             int shift = 100;
+            m = Math.max(m, 1);
             assertThat(
                     DividendShifterUtil.computeInt(n, shift, m),
                     is(computeIntNaive(n, shift, m)));

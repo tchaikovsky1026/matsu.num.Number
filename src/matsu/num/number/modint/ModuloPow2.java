@@ -85,7 +85,6 @@ final class ModuloPow2 extends SkeletalModuloInt {
         int len = x.length;
 
         // 結合法則を利用して, 4系列に分割
-        // mcの単位元で初期化
         int v0 = 1;
         int v1 = 1;
         int v2 = 1;

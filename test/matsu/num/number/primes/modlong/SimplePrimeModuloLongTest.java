@@ -4,7 +4,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.number.primes.modulo;
+package matsu.num.number.primes.modlong;
 
 import java.util.function.LongFunction;
 
@@ -15,12 +15,12 @@ import matsu.num.number.ModuloLong;
 import matsu.num.number.primes.PrimeModuloLong;
 
 /**
- * {@link SimplePrimeModuloInt} のテスト.
+ * {@link SimplePrimeModuloLong} のテスト.
  */
 @RunWith(Enclosed.class)
 final class SimplePrimeModuloLongTest {
 
-    public static class PrimeModulo定型テスト extends PrimeModuloTesting.PrimeLongModulo {
+    public static class PrimeModulo定型テスト extends PrimeModuloLongTesting {
 
         @Override
         LongFunction<PrimeModuloLong> getPrimeModuloFactory() {

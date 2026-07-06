@@ -6,33 +6,38 @@
  */
 
 /*
- * 2025.8.20
+ * 2026.7.6
  */
-package matsu.num.number.primes.modulo;
+package matsu.num.number.primes.modint;
 
-import matsu.num.number.ModuloLong;
+import matsu.num.number.ModuloInt;
 import matsu.num.number.primes.Primality;
-import matsu.num.number.primes.PrimeModuloLong;
+import matsu.num.number.primes.PrimeModuloInt;
 
 /**
- * {@link PrimeModuloLong} の骨格実装. <br>
- * 主に, メソッド契約のための実装提供と, {@link ModuloLong} メソッドの実装の提供である.
+ * {@link PrimeModuloInt} の骨格実装. <br>
+ * 主に, メソッド契約のための実装提供と, {@link ModuloInt} メソッドの実装の提供である.
  * 
  * @author Matsuura Y.
  */
-abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
+abstract class SkeletalPrimeModuloInt implements PrimeModuloInt {
 
-    private final ModuloLong modulo;
+    private final ModuloInt modulo;
 
     /**
      * 唯一のコンストラクタ. <br>
-     * mod p 演算を実現するモジュロ演算を与えて, インスタンスを構築する.
+     * {@link ModuloInt} を与えて, インスタンスを構築する.
+     * 
+     * <p>
+     * このクラス (およびサブクラス) の, {@link ModuloInt} 部分の実装は,
+     * 与えられたインスタンスに転送される.
+     * </p>
      * 
      * @param modulo mod p を実現するモジュロ演算
-     * @throws IllegalArgumentException p が素数でない場合
+     * @throws IllegalArgumentException modulo の divisor が素数でない場合
      * @throws NullPointerException 引数がnullの場合
      */
-    SkeletalPrimeModuloLong(ModuloLong modulo) {
+    SkeletalPrimeModuloInt(ModuloInt modulo) {
         super();
         if (!Primality.isPrime(modulo.divisor())) {
             throw new IllegalArgumentException("divisor is not prime: p = " + modulo.divisor());
@@ -41,51 +46,51 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
     }
 
     @Override
-    public final long divisor() {
-        return this.modulo.divisor();
+    public final int divisor() {
+        return modulo.divisor();
     }
 
     @Override
-    public final long mod(long x) {
-        return this.modulo.mod(x);
+    public final int mod(int x) {
+        return modulo.mod(x);
     }
 
     @Override
-    public final long modpr(long x, long y) {
-        return this.modulo.modpr(x, y);
+    public final int modpr(int x, int y) {
+        return modulo.modpr(x, y);
     }
 
     @Override
-    public final long modpr(long... x) {
-        return this.modulo.modpr(x);
+    public final int modpr(int... x) {
+        return modulo.modpr(x);
     }
 
     @Override
-    public final long modpow(long x, long k) {
-        return this.modulo.modpow(x, k);
+    public final int modpow(int x, int k) {
+        return modulo.modpow(x, k);
     }
 
     @Override
-    public final long gcdInverse(long a) {
-        return this.modulo.gcdInverse(a);
+    public final int gcdInverse(int a) {
+        return modulo.gcdInverse(a);
     }
 
     @Override
-    public final long order(long a) {
+    public final int order(int a) {
         validateDividend(a);
 
         return this.orderConcrete(a);
     }
 
     @Override
-    public final long inverse(long a) {
+    public final int inverse(int a) {
         validateDividend(a);
 
         return this.inverseConcrete(a);
     }
 
     @Override
-    public final boolean isPrimitiveRoot(long a) {
+    public final boolean isPrimitiveRoot(int a) {
         validateDividend(a);
 
         return this.isPrimitiveRootConcrete(a);
@@ -97,20 +102,23 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @param a a
      * @throws IllegalArgumentException {@literal 1 <= a <= p - 1} を満たさない場合
      */
-    private void validateDividend(long a) {
-        if (!(1L <= a && a < this.divisor())) {
+    private void validateDividend(int a) {
+        if (!(1 <= a && a < this.divisor())) {
             throw new IllegalArgumentException(
                     "illegal: not 1 <= a <= p-1: a = " + a + ", p = " + this.divisor());
         }
     }
 
     /**
-     * {@link #order(long)} の具体的処理を実装する抽象メソッド.
+     * {@link #order(int)} の具体的処理を実装する抽象メソッド.
      * 
      * <p>
-     * 外部から {@link #order(long)} を呼んだとき, 引数が正当かどうか
+     * 外部から {@link #order(int)} を呼んだとき, 引数が正当かどうか
      * (1 以上 <i>p</i> - 1 以下かどうか)
-     * が判定され, 正当な場合はこのメソッドがコールされる. <br>
+     * が判定され, 正当な場合はこのメソッドがコールされる.
+     * </p>
+     * 
+     * <p>
      * このメソッド内で例外をスローしてはいけない. <br>
      * このメソッドを継承先から直接コールすることは, ほとんどの場合不適切である.
      * </p>
@@ -118,18 +126,21 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @implSpec
      *               アクセスレベルを継承先で緩和してはいけない.
      * 
-     * @param a 位数を計算する整数, 1 以上 <i>p</i> - 1 以下が確定
-     * @return mod&nbsp;<i>p</i> に対する位数
+     * @param a 位数を計算する整数, {@literal 1 <= a <= p-1} を保証
+     * @return mod p に対する位数
      */
-    abstract long orderConcrete(long a);
+    abstract int orderConcrete(int a);
 
     /**
-     * {@link #inverse(long)} の具体的処理を実装するメソッド.
+     * {@link #inverse(int)} の具体的処理を実装するメソッド.
      * 
      * <p>
-     * 外部から {@link #order(long)} を呼んだとき, 引数が正当かどうか
+     * 外部から {@link #order(int)} を呼んだとき, 引数が正当かどうか
      * (1 以上 <i>p</i> - 1 以下かどうか)
-     * が判定され, 正当な場合はこのメソッドがコールされる. <br>
+     * が判定され, 正当な場合はこのメソッドがコールされる.
+     * </p>
+     * 
+     * <p>
      * このメソッド内で例外をスローしてはいけない. <br>
      * このメソッドを継承先から直接コールすることは, ほとんどの場合不適切である.
      * </p>
@@ -137,27 +148,30 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @implSpec
      *               このメソッドのオーバーライドは許可されている. <br>
      *               デフォルトでは
-     *               {@link #gcdInverse(long)}
-     *               を計算して返す.
+     *               {@link #gcdInverse(int)}
+     *               を返す.
      * 
      *               <p>
      *               アクセスレベルを継承先で緩和してはいけない.
      *               </p>
      * 
-     * @param a 位数を計算する整数, 1 以上 <i>p</i> - 1 以下が確定
-     * @return mod&nbsp;<i>p</i> に対する <i>a</i> の逆元
+     * @param a 位数を計算する整数, {@literal 1 <= a <= p-1} を保証
+     * @return mod p に対する a の逆元
      */
-    long inverseConcrete(long a) {
+    int inverseConcrete(int a) {
         return this.gcdInverse(a);
     }
 
     /**
-     * {@link #isPrimitiveRoot(long)} の具体的処理を実装する抽象メソッド.
+     * {@link #isPrimitiveRoot(int)} の具体的処理を実装する抽象メソッド.
      * 
      * <p>
-     * 外部から {@link #isPrimitiveRoot(long)} を呼んだとき, 引数が正当かどうか
+     * 外部から {@link #isPrimitiveRoot(int)} を呼んだとき, 引数が正当かどうか
      * (1 以上 <i>p</i> - 1 以下かどうか)
-     * が判定され, 正当な場合はこのメソッドがコールされる. <br>
+     * が判定され, 正当な場合はこのメソッドがコールされる.
+     * </p>
+     * 
+     * <p>
      * このメソッド内で例外をスローしてはいけない. <br>
      * このメソッドを継承先から直接コールすることは, ほとんどの場合不適切である.
      * </p>
@@ -165,10 +179,10 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * @implSpec
      *               アクセスレベルを継承先で緩和してはいけない.
      * 
-     * @param a 原始根かどうかを判定する整数, 1 以上 <i>p</i> - 1 以下が確定
+     * @param a 原始根かどうかを判定する整数, {@literal 1 <= a <= p-1} を保証
      * @return 原始根である場合は {@code true}
      */
-    abstract boolean isPrimitiveRootConcrete(long a);
+    abstract boolean isPrimitiveRootConcrete(int a);
 
     /**
      * このインスタンスの文字列表現を返す.
@@ -176,12 +190,15 @@ abstract class SkeletalPrimeModuloLong implements PrimeModuloLong {
      * <p>
      * 文字列表現は明確に規定されておらず, バージョン間の互換性も担保されていない. <br>
      * おそらく次のような形式だろう. <br>
-     * {@code PrimeModulo(long, divisor = %divisor)}
+     * {@code PrimeModuloInt(divisor = %divisor)}
      * </p>
+     * 
+     * @implSpec
+     *               継承先でオーバーライドしてよい.
      */
     @Override
     public String toString() {
-        return "PrimeModulo(long, divisor = %s)"
-                .formatted(this.divisor());
+        return "%s(divisor = %s)"
+                .formatted(PrimeModuloInt.class.getSimpleName(), this.divisor());
     }
 }

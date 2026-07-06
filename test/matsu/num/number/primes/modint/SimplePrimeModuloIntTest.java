@@ -1,10 +1,11 @@
 /*
- * Copyright © 2025 Matsuura Y.
+ * Copyright © 2026 Matsuura Y.
  * 
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-package matsu.num.number.primes.modulo;
+
+package matsu.num.number.primes.modint;
 
 import java.util.function.IntFunction;
 
@@ -20,10 +21,10 @@ import matsu.num.number.primes.PrimeModuloInt;
 @RunWith(Enclosed.class)
 final class SimplePrimeModuloIntTest {
 
-    public static class PrimeModulo定型テスト extends PrimeModuloTesting.PrimeIntModulo {
+    public static class PrimeModulo定型テスト extends PrimeModuloIntTesting {
 
         @Override
-        IntFunction<PrimeModuloInt> getPrimeModuloFactory() {
+        IntFunction<PrimeModuloInt> getPrimeModulo() {
             return (int p) -> new SimplePrimeModuloInt(ModuloInt.get(p));
         }
     }

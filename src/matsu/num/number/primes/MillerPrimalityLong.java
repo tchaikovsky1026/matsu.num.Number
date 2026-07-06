@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.9
+ * 2026.7.6
  */
 package matsu.num.number.primes;
 
@@ -14,11 +14,48 @@ import matsu.num.number.ModuloLong;
 import matsu.num.number.primes.Primality.PrimalityLong;
 
 /**
- * long 型の Miller テストによる素数判定.
+ * {@code long} 型の Miller-Rabin テストによる素数判定.
  * 
  * @author Matsuura Y.
  */
 final class MillerPrimalityLong implements PrimalityLong {
+
+    /*
+     * 数論的性質:
+     * 
+     * p を 3 以上の素数, 1 <= a < p とする.
+     * また, p - 1 = 2^d * m (m は奇数, d >= 1) とする.
+     * 
+     * フェルマーの小定理により, a^(p-1) = a^(2^d * m) = 1 (mod p) である.
+     * (以下, mod p を省略する.)
+     * x^2 = 1 (mod p) であるとき, x = 1 or x = -1 である.
+     * よって, 次がわかる.
+     * 
+     * a^(2^(d-1) * m) = 1 or -1
+     * 1 のとき, a^(2^(d-2) * m) = 1 or -1
+     * 1 のとき, a^(2^(d-3) * m) = 1 or -1 ...
+     * 
+     * すなわち, a^m からスタートし,
+     * a^m, a^(2m), a^(4m), a^(8m), ... , a^(2^(d-1) * m)
+     * を考えたとき, 次のどちらかが成り立つ.
+     * 1. a^m = 1
+     * 2. a^m, a^(2m), a^(4m), a^(8m), ... , a^(2^(d-1) * m) のいずれかは -1 である.
+     */
+
+    /*
+     * Miller-Rabin 素数判定法:
+     * 
+     * p を 3 以上の整数とし, p が素数かどうかを判定したい.
+     * p - 1 = 2^d * m (m は奇数, d >= 1) とする.
+     * 次が成り立つならば, p は合成数である.
+     * 
+     * a^m は 1 でなく, かつ,
+     * a^m, a^(2m), a^(4m), a^(8m), ... , a^(2^(d-1) * m) のいずれも -1 でない.
+     * 
+     * いくつかの a で実行し, 合成数でないならば, p は確率的素数である.
+     * 任意の範囲で確実に素数と判定するための a は特定されないが,
+     * ある範囲の p を素数と判定するために必要な a は良く調べられている.
+     */
 
     private static final long[] testA = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37 };
 
@@ -39,7 +76,7 @@ final class MillerPrimalityLong implements PrimalityLong {
         }
 
         // nは3以上の奇数
-        // Miller テスト
+        // Miller-Rabin テスト
         long n_m1 = n - 1L;
         long pow2Exponent = Long.numberOfTrailingZeros(n_m1);
         long m = n_m1 >> pow2Exponent;
@@ -53,28 +90,29 @@ final class MillerPrimalityLong implements PrimalityLong {
             }
 
             long aPow = modN.modpow(a, m);
+
+            /*
+             * 合成数の証拠である次を検証する.
+             * a^m は 1 でなく, かつ,
+             * a^m, a^(2m), a^(4m), a^(8m), ... , a^(2^(d-1) * m) のいずれも -1 でない.
+             * 満たさない場合は早期 continue
+             */
             if (aPow == 1L) {
-                // a^m = 1 ならば, どちらの証拠にもならない
                 continue;
             }
-
             for (int r = 0; r < pow2Exponent;
                     r++, aPow = modN.modpr(aPow, aPow)) {
                 // aPow = a^(2^r m) である
+                // r = 0, 1, ... , d-1 が走査される
                 if (aPow == n_m1) {
                     continue labelA;
                 }
             }
 
-            /*
-             * ここに到達するには,
-             * (n-1)/2 までに -1 が出現していない,
-             * または (n-1) で 1 でないという意味である.
-             */
+            // ここに到達した場合は, 合成数の証拠が得られたという意味
             return false;
         }
 
         return true;
     }
-
 }

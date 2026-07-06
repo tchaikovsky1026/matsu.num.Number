@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.9
+ * 2026.7.6
  */
 package matsu.num.number.primes;
 
@@ -17,12 +17,12 @@ import matsu.num.number.primes.Primality.PrimalityInt;
  * 
  * @author Matsuura Y.
  */
-final class NaivePrimalityInt implements PrimalityInt {
+final class NaivePrimalityIntForTesting implements PrimalityInt {
 
     /**
      * 唯一のコンストラクタ.
      */
-    NaivePrimalityInt() {
+    NaivePrimalityIntForTesting() {
         super();
     }
 

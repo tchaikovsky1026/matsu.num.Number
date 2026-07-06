@@ -21,7 +21,7 @@ final class MillerPrimalityLongTest {
 
     private static final PrimalityLong Test_Primality = new MillerPrimalityLong();
 
-    public static class Enumeration extends PrimalityTesting.EnumerationLong {
+    public static class Enumeration extends PrimalityLongTesting.EnumerationLong {
 
         @Override
         PrimalityLong getPrimalityLong() {
@@ -29,7 +29,7 @@ final class MillerPrimalityLongTest {
         }
     }
 
-    public static class Randoms extends PrimalityTesting.RandomsLong {
+    public static class Randoms extends PrimalityLongTesting.RandomsLong {
 
         @Override
         PrimalityLong getPrimalityLong() {

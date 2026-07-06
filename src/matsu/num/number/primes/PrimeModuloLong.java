@@ -6,12 +6,12 @@
  */
 
 /*
- * 2025.8.19
+ * 2026.7.6
  */
 package matsu.num.number.primes;
 
 import matsu.num.number.ModuloLong;
-import matsu.num.number.primes.modulo.SimplePrimeModuloFactory;
+import matsu.num.number.primes.modlong.PrimeModuloLongFactory;
 
 /**
  * {@code long} 型の素数を法とするモジュロ演算を行うインターフェース.
@@ -98,6 +98,6 @@ public interface PrimeModuloLong extends ModuloLong {
      * @throws IllegalArgumentException <i>p</i> が素数でない場合
      */
     public static PrimeModuloLong get(long p) {
-        return SimplePrimeModuloFactory.createFrom(ModuloLong.get(p));
+        return PrimeModuloLongFactory.createFrom(ModuloLong.get(p));
     }
 }

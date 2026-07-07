@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.1.9
+ * 2026.7.7
  */
 package matsu.num.number.primes;
 
@@ -23,8 +23,6 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -93,37 +91,12 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * @param factorsList 素因数分解結果: 総積がoriginalに一致
      */
     PrimeFactorInt(int original, Collection<Integer> factorsList) {
-        this(original, Factors2MapHolder.factors2Map(factorsList));
+        this(original, ElementsToCountMapUtil.toCountMap(factorsList));
 
         this.factors = factorsList.stream()
                 .mapToInt(i -> i.intValue())
                 .toArray();
         Arrays.sort(this.factors);
-    }
-
-    /**
-     * 素因数のストリームを "素因数とその個数のマップ" に変換する機能.
-     */
-    private static final class Factors2MapHolder {
-
-        private static final Collector<Integer, ?, SortedMap<Integer, Integer>> factors2MapCollector;
-
-        static {
-            Collector<Object, ?, Integer> counting = Collectors.collectingAndThen(
-                    Collectors.counting(),
-                    (Long i) -> Integer.valueOf(i.intValue()));
-
-            factors2MapCollector = Collectors.groupingBy(
-                    i -> i, TreeMap<Integer, Integer>::new, counting);
-        }
-
-        /**
-         * エンクロージングクラスからはこのメソッドを呼ぶ.
-         */
-        static SortedMap<Integer, Integer> factors2Map(Collection<Integer> factorsList) {
-            return factorsList.stream()
-                    .collect(Factors2MapHolder.factors2MapCollector);
-        }
     }
 
     /**

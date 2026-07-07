@@ -51,7 +51,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * {@literal (p_i -> k_i)}
      * を表現する.
      */
-    private final SortedMap<Long, Integer> factor2Number;
+    private final SortedMap<Long, Integer> factorToNumber;
 
     /**
      * original が素数であるかどうか
@@ -91,11 +91,6 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      */
     PrimeFactorLong(long original, Collection<Long> factorsList) {
         this(original, ElementsToCountMapUtil.toCountMap(factorsList));
-
-        this.factors = factorsList.stream()
-                .mapToLong(i -> i.longValue())
-                .toArray();
-        Arrays.sort(this.factors);
     }
 
     /**
@@ -107,17 +102,17 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * </p>
      * 
      * @param original 素因数分解前の値: 1以上の整数
-     * @param factor2Number 素因数とその個数のマップ:
+     * @param factorToNumber 素因数とその個数のマップ:
      *            自然順序のcompare,
      *            Value は1以上,
      *            マップへの参照は外部に漏れていない
      */
-    private PrimeFactorLong(long original, SortedMap<Long, Integer> factor2Number) {
+    private PrimeFactorLong(long original, SortedMap<Long, Integer> factorToNumber) {
         super();
 
         this.original = original;
-        this.factor2Number = factor2Number;
-        this.prime = this.factor2Number.containsKey(Long.valueOf(original));
+        this.factorToNumber = factorToNumber;
+        this.prime = this.factorToNumber.containsKey(Long.valueOf(original));
     }
 
     /**
@@ -139,7 +134,8 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
     }
 
     /**
-     * <i>n</i> の素因数を配列として返す.
+     * <i>n</i> の素因数を配列として返す. <br>
+     * 例えば, {@code this.original() == 12} の場合, {@code {2, 3}} が返る.
      * 
      * <p>
      * 配列は昇順にソートされている. <br>
@@ -150,18 +146,19 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * @return 素因数
      */
     public final long[] factors() {
-        long[] out = this.factors;
+        long[] out = factors;
         if (Objects.nonNull(out)) {
             return out.clone();
         }
 
         synchronized (lock) {
-            out = this.factors;
+            out = factors;
             if (Objects.nonNull(out)) {
                 return out.clone();
             }
 
-            out = this.factor2Number.entrySet().stream()
+            // SortedMapがキー(素因数)の自然順であるので, array も昇順である
+            out = factorToNumber.entrySet().stream()
                     .flatMapToLong(
                             // Entry(素因数, 繰り返し) を Stream(素因数,素因数,...)に変換
                             e -> LongStream
@@ -169,7 +166,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
                                             e.getKey().longValue(), LongUnaryOperator.identity())
                                     .limit(e.getValue().intValue()))
                     .toArray();
-            this.factors = out.clone();
+            factors = out.clone();
             return out;
         }
     }
@@ -187,7 +184,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      * @return <i>n</i>/<i>q</i> に対する素因数分解, <i>q</i> が不適の場合は空
      */
     public final Optional<PrimeFactorLong> dividedBy(long q) {
-        return this.factor2Number.containsKey(Long.valueOf(q))
+        return this.factorToNumber.containsKey(Long.valueOf(q))
                 ? Optional.of(this.dividedByConcrete(q))
                 : Optional.empty();
     }
@@ -208,7 +205,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
      */
     private PrimeFactorLong dividedByConcrete(long q) {
         long newOriginal = this.original / q;
-        SortedMap<Long, Integer> newFactor2Number = new TreeMap<>(this.factor2Number);
+        SortedMap<Long, Integer> newFactor2Number = new TreeMap<>(this.factorToNumber);
 
         Long qLong = Long.valueOf(q);
         Integer kInteger = newFactor2Number.get(qLong);
@@ -276,7 +273,17 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
 
     /**
      * {@code this} から素因数をひとつだけ取り除いた ({@link #dividedBy(long)} を適用した)
-     * {@link PrimeFactorLong} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す.
+     * {@link PrimeFactorLong} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す. <br>
+     * 例としては, 次である.
+     * 
+     * <ul>
+     * <li>original = 12 &rarr;
+     * {@code {PrimeFactors(6), PrimeFactors(4)}}</li>
+     * <li>original = 2 &rarr;
+     * {@code {PrimeFactors(1)}}</li>
+     * <li>original = 1 &rarr;
+     * {@code {}}</li>
+     * </ul>
      * 
      * <p>
      * 返される {@link Collection} は,
@@ -326,7 +333,7 @@ public final class PrimeFactorLong implements Comparable<PrimeFactorLong> {
         private final LongFunction<PrimeFactorLong> mapper =
                 q -> PrimeFactorLong.this.dividedByConcrete(q);
 
-        private final long[] qs = factor2Number.keySet().stream()
+        private final long[] qs = factorToNumber.keySet().stream()
                 .mapToLong(i -> i.longValue())
                 .toArray();
 

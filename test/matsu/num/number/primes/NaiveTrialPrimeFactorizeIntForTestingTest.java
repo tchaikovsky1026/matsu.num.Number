@@ -14,15 +14,14 @@ import org.junit.runner.RunWith;
 import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeInt;
 
 /**
- * {@link NaiveTrialPrimeFactorizeInt} のテスト.
+ * {@link NaiveTrialPrimeFactorizeIntForTesting} のテスト.
  */
-@Deprecated
 @RunWith(Enclosed.class)
-final class NaiveTrialPrimeFactorizeIntTest {
+final class NaiveTrialPrimeFactorizeIntForTestingTest {
 
-    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorizeInt.class;
+    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorizeIntForTesting.class;
 
-    private static final PrimeFactorizeInt FACTORIZE_INT = new NaiveTrialPrimeFactorizeInt();
+    private static final PrimeFactorizeInt FACTORIZE_INT = new NaiveTrialPrimeFactorizeIntForTesting();
 
     public static class IntFactorize extends PrimeFactorizeTesting.IntFactorize {
 

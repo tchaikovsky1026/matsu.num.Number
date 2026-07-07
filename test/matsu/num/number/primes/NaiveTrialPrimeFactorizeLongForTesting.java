@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.11
+ * 2026.7.7
  */
 package matsu.num.number.primes;
 
@@ -16,18 +16,16 @@ import java.util.List;
 import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeLong;
 
 /**
- * 素朴な試し割り法による {@link PrimeFactorizeLong} の実装.
+ * テスト用の, 素朴な試し割り法による {@link PrimeFactorizeLong} の実装.
  * 
  * @author Matsuura Y.
- * @deprecated このクラスはプロダクトコードから使用されていない
  */
-@Deprecated
-final class NaiveTrialPrimeFactorizeLong implements PrimeFactorizeLong {
+final class NaiveTrialPrimeFactorizeLongForTesting implements PrimeFactorizeLong {
 
     /**
      * 唯一のコンストラクタ.
      */
-    NaiveTrialPrimeFactorizeLong() {
+    NaiveTrialPrimeFactorizeLongForTesting() {
         super();
     }
 

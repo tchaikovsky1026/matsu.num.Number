@@ -18,15 +18,14 @@ import org.junit.runner.RunWith;
 import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeLong;
 
 /**
- * {@link NaiveTrialPrimeFactorizeLong} のテスト.
+ * {@link NaiveTrialPrimeFactorizeLongForTesting} のテスト.
  */
-@Deprecated
 @RunWith(Enclosed.class)
-final class NaiveTrialPrimeFactorizeLongTest {
+final class NaiveTrialPrimeFactorizeLongForTestingTest {
 
-    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorizeLong.class;
+    public static final Class<?> TEST_CLASS = NaiveTrialPrimeFactorizeLongForTesting.class;
 
-    private static final PrimeFactorizeLong FACTORIZE_LONG = new NaiveTrialPrimeFactorizeLong();
+    private static final PrimeFactorizeLong FACTORIZE_LONG = new NaiveTrialPrimeFactorizeLongForTesting();
 
     public static class LongFactorize extends PrimeFactorizeTesting.LongFactorize {
 

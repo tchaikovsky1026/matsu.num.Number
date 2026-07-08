@@ -24,6 +24,58 @@ import matsu.num.number.primes.PrimeFactorize.PrimeFactorizeInt;
  */
 final class PollardBrentRhoInt implements PrimeFactorizeInt {
 
+    /*
+     * Pollard-rho アルゴリズムを利用した素因数分解法:
+     * 
+     * (事前準備)
+     * 与えられた数に対して試し割り法を実行し, 小さい素因数を弾いておく.
+     * 評価する整数 n に対し, n^(1/4) 以下の素因数は含まない状態にする.
+     * この時点で n は素因数を高々3個しか持たない.
+     * 
+     * Pollard-rho アルゴリズムは, n の約数を見つけるアルゴリズムである.
+     * これを用いて, 次のように処理する.
+     * 1. n が素数かを判定し, 素数なら終了.
+     * 2. n が素数でない場合は約数を見つける. そして,
+     * (1) 見つかった約数 g が (n^(1/2)) 以下なら, g は n の素因数である.
+     * n := n/g として 1 に戻る.
+     * (2) 見つかった約数 g が (n^(1/2)) より大きいなら, n/g は n の素因数である.
+     * n := g として 1 に戻る.
+     */
+
+    /*
+     * Pollard の rho アルゴリズム: 合成数 n に対して, 2 以上 n 未満の約数を探す.
+     * 
+     * 0 以上 n 未満の値を発生させる乱数 2 個の差が非自明な n の約数となることを期待する.
+     * rho アルゴリズムは, x_(i+1) = f(x_i) mod n であるような写像により疑似乱数を生成し,
+     * gcd(n, |x_i - x_j|) を i と j の間隔をずらしながら評価する.
+     * この乱数列は, 初期部分を除いてある周期で循環する.
+     * gcd(n, |x_i - x_j|) = n となった場合は |i - j| 周期で循環したことを意味する.
+     * これがギリシャ文字の rho の形であるため, rho 法という.
+     * 
+     * そこで, i-j の値が 1 ずつ増えるように進める (i:=i+1, j:=j+2 とする) と, 間隔を増やしながら循環を検出できる.
+     * これを Floyd の循環検出法という.
+     * 両方を進めるのは, 初期部分を忘れるためである.
+     * 
+     * 乱数生成式として f(x) = x^2 + c を選ぶ.
+     * 今, x_i と x_j が循環の中にあるとすると,
+     * x_{i+1} - x_{j+1} = (x_i - x_j)(x_i + x_j) であるので,
+     * gcd(n,|x_i - x_j|) は gcd(n,|x_{i+1} - x_{j+1}|) の約数である.
+     * さらに循環するため, (循環部分の) 任意の i について, gcd(n,|x_i - x_{i + k}|) は k のみに依存する.
+     * 
+     * 最もシンプルな Pollard の rho アルゴリズムは,
+     * i = 0, j = 1 を初期値として, i:=i+1, j:=j+2 としながら進め, gcd(n, |x_i - x_j|) を観察する.
+     * gcd(n, |x_i - x_j|) >= 2 となったとき, それが n 未満ならば非自明な約数が得られたことになる.
+     * n であれば, 乱数生成方法を変えて (c の値を変更して) 試す.
+     * 
+     * gcd(n, |x_i - x_j|) を毎回計算するのでなく,
+     * gcd(n, |x_i - x_j||x_{i+1} - x_{j+2}||x_{i+2} - x_{j+4}|...) として,
+     * 積について計算したとする.
+     * これが 1 ならばすべて 1 である (互いに素).
+     * 2 以上 n 未満なら, それは非自明な約数である.
+     * n なら, そこまでの |x_i - x_j| を検証すれば, 非自明な約数または循環が検出できる.
+     * これが Brent 最適化である.
+     */
+
     /**
      * rho 法に移行した場合の, 素因数の最小. <br>
      * (小さい素因数は, 試し割り法により積極的に弾きたい) <br>
@@ -31,14 +83,10 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
      */
     private static final int MIN_RHO = 500;
 
-    /**
-     * 2乗がInteger.MAX_VALUE以下である最大のint
-     */
+    /** 2乗がInteger.MAX_VALUE以下である最大のint. */
     private static final int MAX_SQRT_INT = 46340;
 
-    /**
-     * 唯一のコンストラクタ.
-     */
+    /** 唯一のコンストラクタ. */
     PollardBrentRhoInt() {
         super();
     }
@@ -55,6 +103,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
         }
 
         // 素数ははじく
+        // (本来は不要だが, 素数かどうかの評価は高速なので試す.)
         if (Primality.isPrime(n)) {
             return new PrimeFactorInt(n, List.of(Integer.valueOf(n)));
         }
@@ -65,10 +114,7 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
         List<Integer> factors = new ArrayList<>(32);
 
         // 素因数2, 3, 5を調べる
-        while ((n & 1) == 0) {
-            factors.add(Integer.valueOf(2));
-            n >>= 1;
-        }
+        n = trial(n, 2, factors);
         n = trial(n, 3, factors);
         n = trial(n, 5, factors);
 
@@ -226,9 +272,11 @@ final class PollardBrentRhoInt implements PrimeFactorizeInt {
         }
 
         /**
-         * 乱数を生成する
+         * 乱数を生成する. <br>
+         * f = y*y + c mod n である.
          * 
          * @param c 0以下
+         * @return y*y + c mod n, 0 以上 n 未満
          */
         private int f(int y, int c) {
             int y2_p_c = moduloN.modpr(y, y) + c;

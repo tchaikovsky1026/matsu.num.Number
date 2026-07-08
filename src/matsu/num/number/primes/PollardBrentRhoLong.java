@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.15
+ * 2026.7.8
  */
 package matsu.num.number.primes;
 
@@ -79,6 +79,11 @@ final class PollardBrentRhoLong implements PrimeFactorizeLong {
          * l = 6k とする.
          */
         for (long l = 6L; m < MIN_RHO || (m * m) * (m * m) <= n; l += 6L) {
+
+            // m^4 がオーバーフローするリスクを回避するための処置
+            if (m > 1L << 16) {
+                break;
+            }
 
             // 6k + 1 の検証
             n = trial(n, l + 1L, factors);

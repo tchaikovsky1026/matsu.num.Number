@@ -80,7 +80,7 @@ final class PollardBrentRhoLongTest {
         @Test
         public void test_NaiveTrialPrimeFactorizeLongの実行() {
             @SuppressWarnings("deprecation")
-            PrimeFactorizeLong primeFactorizeLong = new NaiveTrialPrimeFactorizeLong();
+            PrimeFactorizeLong primeFactorizeLong = new NaiveTrialPrimeFactorizeLongForTesting();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeLong: ", 1,

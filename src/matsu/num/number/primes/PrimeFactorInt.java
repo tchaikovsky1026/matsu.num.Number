@@ -6,7 +6,7 @@
  */
 
 /*
- * 2025.8.28
+ * 2026.7.7
  */
 package matsu.num.number.primes;
 
@@ -23,8 +23,6 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -54,7 +52,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * {@literal (p_i -> k_i)}
      * を表現する.
      */
-    private final SortedMap<Integer, Integer> factor2Number;
+    private final SortedMap<Integer, Integer> factorToNumber;
 
     /**
      * original が素数であるかどうか
@@ -93,37 +91,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * @param factorsList 素因数分解結果: 総積がoriginalに一致
      */
     PrimeFactorInt(int original, Collection<Integer> factorsList) {
-        this(original, Factors2MapHolder.factors2Map(factorsList));
-
-        this.factors = factorsList.stream()
-                .mapToInt(i -> i.intValue())
-                .toArray();
-        Arrays.sort(this.factors);
-    }
-
-    /**
-     * 素因数のストリームを "素因数とその個数のマップ" に変換する機能.
-     */
-    private static final class Factors2MapHolder {
-
-        private static final Collector<Integer, ?, SortedMap<Integer, Integer>> factors2MapCollector;
-
-        static {
-            Collector<Object, ?, Integer> counting = Collectors.collectingAndThen(
-                    Collectors.counting(),
-                    (Long i) -> Integer.valueOf(i.intValue()));
-
-            factors2MapCollector = Collectors.groupingBy(
-                    i -> i, TreeMap<Integer, Integer>::new, counting);
-        }
-
-        /**
-         * エンクロージングクラスからはこのメソッドを呼ぶ.
-         */
-        static SortedMap<Integer, Integer> factors2Map(Collection<Integer> factorsList) {
-            return factorsList.stream()
-                    .collect(Factors2MapHolder.factors2MapCollector);
-        }
+        this(original, ElementsToCountMapUtil.toCountMap(factorsList));
     }
 
     /**
@@ -135,17 +103,17 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * </p>
      * 
      * @param original 素因数分解前の値: 1以上の整数
-     * @param factor2Number 素因数とその個数のマップ:
+     * @param factorToNumber 素因数とその個数のマップ:
      *            自然順序のcompare,
      *            Value は1以上,
      *            マップへの参照は外部に漏れていない
      */
-    private PrimeFactorInt(int original, SortedMap<Integer, Integer> factor2Number) {
+    private PrimeFactorInt(int original, SortedMap<Integer, Integer> factorToNumber) {
         super();
 
         this.original = original;
-        this.factor2Number = factor2Number;
-        this.prime = this.factor2Number.containsKey(Integer.valueOf(original));
+        this.factorToNumber = factorToNumber;
+        this.prime = this.factorToNumber.containsKey(Integer.valueOf(original));
     }
 
     /**
@@ -167,7 +135,8 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
     }
 
     /**
-     * <i>n</i> の素因数を配列として返す.
+     * <i>n</i> の素因数を配列として返す. <br>
+     * 例えば, {@code this.original() == 12} の場合, {@code {2, 3}} が返る.
      * 
      * <p>
      * 配列は昇順にソートされている. <br>
@@ -178,18 +147,19 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * @return 素因数
      */
     public final int[] factors() {
-        int[] out = this.factors;
+        int[] out = factors;
         if (Objects.nonNull(out)) {
             return out.clone();
         }
 
         synchronized (lock) {
-            out = this.factors;
+            out = factors;
             if (Objects.nonNull(out)) {
                 return out.clone();
             }
 
-            out = this.factor2Number.entrySet().stream()
+            // SortedMapがキー(素因数)の自然順であるので, array も昇順である
+            out = factorToNumber.entrySet().stream()
                     .flatMapToInt(
                             // Entry(素因数, 繰り返し) を Stream(素因数,素因数,...)に変換
                             e -> IntStream
@@ -197,7 +167,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
                                             e.getKey().intValue(), IntUnaryOperator.identity())
                                     .limit(e.getValue().intValue()))
                     .toArray();
-            this.factors = out.clone();
+            factors = out.clone();
             return out;
         }
     }
@@ -215,7 +185,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      * @return <i>n</i>/<i>q</i> に対する素因数分解, <i>q</i> が不適の場合は空
      */
     public final Optional<PrimeFactorInt> dividedBy(int q) {
-        return this.factor2Number.containsKey(Integer.valueOf(q))
+        return this.factorToNumber.containsKey(Integer.valueOf(q))
                 ? Optional.of(this.dividedByConcrete(q))
                 : Optional.empty();
     }
@@ -236,7 +206,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
      */
     private PrimeFactorInt dividedByConcrete(int q) {
         int newOriginal = this.original / q;
-        SortedMap<Integer, Integer> newFactor2Number = new TreeMap<>(this.factor2Number);
+        SortedMap<Integer, Integer> newFactor2Number = new TreeMap<>(this.factorToNumber);
 
         Integer qInteger = Integer.valueOf(q);
         Integer kInteger = newFactor2Number.get(qInteger);
@@ -304,7 +274,17 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
 
     /**
      * {@code this} から素因数をひとつだけ取り除いた ({@link #dividedBy(int)} を適用した)
-     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す.
+     * {@link PrimeFactorInt} の重複なしのバリエーションを列挙するイミュータブルコレクションを返す. <br>
+     * 例としては, 次である.
+     * 
+     * <ul>
+     * <li>original = 12 &rarr;
+     * {@code {PrimeFactors(6), PrimeFactors(4)}}</li>
+     * <li>original = 2 &rarr;
+     * {@code {PrimeFactors(1)}}</li>
+     * <li>original = 1 &rarr;
+     * {@code {}}</li>
+     * </ul>
      * 
      * <p>
      * 返される {@link Collection} は,
@@ -335,9 +315,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
                 return out;
             }
 
-            out = new SubFactorsCollection();
-            this.subFactorsCollection = out;
-            return out;
+            return this.subFactorsCollection = new SubFactorsCollection();
         }
     }
 
@@ -356,7 +334,7 @@ public final class PrimeFactorInt implements Comparable<PrimeFactorInt> {
         private final IntFunction<PrimeFactorInt> mapper =
                 q -> PrimeFactorInt.this.dividedByConcrete(q);
 
-        private final int[] qs = factor2Number.keySet().stream()
+        private final int[] qs = factorToNumber.keySet().stream()
                 .mapToInt(i -> i.intValue())
                 .toArray();
 

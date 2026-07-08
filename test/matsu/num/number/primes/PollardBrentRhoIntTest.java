@@ -81,7 +81,7 @@ final class PollardBrentRhoIntTest {
         @Test
         public void test_NaiveTrialPrimeFactorizeIntの実行() {
             @SuppressWarnings("deprecation")
-            PrimeFactorizeInt primeFactorizeInt = new NaiveTrialPrimeFactorizeInt();
+            PrimeFactorizeInt primeFactorizeInt = new NaiveTrialPrimeFactorizeIntForTesting();
             {
                 var executor = new SpeedTestExecutor(
                         TEST_CLASS, "NaiveTrialPrimeFactorizeInt: ", 1,

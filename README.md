@@ -1,6 +1,6 @@
 # matsu.num.Number
 
-![Version](https://img.shields.io/badge/version-1.3.0-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 ![Java](https://img.shields.io/badge/Java-17%2B-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![Javadoc](https://img.shields.io/badge/docs-Javadoc-blue)](https://tchaikovsky1026.github.io/matsu.num.Number/)
@@ -8,7 +8,7 @@
 
 `matsu.num.Number` は Java 言語向けの数値計算における, 整数論に関するライブラリである.
 
-現在のリリースバージョンは `1.3.1` であり, Java 17 に準拠する.
+現在のリリースバージョンは `1.4.0` であり, Java 17 に準拠する.
 このバージョンにおいて, 次がサポートされている.
 
 - 乗算に関するユーティリティ

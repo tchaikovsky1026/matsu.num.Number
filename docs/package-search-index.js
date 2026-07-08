@@ -1,0 +1,1 @@
+packageSearchIndex = [{"m":"matsu.num.Number","l":"matsu.num.number"},{"m":"matsu.num.Number","l":"matsu.num.number.primes"},{"l":"すべてのパッケージ","u":"allpackages-index.html","k":"18"}];updateSearchResults();

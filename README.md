@@ -28,6 +28,7 @@
 https://tchaikovsky1026.github.io/matsu.num.Number/  
 This site contains the public API reference generated from source code.  
 The documentation is generated from the latest release.
+- Technical notes and supplementary documentation are available in the `note` directory.
 
 ## History
 更新履歴は history.txt を参照のこと.

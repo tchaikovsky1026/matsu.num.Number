@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.5
+ * 2026.7.10
  */
 package matsu.num.number.modlong;
 
@@ -20,32 +20,13 @@ import matsu.num.number.ModuloLong;
  */
 final class ModuloEvenNotPow2 extends SkeletalModuloLong {
 
-    private final long divisor;
-
     /*
-     * 基本方針:
-     * m を 3 以上の奇数として,
-     * x mod (2^d * m) を, x mod 2^d と x mod m から計算する.
-     * l = 2^d とする. l と m は互いに素である.
-     * 
-     * 中国剰余定理により, (l,m) が互いに素の場合,
-     * 任意の r, s に対して
-     * x = r (mod m)
-     * x = s (mod l)
-     * となるような x は法 lm について一意に存在する.
-     * この x の値は次のように求まる.
-     * 
-     * 今, r, s は正規化済み (0 以上 divisor 未満) であるとする.
-     * x = t1 + m*t2 (0 <= t1 < m, 0 <= t2 < l)
-     * とおくと, 法lmについて t1, t2 は一意であり, t1 = r は直ちにわかる.
-     * 次に, 法 l に対する m の乗法逆元を m^(-1) とすると,
-     * t2 = [(s - r) * m^(-1)] mod l
-     * となる.
-     * 
-     * 
-     * mod 2^d と mod m の計算, 2^d を法とする m の逆元の計算は,
-     * 他のクラスに依存する.
+     * 方針:
+     * divisor = 2^d * m とし,
+     * mod 2^d と mod m から mod divisor を得る.
      */
+
+    private final long divisor;
 
     private final ModuloLong modPow2Calculator;
     private final ModuloLong modMCalculator;
@@ -135,18 +116,6 @@ final class ModuloEvenNotPow2 extends SkeletalModuloLong {
      * @return mod (m * (2^d))
      */
     private long combinedMod(long modMRemainder, long modPow2Remainder) {
-
-        /*
-         * l = 2^d とする.
-         * 
-         * x = r (mod m) と x = s (mod l) を満たす r, s を与えたときの,
-         * x mod (rs) を返す.
-         * 
-         * r, s が正規化されているとき,
-         * t1 = r, t2 = [(s - r) * m^(-1)] mod l
-         * として, t1 + m*t2 が求める値である.
-         */
-
         return modMRemainder + m * (((modPow2Remainder - modMRemainder) * minv) & modPow2BitMask);
     }
 }

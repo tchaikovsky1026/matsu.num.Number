@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.5
+ * 2026.7.10
  */
 package matsu.num.number.modlong;
 
@@ -23,11 +23,7 @@ final class ModuloPow2 extends SkeletalModuloLong {
     private final long divisor;
 
     /** mod 2^k を計算するためのマスク. */
-    /*
-     * x mod 2^k は, x & (2^k-1) に等しい.
-     * x が負であってもよい.
-     */
-    private final long bitMask;
+    private final long modBitMask;
 
     /**
      * 指数 k を与えて, 2^k を法としたモジュロ演算を構築する.
@@ -45,7 +41,7 @@ final class ModuloPow2 extends SkeletalModuloLong {
         assert 1 <= exponent && exponent <= 62;
 
         this.divisor = 1L << exponent;
-        this.bitMask = this.divisor - 1;
+        this.modBitMask = this.divisor - 1;
     }
 
     @Override
@@ -55,14 +51,14 @@ final class ModuloPow2 extends SkeletalModuloLong {
 
     @Override
     public long mod(long x) {
-        return x & bitMask;
+        return x & modBitMask;
     }
 
     @Override
     public long modpr(long x, long y) {
         // 下位 bit の抽出目的ではオーバーフローしても良い.
         // 負でもよい.
-        return (x * y) & bitMask;
+        return (x * y) & modBitMask;
     }
 
     @Override
@@ -100,7 +96,7 @@ final class ModuloPow2 extends SkeletalModuloLong {
             v0 *= x[i];
         }
 
-        return ((v0 * v1) * (v2 * v3)) & bitMask;
+        return ((v0 * v1) * (v2 * v3)) & modBitMask;
     }
 
     @Override
@@ -135,6 +131,6 @@ final class ModuloPow2 extends SkeletalModuloLong {
             xPow = xPow * xPow;
         }
 
-        return out & bitMask;
+        return out & modBitMask;
     }
 }

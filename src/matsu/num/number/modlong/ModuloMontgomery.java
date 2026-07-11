@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.5
+ * 2026.7.10
  */
 package matsu.num.number.modlong;
 
@@ -19,45 +19,6 @@ import matsu.num.number.MultUtil;
  * @author Matsuura Y.
  */
 final class ModuloMontgomery extends SkeletalModuloLong {
-    /*
-     * 事前準備: Montgomery multiplication (モンゴメリ乗算)
-     * 
-     * R は 2 の累乗数である. (int なら 2^32, long なら 2^64 とする)
-     * m を 3 以上の奇数かつ m < R とする. m と R は互いに素である.
-     * m' を, m*m' mod R = -1 を満たす, 0 <= m' < R である整数とする.
-     * 
-     * a を, 0 <= a < m*R を満たす整数とし, a のモンゴメリリダクション MR(a) を次で定義する.
-     * MR(a) = (a * R^(-1)) mod m
-     * ここで, 0 <= MR(a) < m であり, R^(-1) は R * R^(-1) = 1 mod m を満たす整数である.
-     * MR(a) は次のアルゴリズムで計算できる.
-     * 
-     * 1. t = (a + m*((a * m') mod R)) / R
-     * 2. MR(a) = t or t - m
-     * (初段の / R は通常の意味の除算である (被除数は R の倍数となっている).)
-     * 
-     * モンゴメリリダクションの逆演算をモンゴメリ変換といい, a のモンゴメリ変換 M(a) は次で計算される.
-     * M(a) = MR(a * R^2)
-     * 0 <= a < R のモンゴメリ変換を扱いたい場合, R_2 = R^2 mod m を計算しておき,
-     * M(a) = MR(a * R_2) とすればよい.
-     */
-
-    /*
-     * このクラスの実装方針: 3 以上の奇数を法とする剰余計算を, Montgomery multiplication (モンゴメリ乗算) で行う.
-     * 
-     * 単純な剰余: a mod m = MR(M(a))
-     * 
-     * 2数の乗算剰余: ab mod m = MR(M(a) * b)
-     * 
-     * 3数以上の乗算剰余:
-     * M(ab) = MR(M(a) * M(b)) という性質を使い,
-     * abc... の積を求めるとき, a, b, c, ... を M(a), M(b), M(c), ... に変換後,
-     * M(abc...) = MR(M(a) * MR(M(b) * MR(M(c) * ...)))
-     * と計算し, MR(M(abc...)) を得る.
-     */
-
-    /*
-     * R = 2^64 とする.
-     */
 
     /** 除数 m */
     private final long divisor;

@@ -11,9 +11,7 @@ import static org.hamcrest.Matchers.*;
 
 import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
 
-import org.junit.BeforeClass;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
@@ -32,28 +30,36 @@ final class DividendShifterUtilTest {
     public static class int型の値テスト {
 
         /**
-         * n,m に使用する0以上の整数の集まり.
-         * mに使用するときは, 0を弾くようにする.
+         * 除数. <br>
+         * ホワイトボックステストとして, 境界値を強化.
          */
         @DataPoints
-        public static int[] values;
+        public static int[] divisor = {
+                3, 100,
+                (1 << 30) - 1,
+                (1 << 30),
+                (1 << 30) + 1,
+                (1 << 31) - 1
+        };
 
-        @BeforeClass
-        public static void before_整数の準備() {
-            final int size = 20;
+        @Theory
+        public void test_modShiftのテスト(int m) {
+            int iteration = 1000;
+            int shift = 100;
 
-            values = IntStream.range(0, size)
-                    .map(ignore -> (ThreadLocalRandom.current().nextInt() & 0x7FFF_FFFF))
-                    .toArray();
+            for (int c = 0; c < iteration; c++) {
+                int n = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE) + 1;
+                assertThat(
+                        DividendShifterUtil.computeInt(n, shift, m),
+                        is(computeIntNaive(n, shift, m)));
+            }
         }
 
         @Theory
-        public void test_modShiftのテスト(int n, int m) {
-            int shift = 100;
-            m = Math.max(m, 1);
+        public void test_modShiftのテスト_0(int m) {
             assertThat(
-                    DividendShifterUtil.computeInt(n, shift, m),
-                    is(computeIntNaive(n, shift, m)));
+                    DividendShifterUtil.computeInt(0, 100, m),
+                    is(computeIntNaive(0, 100, m)));
         }
 
         /**

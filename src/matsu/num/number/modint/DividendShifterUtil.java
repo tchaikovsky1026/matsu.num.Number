@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.4
+ * 2026.7.11
  */
 package matsu.num.number.modint;
 
@@ -44,18 +44,18 @@ final class DividendShifterUtil {
         assert m >= 1;
         assert shift >= 0;
 
-        if (shift == 0) {
-            return n % m;
-        }
+        // n を正規化
+        n %= m;
 
         /*
-         * 除数が 2^30 未満の場合,
-         * "シフトにより 31-bit までシフトして剰余をとる" を繰り返す.
-         * 除数が 2^30 以上の場合, これは 31-bit なので,
-         * "シフトにより 32-bit までシフトし, 除数を引く"を繰り返す.
+         * 除数が 2^30 以下の場合,
+         * "シフトにより 30-bit (31ケタ) までシフトして剰余をとる" を繰り返す.
+         * 
+         * 除数が 2^30 より大きい場合, これは 31ケタ なので,
+         * "シフトにより 31-bit (32ケタ) までシフトし, 除数を引く"を繰り返す.
          */
-        if (m < (1 << 30)) {
-            // m < 2^30
+        if (m <= (1 << 30)) {
+            // m <= 2^30
             while (shift > 0) {
                 int currentShift = Math.min(shift, Integer.numberOfLeadingZeros(n) - 1);
                 n <<= currentShift;
@@ -64,13 +64,7 @@ final class DividendShifterUtil {
             }
             return n;
         } else {
-            // m >= 2^30
-
-            //最初にnを正規化しておく
-            // n が 2^31 - 1 以下, m が 2^30 以上なので, n - m <= m - 1 は確定している.
-            if (n >= m) {
-                n -= m;
-            }
+            // m > 2^30
 
             for (; shift > 0; shift--) {
                 n <<= 1;

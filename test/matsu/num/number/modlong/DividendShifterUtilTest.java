@@ -11,9 +11,7 @@ import static org.hamcrest.Matchers.*;
 
 import java.math.BigInteger;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.LongStream;
 
-import org.junit.BeforeClass;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
@@ -32,28 +30,36 @@ final class DividendShifterUtilTest {
     public static class long型の値テスト {
 
         /**
-         * n,m に使用する0以上の整数の集まり.
-         * mに使用するときは, 0を弾くようにする.
+         * 除数. <br>
+         * ホワイトボックステストとして, 境界値を強化.
          */
         @DataPoints
-        public static long[] values;
+        public static long[] divisor = {
+                3, 100,
+                (1L << 62) - 1,
+                (1L << 62),
+                (1L << 62) + 1,
+                (1L << 63) - 1
+        };
 
-        @BeforeClass
-        public static void before_整数の準備() {
-            final int size = 20;
+        @Theory
+        public void test_modShiftのテスト(long m) {
+            int iteration = 1000;
+            int shift = 100;
 
-            values = LongStream.range(0, size)
-                    .map(ignore -> (ThreadLocalRandom.current().nextLong() & 0x7FFF_FFFF_FFFF_FFFFL))
-                    .toArray();
+            for (int c = 0; c < iteration; c++) {
+                long n = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE) + 1;
+                assertThat(
+                        DividendShifterUtil.computeLong(n, shift, m),
+                        is(computeLongNaive(n, shift, m)));
+            }
         }
 
         @Theory
-        public void test_modShiftのテスト(long n, long m) {
-            int shift = 100;
-            m = Math.max(m, 1L);
+        public void test_modShiftのテスト_0(long m) {
             assertThat(
-                    DividendShifterUtil.computeLong(n, shift, m),
-                    is(computeLongNaive(n, shift, m)));
+                    DividendShifterUtil.computeLong(0, 100, m),
+                    is(computeLongNaive(0, 100, m)));
         }
 
         /**

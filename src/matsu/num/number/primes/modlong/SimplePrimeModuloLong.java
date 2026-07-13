@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.6
+ * 2026.7.13
  */
 package matsu.num.number.primes.modlong;
 
@@ -21,34 +21,6 @@ import matsu.num.number.primes.PrimeModuloLong;
  * @author Matsuura Y.
  */
 final class SimplePrimeModuloLong extends SkeletalPrimeModuloLong {
-
-    /*
-     * 素数を法とするモジュロ演算における, 位数と原始根に関する.
-     * 除数を p (素数) とする.
-     * 
-     * 1 <= a < p である a について,
-     * a の位数とは, a^m = 1 (mod p) であるような最小の正整数 m である.
-     * 位数の性質として次が成り立つ.
-     * 
-     * m は (p-1) の約数である.
-     * a^q = 1 (mod p) を満たすすべての q は m の倍数である.
-     * 
-     * 位数計算アルゴリズム:
-     * 1. a^q = 1 (mod p) なる q がわかっているとする.
-     * 2. q の素因数の集合 {p_1, p_2, ...} を考え, q_k = q/p_k とし, a^(q_k) mod p を計算する.
-     * 3. a^(q_k) = 1 (mod p) なる q_k があった場合, q := q_k として 2 にもどる.
-     * (一度見つかればそれ以降の k を検証する必要はない).
-     * ない場合は m = q である.
-     * 
-     * 初期値は q = p-1 とする.
-     * 
-     * 
-     * 1 <= a < p である a について,
-     * a が p を法としての原始根であるとは, a の位数が p-1 であることである.
-     * a が原始根であるかを判定するには,
-     * q の素因数の集合 {p_1, p_2, ...} を考え, q_k = q/p_k とし,
-     * すべての k について a^(q_k) != 1 (mod p) を確かめればよい.
-     */
 
     /**
      * p-1の素因数分解を扱う.

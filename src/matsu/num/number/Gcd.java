@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.6.29
+ * 2026.7.15
  */
 package matsu.num.number;
 
@@ -47,58 +47,47 @@ public final class Gcd {
     public static int gcd(int a, int b) {
 
         /*
-         * 方針:
-         * 特殊パターンを最初に処理し, a, b とも 1以上 2^31 以下にする.
-         * (2^31 は int としては -2^31 である.)
-         * a, b に含まれる素因数 2 を除去する (最終結果では考慮, この時点で 2^31 は 1 まで動く).
-         * 奇数となった a, b に対して Stein のアルゴリズムを実行.
+         * 特殊パターンを最初に処理し, a, b とも 1以上 (MAX_VALUE + 1) 以下にする.
+         * (MAX_VALUE + 1 は内部的には MIN_VALUE である.)
+         * a, b に含まれる素因数 2 の個数を求め, 削除し, 奇数となった a, b に対して Stein のアルゴリズムを実行.
          */
-
         a = Math.abs(a);
         b = Math.abs(b);
-
         if (a == 0) {
             return b;
         }
         if (b == 0) {
             return a;
         }
-
         int pow2TrailExponentA = Integer.numberOfTrailingZeros(a);
         int pow2TrailExponentB = Integer.numberOfTrailingZeros(b);
         int pow2Exponent = Math.min(pow2TrailExponentA, pow2TrailExponentB);
-        // Integer.MIN_VALUE に対応するため, 符号なしBitシフト
+        // (MAX_VALUE + 1) に対応するため, 符号なしで処理する
         a >>>= pow2TrailExponentA;
         b >>>= pow2TrailExponentB;
 
-        // a >= b にする
+        // Stein のアルゴリズム
         if (a < b) {
             int t = a;
             a = b;
             b = t;
         }
-
-        /*
-         * Stein のアルゴリズムに基づく.
-         * 初期: a,bが奇数,
-         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
-         */
         while (true) {
-            // ここの時点で, a >= b かつ a, bとも奇数である.
+            // ここの時点で必ず, a >= b かつ a, bとも奇数
+
             while (a >= b) {
-                // gcd(a,b) = gcd(a-b,b)
                 a -= b;
 
                 // a に含まれる素因数 2 を除去: a の末尾0を削除 (a = 0 でも正常動作)
                 a >>= Integer.numberOfTrailingZeros(a);
             }
 
-            // この時点で a < b なので, a >= b にする
+            // a >= b となるようにスワップ
             int t = a;
             a = b;
             b = t;
 
-            // b = 0なら gcdはa
+            // b = 0 なら gcdは a である
             if (b == 0) {
                 break;
             }
@@ -132,58 +121,47 @@ public final class Gcd {
     public static long gcd(long a, long b) {
 
         /*
-         * 方針:
-         * 特殊パターンを最初に処理し, a, b とも 1以上 2^31 以下にする.
-         * (2^31 は int としては -2^31 である.)
-         * a, b に含まれる素因数 2 を除去する (最終結果では考慮, この時点で 2^31 は 1 まで動く).
-         * 奇数となった a, b に対して Stein のアルゴリズムを実行.
+         * 特殊パターンを最初に処理し, a, b とも 1以上 (MAX_VALUE + 1) 以下にする.
+         * (MAX_VALUE + 1 は内部的には MIN_VALUE である.)
+         * a, b に含まれる素因数 2 の個数を求め, 削除し, 奇数となった a, b に対して Stein のアルゴリズムを実行.
          */
-
         a = Math.abs(a);
         b = Math.abs(b);
-
         if (a == 0) {
             return b;
         }
         if (b == 0) {
             return a;
         }
-
         int pow2TrailExponentA = Long.numberOfTrailingZeros(a);
         int pow2TrailExponentB = Long.numberOfTrailingZeros(b);
         int pow2Exponent = Math.min(pow2TrailExponentA, pow2TrailExponentB);
-        // Long.MIN_VALUE に対応するため, 符号なしBitシフト
+        // (MAX_VALUE + 1) に対応するため, 符号なしで処理する
         a >>>= pow2TrailExponentA;
         b >>>= pow2TrailExponentB;
 
-        // a >= b にする
+        // Stein のアルゴリズム
         if (a < b) {
             long t = a;
             a = b;
             b = t;
         }
-
-        /*
-         * Stein のアルゴリズムに基づく.
-         * 初期: a,bが奇数,
-         * 「大きい方を |a-b|/(2^r) に置き換えていく」を繰り返す.
-         */
         while (true) {
-            // ここの時点で, a >= b かつ a, bとも奇数である.
+            // ここの時点で必ず, a >= b かつ a, bとも奇数
+
             while (a >= b) {
-                // gcd(a,b) = gcd(a-b,b)
                 a -= b;
 
                 // a に含まれる素因数 2 を除去: a の末尾0を削除 (a = 0 でも正常動作)
                 a >>= Long.numberOfTrailingZeros(a);
             }
 
-            // この時点で a < b なので, a >= b にする
+            // a >= b となるようにスワップ
             long t = a;
             a = b;
             b = t;
 
-            // b = 0なら gcdはa
+            // b = 0 なら gcdは a である
             if (b == 0) {
                 break;
             }

@@ -6,7 +6,7 @@
  */
 
 /*
- * 2026.7.5
+ * 2026.7.16
  */
 package matsu.num.number;
 
@@ -122,7 +122,8 @@ public interface ModuloInt {
      * <p>
      * このメソッドの戻り値 <i>r</i> を使い, gcd(<i>a</i>, <i>m</i>) を
      * <i>a</i><i>r</i> mod&nbsp;<i>m</i>
-     * により得ることができる ({@link #modpr(int, int) modpr(a,r)}). <br>
+     * により得ることができる
+     * (ただし結果が 0 になった場合は gcd(<i>a</i>, <i>m</i>) = <i>m</i>). <br>
      * ただし, gcd(<i>a</i>, <i>m</i>) を得ることのみが目的であれば,
      * {@link Gcd#gcd(int, int)} の方が適切である.
      * </p>
